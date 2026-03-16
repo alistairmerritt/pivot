@@ -1,0 +1,139 @@
+blueprint:
+  name: "Pivot — Bank Control"
+  description: >
+    Applies the active bank's knob value to the assigned entity.
+    Create one instance per device named `script.{suffix}_bank_control`.
+    The firmware triggers this whenever the knob is turned in Control Mode.
+
+    Supported: lights (brightness), media players (volume), fans (speed),
+    climate (temperature), covers (position).
+    Scenes and scripts are passive — knob does nothing for those.
+  domain: script
+  input:
+    active_bank_entity:
+      name: Active Bank Number
+      description: "The Active Bank number entity, e.g. `number.ha_voice_1_active_bank`."
+      selector:
+        entity:
+          domain: number
+
+    bank_0_entity:
+      name: Bank 1 Entity (text)
+      description: "The Bank 1 Entity text entity, e.g. `text.ha_voice_1_bank_0_entity`."
+      selector:
+        entity:
+          domain: text
+
+    bank_1_entity:
+      name: Bank 2 Entity (text)
+      selector:
+        entity:
+          domain: text
+
+    bank_2_entity:
+      name: Bank 3 Entity (text)
+      selector:
+        entity:
+          domain: text
+
+    bank_3_entity:
+      name: Bank 4 Entity (text)
+      selector:
+        entity:
+          domain: text
+
+    bank_0_value:
+      name: Bank 1 Value (number)
+      description: "The Bank 1 Value number entity, e.g. `number.ha_voice_1_bank_0_value`."
+      selector:
+        entity:
+          domain: number
+
+    bank_1_value:
+      name: Bank 2 Value (number)
+      selector:
+        entity:
+          domain: number
+
+    bank_2_value:
+      name: Bank 3 Value (number)
+      selector:
+        entity:
+          domain: number
+
+    bank_3_value:
+      name: Bank 4 Value (number)
+      selector:
+        entity:
+          domain: number
+
+variables:
+  active_bank_entity: !input active_bank_entity
+  bank_0_entity: !input bank_0_entity
+  bank_1_entity: !input bank_1_entity
+  bank_2_entity: !input bank_2_entity
+  bank_3_entity: !input bank_3_entity
+  bank_0_value: !input bank_0_value
+  bank_1_value: !input bank_1_value
+  bank_2_value: !input bank_2_value
+  bank_3_value: !input bank_3_value
+
+sequence:
+  - variables:
+      bank: "{{ states(active_bank_entity) | int - 1 }}"
+      bank_entity: >
+        {% set entities = [
+          states(bank_0_entity),
+          states(bank_1_entity),
+          states(bank_2_entity),
+          states(bank_3_entity)
+        ] %}
+        {{ entities[bank] }}
+      bank_value_entity: >
+        {% set values = [bank_0_value, bank_1_value, bank_2_value, bank_3_value] %}
+        {{ values[bank] }}
+      value: "{{ states(bank_value_entity) | float }}"
+      domain: "{{ bank_entity.split('.')[0] if '.' in bank_entity else '' }}"
+  - choose:
+      - conditions: "{{ domain == 'light' }}"
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: "{{ bank_entity }}"
+            data:
+              brightness_pct: "{{ value }}"
+
+      - conditions: "{{ domain == 'media_player' }}"
+        sequence:
+          - action: media_player.volume_set
+            target:
+              entity_id: "{{ bank_entity }}"
+            data:
+              volume_level: "{{ value / 100 }}"
+
+      - conditions: "{{ domain == 'fan' }}"
+        sequence:
+          - action: fan.set_percentage
+            target:
+              entity_id: "{{ bank_entity }}"
+            data:
+              percentage: "{{ value }}"
+
+      - conditions: "{{ domain == 'climate' }}"
+        sequence:
+          - action: climate.set_temperature
+            target:
+              entity_id: "{{ bank_entity }}"
+            data:
+              temperature: "{{ value }}"
+
+      - conditions: "{{ domain == 'cover' }}"
+        sequence:
+          - action: cover.set_cover_position
+            target:
+              entity_id: "{{ bank_entity }}"
+            data:
+              position: "{{ value }}"
+
+mode: restart
+icon: mdi:rotate-right
