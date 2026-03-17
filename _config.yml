@@ -1,0 +1,12 @@
+title: Pivot
+description: Turn your Home Assistant Voice Preview Edition into a physical control knob for Home Assistant.
+theme: minima
+baseurl: "/pivot"
+url: "https://alistairmerritt.github.io"
+
+header_pages:
+  - getting-started.md
+  - firmware.md
+  - integration.md
+  - troubleshooting.md
+  - changelog.md
