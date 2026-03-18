@@ -72,13 +72,15 @@ Each bank has an optional **Mirror light colour** switch (`switch.{suffix}_bank_
 
 - **Mirror on, light on** — LED ring uses the light's current RGB colour, updating whenever the light changes colour.
 - **Mirror on, light off** — LED ring stays at the last mirrored colour until the light comes back on.
-- **Mirror off** — LED ring returns to the default bank colour (Blue, Orange, Green, or Purple).
+- **Mirror off** — LED ring returns to the colour set in the bank's colour picker. If you haven't changed it, this will be the default bank colour (Blue, Orange, Green, or Purple).
 
 This is a persistent per-bank setting, not a temporary effect. It only applies to RGB lights — if the assigned entity is not a compatible RGB light, the bank falls back to its default colour automatically.
 
 ---
 
 ## Supported entity domains
+
+When an assigned entity is changed externally — by a voice command, another dashboard, an automation, or a physical switch — Pivot automatically syncs the new state back into the bank value. The LED gauge will update to reflect the change without any additional configuration.
 
 | Domain | Knob (Control Mode) | Button press |
 | --- | --- | --- |
