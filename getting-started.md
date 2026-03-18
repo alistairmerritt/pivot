@@ -119,6 +119,8 @@ If you don't already have ESPHome Device Builder installed, install it via <stro
 5. Optionally configure announcements — select a text-to-speech service (TTS) and speaker to have Pivot speak the active bank name when you switch
 
 
+> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
+
 ---
 
 ## Step 6. Assign entities to banks

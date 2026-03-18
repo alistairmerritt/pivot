@@ -64,6 +64,8 @@ The setup mode can be changed at any time from the integration's **Configure** m
 | `binary_sensor.{suffix}_bank_2_passive` | On when Bank 3 entity is a scene or script (knob disabled) |
 | `binary_sensor.{suffix}_bank_3_passive` | On when Bank 4 entity is a scene or script (knob disabled) |
 
+> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
+
 ---
 
 ## Mirror light colour
