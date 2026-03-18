@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.6
+- **Fix:** Resolved oscillation loop when adjusting brightness via the knob — intermediate brightness values reported by the light during a transition are now ignored for 2 seconds after a Pivot-initiated change
+
 ### v0.0.5
 - **Fix:** Resolved a feedback loop in live entity sync where lights reporting intermediate brightness values during a transition could cause the LED gauge to oscillate uncontrollably
 
