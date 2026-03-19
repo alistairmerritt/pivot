@@ -29,9 +29,9 @@ The timer helpers are provisioned with every Pivot device but disabled by defaul
 
 1. Go to **Settings → Devices & Services → Pivot** and open your device.
 2. Find the three timer entities listed under the device:
-   - `timer.{suffix}_timer` — the countdown timer
    - `number.{suffix}_timer_duration` — duration in minutes
    - `select.{suffix}_timer_state` — state mirror (idle / running / paused)
+   - `text.{suffix}_timer_end` — internal countdown tracker
 3. Click each entity, go to **Settings**, and toggle **Enable**.
 
 All three must be enabled for the blueprint to work correctly.
@@ -77,11 +77,11 @@ That's it — single-press the bank to start.
 
 | Entity | Purpose |
 | --- | --- |
-| `timer.{suffix}_timer` | Native HA timer — tracks state (idle / active / paused) and remaining time |
 | `number.{suffix}_timer_duration` | Duration in minutes (1–120, default 25) |
 | `select.{suffix}_timer_state` | State mirror — updated by blueprint (idle / running / paused) |
+| `text.{suffix}_timer_end` | Internal — stores ISO end time while running, remaining seconds while paused |
 
-All three entities are **disabled by default** and live under the Pivot device in the HA device registry.
+All three entities are **disabled by default** and live under the Pivot device in the HA device registry. The `text.{suffix}_timer_end` entity is managed entirely by the blueprint; you don't need to interact with it directly.
 
 ---
 
@@ -95,4 +95,4 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 **Multiple timers** — You can create multiple automations from the same blueprint, one per Pivot device, each with its own suffix and bank assignment.
 
-**Pausing and resuming** — The timer saves remaining time across pauses, including HA restarts. If HA restarts while the timer is running and the scheduled finish time has already passed, the timer resets to idle automatically rather than firing a spurious finish event.
+**Pausing and resuming** — Remaining time is stored in `text.{suffix}_timer_end` and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the gauge sync will detect this within 5 seconds of startup and trigger the finish sequence normally.
