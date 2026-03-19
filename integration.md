@@ -64,6 +64,16 @@ The setup mode can be changed at any time from the integration's **Configure** m
 | `binary_sensor.{suffix}_bank_2_passive` | On when Bank 3 entity is a scene or script (knob disabled) |
 | `binary_sensor.{suffix}_bank_3_passive` | On when Bank 4 entity is a scene or script (knob disabled) |
 
+### Timer entities
+
+These entities are provisioned per device but **disabled by default**. Enable them individually in the HA entity registry if you want to use the [Pivot Timer](/pivot/timer/) feature.
+
+| Entity | Purpose |
+| --- | --- |
+| `number.{suffix}_timer_duration` | Timer duration in minutes (1–120, default 25) |
+| `select.{suffix}_timer_state` | Timer state — idle, running, or paused |
+| `text.{suffix}_timer_end` | Internal — stores the countdown end time while the timer is running |
+
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
 ---
