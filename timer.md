@@ -14,7 +14,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 - **Single press** — start the timer if idle, pause if running, resume if paused
 - **Long press** — cancel and reset
-- **Gauge LEDs** — fill as the timer counts down (0% = not started, 100% = about to finish)
+- **Gauge LEDs** — drain as the timer counts down (100% = just started, 0% = finished)
 - **Finish** — the gauge resets to 0, a sound plays through the media player, and optionally a TTS message is spoken
 
 The duration is set via the `number.{suffix}_timer_duration` entity (default: 25 minutes, range: 1–120 minutes).
@@ -87,7 +87,7 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 ## Tips
 
-**Using the gauge as a visual countdown** — The gauge starts empty when the timer is idle. Once started, it fills as time progresses, reaching 100% just before the timer finishes, then drops back to 0. This gives a natural at-a-glance sense of how much time remains.
+**Using the gauge as a visual countdown** — The gauge starts full (100%) when the timer begins and drains to 0% as time runs out. When the timer finishes, it drops to 0. This gives a natural at-a-glance sense of how much time remains.
 
 **Assigning the bank** — Pick a bank that isn't already controlling another entity, or dedicate a specific bank (e.g. Bank 4) as your timer bank. The blueprint's bank input matches the bank number shown on the device (1–4).
 
