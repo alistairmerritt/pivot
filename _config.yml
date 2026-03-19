@@ -8,5 +8,6 @@ header_pages:
   - getting-started.md
   - firmware.md
   - integration.md
+  - timer.md
   - troubleshooting.md
   - changelog.md

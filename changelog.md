@@ -6,6 +6,11 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.7
+- **New:** Timer helper feature — three new per-device entities (`timer.{suffix}_timer`, `number.{suffix}_timer_duration`, `select.{suffix}_timer_state`) provisioned per device, disabled by default
+- **New:** Pivot Timer blueprint — turns any bank into a Pomodoro-style countdown timer with single-press start/pause/resume, long-press cancel, live gauge sync, finish sound, and optional TTS announcement
+- **New:** Timer docs page with setup guide and blueprint import link
+
 ### v0.0.6
 - **Fix:** Resolved oscillation loop when adjusting brightness via the knob — intermediate brightness values reported by the light during a transition are now ignored for 2 seconds after a Pivot-initiated change
 
