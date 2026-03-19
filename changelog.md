@@ -6,8 +6,14 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.8
+- **Fix:** Timer entities now appear correctly under the device — HA's `timer` domain does not support the entity-platform mechanism used by custom integrations, so `timer.{suffix}_timer` was silently never created. Replaced with `text.{suffix}_timer_end`, which stores the countdown end time and is managed entirely by the blueprint
+- **Change:** Timer entity set is now `number.{suffix}_timer_duration`, `select.{suffix}_timer_state`, and `text.{suffix}_timer_end` (all disabled by default)
+- **Change:** Pivot Timer blueprint rewritten to be fully self-contained — no longer uses `timer.*` services; finish is detected in the 5-second gauge-sync loop
+- **Change:** Gauge drains from 100% → 0% as the timer counts down (was 0% → 100%)
+
 ### v0.0.7
-- **New:** Timer helper feature — three new per-device entities (`timer.{suffix}_timer`, `number.{suffix}_timer_duration`, `select.{suffix}_timer_state`) provisioned per device, disabled by default
+- **New:** Timer helper feature — three new per-device entities provisioned per device, disabled by default
 - **New:** Pivot Timer blueprint — turns any bank into a Pomodoro-style countdown timer with single-press start/pause/resume, long-press cancel, live gauge sync, finish sound, and optional TTS announcement
 - **New:** Timer docs page with setup guide and blueprint import link
 
