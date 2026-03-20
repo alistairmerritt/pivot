@@ -6,6 +6,11 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.15
+- **New:** Timer finish now repeats — gauge flashes 3 times and the finish sound plays in a loop (up to 10 times) until dismissed with a single press on any bank, matching VPE timer behaviour
+- **Change:** Finish sound is now hardcoded to the VPE built-in `timer_finished.flac` — removed the user-facing "Finish Sound URL" input
+- **New:** Optional TTS message now plays once before the alert loop begins (if configured)
+
 ### v0.0.14
 - **Fix:** Single press no longer causes `idle → running → paused` on reflashed firmware. On firmware v0.0.4+, the `button_press_event` entity fires `single_press` immediately, then 2–3 seconds later the HA API call to run the bank-toggle script completes and fires a second `pivot_button_press`. The integration now deduplicates these — the bank-toggle script path is suppressed if the firmware path already fired within the last 3 seconds. Pre-reflash devices are unaffected.
 
