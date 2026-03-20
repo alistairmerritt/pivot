@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.14
+- **Fix:** Single press no longer causes `idle → running → paused` on reflashed firmware. On firmware v0.0.4+, the `button_press_event` entity fires `single_press` immediately, then 2–3 seconds later the HA API call to run the bank-toggle script completes and fires a second `pivot_button_press`. The integration now deduplicates these — the bank-toggle script path is suppressed if the firmware path already fired within the last 3 seconds. Pre-reflash devices are unaffected.
+
 ### v0.0.13
 - **Fix:** `switch` and `input_boolean` entities now correctly mark their bank as passive — the knob is disabled for these domains just as it is for scenes and scripts
 
