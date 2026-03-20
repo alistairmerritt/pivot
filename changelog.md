@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.11
+- **Fix:** Pressing once after a cancel/reset no longer immediately puts the timer into a paused state. Two defensive changes: stale button press events (older than 2 seconds) are now discarded before any state changes run; automation queue max reduced from 5 to 2 to prevent event pile-up from previous presses triggering back-to-back transitions
+
 ### v0.0.10
 - **Fix:** Gauge now holds the correct remaining percentage when the timer is paused, rather than dropping to 0. The pause sequence now writes the current progress to the bank value entity at the moment of pausing.
 
