@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.12
+- **Fix:** Changed bank-toggle script and timer blueprint to `mode: single` — only one instance can run at a time, so duplicate events from rapid or back-to-back presses are dropped rather than queued and processed in sequence
+
 ### v0.0.11
 - **Fix:** Pressing once after a cancel/reset no longer immediately puts the timer into a paused state. Two defensive changes: stale button press events (older than 2 seconds) are now discarded before any state changes run; automation queue max reduced from 5 to 2 to prevent event pile-up from previous presses triggering back-to-back transitions
 
