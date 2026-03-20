@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.9
+- **Fix:** Timer blueprint now triggers correctly on single press — `pivot_button_press` with `press_type: single_press` was never fired because the bank_toggle script exited early when the bank had no entity assigned. The event is now fired before the entity guard, so automations (including the timer blueprint) always receive single-press events in control mode
+
 ### v0.0.8
 - **Fix:** Timer entities now appear correctly under the device — HA's `timer` domain does not support the entity-platform mechanism used by custom integrations, so `timer.{suffix}_timer` was silently never created. Replaced with `text.{suffix}_timer_end`, which stores the countdown end time and is managed entirely by the blueprint
 - **Change:** Timer entity set is now `number.{suffix}_timer_duration`, `select.{suffix}_timer_state`, and `text.{suffix}_timer_end` (all disabled by default)
@@ -45,6 +48,9 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+### v0.0.4
+- **Fix:** `single_press` added to `button_press_event` entity — the firmware now fires this event on every valid single press, so `pivot_button_press` with `press_type: single_press` is correctly received by HA automations (including the timer blueprint) without needing to be in control mode. Requires a firmware reflash.
 
 ### v0.0.3
 - Removed secondary scroll (hold+turn in Normal mode) — restored to stock behaviour of changing the LED ring colour (hue cycling)
