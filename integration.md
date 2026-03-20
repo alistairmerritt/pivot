@@ -59,10 +59,10 @@ The setup mode can be changed at any time from the integration's **Configure** m
 
 | Entity | Purpose |
 | --- | --- |
-| `binary_sensor.{suffix}_bank_0_passive` | On when Bank 1 entity is a scene or script (knob disabled) |
-| `binary_sensor.{suffix}_bank_1_passive` | On when Bank 2 entity is a scene or script (knob disabled) |
-| `binary_sensor.{suffix}_bank_2_passive` | On when Bank 3 entity is a scene or script (knob disabled) |
-| `binary_sensor.{suffix}_bank_3_passive` | On when Bank 4 entity is a scene or script (knob disabled) |
+| `binary_sensor.{suffix}_bank_0_passive` | On when Bank 1 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{suffix}_bank_1_passive` | On when Bank 2 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{suffix}_bank_2_passive` | On when Bank 3 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{suffix}_bank_3_passive` | On when Bank 4 entity is a scene, script, switch, or input_boolean (knob disabled) |
 
 ### Timer entities
 

@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.13
+- **Fix:** `switch` and `input_boolean` entities now correctly mark their bank as passive — the knob is disabled for these domains just as it is for scenes and scripts
+
 ### v0.0.12
 - **Fix:** Changed bank-toggle script and timer blueprint to `mode: single` — only one instance can run at a time, so duplicate events from rapid or back-to-back presses are dropped rather than queued and processed in sequence
 
