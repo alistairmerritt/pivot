@@ -7,6 +7,11 @@ permalink: /changelog/
 ## Integration
 
 ### v0.0.16
+
+> **After updating:** two manual steps are required:
+> 1. If you use the timer, go to **Settings → Devices & Services → Pivot → your device → Configure** and set the bank entity for your timer bank to `timer` (lowercase). The timer blueprint will not respond until this is set.
+> 2. Open your Pivot Timer automation and re-save it so it picks up the updated blueprint logic.
+
 - **Fix:** Switches (e.g. Show Control Value, Control Mode) now correctly restore their state after a Home Assistant restart without needing to be toggled
 - **Fix:** Timer blueprint now requires the bank entity to be set to `timer` — the timer will no longer accidentally trigger when a real entity is assigned to the same bank
 - **Change:** Timer finish flash speed increased — LED flashes are now 150 ms each (was 400 ms), making the alert snappier and reducing the window in which a dismiss press can be missed
