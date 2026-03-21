@@ -55,6 +55,8 @@ The setup mode can be changed at any time from the integration's **Configure** m
 | `text.{suffix}_bank_2_entity` | Entity assigned to Bank 3 |
 | `text.{suffix}_bank_3_entity` | Entity assigned to Bank 4 |
 
+> **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). The knob has no effect on a timer bank — the LED gauge is managed entirely by the blueprint. Any other value is treated as a Home Assistant entity ID.
+
 ### Binary sensor entities
 
 | Entity | Purpose |

@@ -114,6 +114,41 @@ The quickest fix is to go to **Settings → Devices & Services → Pivot → you
 
 ---
 
+## Switches (Show Control Value, Control Mode, etc.) reset after a Home Assistant restart
+
+This was a bug in integration versions prior to v0.0.16 — switch states were not correctly published to Home Assistant on startup, so the device would not reflect the restored value until the switch was toggled. **Update to v0.0.16 or later** via HACS to fix this permanently.
+
+---
+
+## The timer blueprint triggers when I turn the knob on a bank with a real entity
+
+This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint now requires the bank's entity field to be set to the reserved keyword `timer` before it will respond — this prevents it from interfering with normally-assigned banks.
+
+To fix: go to **Settings → Devices & Services → Pivot → your device → Configure**, set the bank entity for your timer bank to `timer` (lowercase), and save. If the timer bank has a real entity assigned, remove it first.
+
+---
+
+## The timer finish alert doesn't stop when I press the button
+
+If the finish alert keeps playing after you press the button, the most likely cause is that your timer automation is running an older version of the blueprint.
+
+1. Go to **Settings → Automations**, find your Pivot Timer automation, and open it.
+2. Click **Save** to re-load the latest blueprint logic.
+3. Make sure you are on integration **v0.0.18 or later**.
+
+The v0.0.18 blueprint uses two independent dismiss signals — a direct event and the bank-toggle script state — so a press at any point during the alert (including during the flash sequence) is now reliably detected within a few seconds.
+
+---
+
+## The timer gauge (LED ring) does not update while the timer is running
+
+1. Make sure all three timer entities are enabled: `number.{suffix}_timer_duration`, `select.{suffix}_timer_state`, and `text.{suffix}_timer_end`. All three must be enabled for the blueprint to work.
+2. Check the bank entity for the timer bank is set to `timer` (not left blank or set to a real entity).
+3. Confirm the timer automation is enabled — go to **Settings → Automations** and check it is toggled on.
+4. The gauge updates every 5 seconds, not continuously. A brief delay before the first update is normal.
+
+---
+
 ## The device suffix mismatch — entities have wrong IDs
 
 The `device_suffix` in your firmware YAML must match exactly what you entered in the integration setup. If they don't match, the firmware and integration will use mismatched entity IDs and won't communicate.
