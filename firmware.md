@@ -59,13 +59,44 @@ It determines all entity IDs — for example `ha_voice_lounge` produces `number.
 
 ## Multiple devices
 
-Flash a separate copy of the firmware for each VPE with a unique `device_suffix` for each one. The integration will create a completely separate set of entities for each device.
+Each VPE needs its own config file in ESPHome with a unique `device_suffix`. The recommended approach uses ESPHome's `packages:` feature — each device has a small per-device file that pulls the full shared firmware from GitHub automatically. You never have to copy or maintain separate full YAML files per device.
+
+**Per-device config (paste into ESPHome as a new device):**
+
+```yaml
+substitutions:
+  device_name: home_assistant_voice_lounge
+  device_friendly_name: Lounge VPE
+  device_suffix: ha_voice_lounge
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
+  api_encryption_key: "generate-a-unique-key-per-device"
+  led_offset: '6'
+
+packages:
+  pivot:
+    url: https://github.com/alistairmerritt/pivot-firmware
+    ref: main
+    file: home-assistant-voice.yaml
+    refresh: 1d
+```
+
+A fully annotated template is available at [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml) in the firmware repo.
+
+When a new version of Pivot firmware is released, open each device in ESPHome and click **Install** — ESPHome pulls the latest from GitHub and flashes it OTA. No manual YAML copying required.
 
 | Device | `device_suffix` |
 | --- | --- |
 | Lounge VPE | `ha_voice_lounge` |
 | Bedroom VPE | `ha_voice_bedroom` |
 | Study VPE | `ha_voice_study` |
+
+### Devices on stock firmware
+
+If a VPE is currently running Nabu Casa's stock firmware:
+
+- **If it appears in your ESPHome dashboard** (amber or green dot) — its API key and WiFi are already there. Create a new device entry using the per-device config above, then click **Install → Wirelessly**.
+- **If it has never been in ESPHome** (set up via the HA onboarding UI only) — you won't have the API key, so the first flash needs to be done via USB. After that, all future updates are OTA.
 
 ---
 
