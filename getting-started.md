@@ -43,56 +43,83 @@ This is required for the Pivot firmware to call scripts and send events to Home 
 
 ---
 
-## Step 3. Flash the Pivot firmware 
+## Step 3. Flash the Pivot firmware
 
 > **Installing custom firmware is safe and reversible.** Pivot firmware is based on the official Home Assistant Voice PE firmware and has been tested extensively, but as with any custom firmware there is a small element of risk. If anything goes wrong, you can always restore the original stock firmware by visiting [esphome.github.io/home-assistant-voice-pe](https://esphome.github.io/home-assistant-voice-pe/) and flashing it from your browser — no tools required.
 
 <ol>
-<li>Download <code>home-assistant-voice.yaml</code> from the <a href="https://github.com/alistairmerritt/pivot-firmware">pivot-firmware</a> repository</li>
-
-<li><p>Open the file and fill in the substitutions block at the top:</p>
-
-<pre><code>substitutions:
-  device_name: home_assistant_voice_lounge
-  device_friendly_name: Lounge VPE
-  device_suffix: ha_voice_lounge
-  wifi_ssid: "YourWiFiName"
-  wifi_password: "YourWiFiPassword"
-  api_encryption_key: "your_generated_key_here"
-
-  # LED orientation: '6' = flat on surface, '0' = upright on stand
-  led_offset: '6'
-</code></pre>
-
-<p>The <code>device_suffix</code> can be anything you want, but must be unique per device with no spaces or dashes. You will enter this exact value when setting up the integration. Generate an API key at <a href="https://esphome.io/components/api.html#configuration-variables">esphome.io</a>.</p>
-
-<blockquote><strong>Tip:</strong> Before flashing, note down your <code>device_suffix</code> and <code>api_encryption_key</code> somewhere safe. You will need both — the suffix when adding the Pivot integration, and the key if/when Home Assistant asks for it.</blockquote></li>
-
-<li><p><strong>Take control of your VPE in ESPHome Device Builder.</strong> 
-If you don't already have ESPHome Device Builder installed, install it via <strong>Settings → Applications → Add Application</strong>. If your VPE doesn't already appear, follow the <a href="https://esphome.io/guides/getting_started_hassio/">ESPHome getting started guide</a> to add it.</p>
-
-<p><strong>Taking control of your VPE in ESPHome</strong></p>
-
-<p>Taking control simply imports the device into ESPHome Device Builder so you can manage and flash its configuration. This can be undone at any time by restoring the original stock firmware at <a href="https://esphome.github.io/home-assistant-voice-pe">esphome.github.io/home-assistant-voice-pe</a>.</p>
+<li><p><strong>Take control of your VPE in ESPHome Device Builder.</strong><br>
+If you don't already have ESPHome Device Builder installed, install it via <strong>Settings → Applications → Add Application</strong>.</p>
 
 <p>When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices — click <strong>Show</strong> in the top right corner if you don't see it.</p>
 
-<blockquote><strong>Not sure which device is yours?</strong> If you have multiple VPEs, ESPHome names them by the last 6 characters of their MAC address (e.g. <code>Home-Assistant-Voice-052B5D</code>). To find the MAC address of a specific device, go to <strong>Settings → Devices &amp; Services → ESPHome</strong>, select the device, and look in the left column — the MAC address will be listed there.</blockquote>
+<blockquote><strong>Not sure which device is yours?</strong> If you have multiple VPEs, ESPHome names them by the last 6 characters of their MAC address (e.g. <code>Home-Assistant-Voice-052B5D</code>). To find the MAC address of a specific device, go to <strong>Settings → Devices &amp; Services → ESPHome</strong>, select the device, and look in the left column.</blockquote>
 
-<p>Click <strong>Take Control</strong> and give it a name. ESPHome will then offer to install its own firmware — you can skip this, as it will be overwritten by the Pivot firmware anyway.</p>
+<p>Click <strong>Take Control</strong> and give it a name. ESPHome will offer to install its own firmware — you can skip this as it will be replaced by Pivot firmware in the next step.</p>
 
-<blockquote><strong>Save your encryption key.</strong> When you take control, ESPHome will show you the device's API encryption key. Copy this and keep it somewhere safe — you'll need it in the firmware substitutions block. Alternatively, generate a fresh one at <a href="https://esphome.io/components/api.html#configuration-variables">esphome.io</a>.</blockquote>
+<blockquote><strong>Save your encryption key.</strong> When you take control, ESPHome shows the device's API encryption key. Copy this and keep it somewhere safe — you'll need it in the next step. Alternatively, generate a fresh one at <a href="https://esphome.io/components/api.html#configuration-variables">esphome.io</a>.</blockquote></li>
 
-<p>Once you have taken control, replace the stock YAML with the entire Pivot firmware YAML (including your details).</p></li>
+<li><p><strong>Create your per-device config.</strong><br>
+Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml"><code>devices/example.yaml</code></a> in the firmware repo and paste it into ESPHome, replacing the stock YAML. Fill in your device-specific values:</p>
 
-<li><p><strong>Connect your VPE via USB</strong> — use a good quality USB cable. OTA (wireless) flashing works for updates but a wired connection is recommended for the initial flash.</p>
+<pre><code>substitutions:
+  # =======================================================================
+  # PIVOT DEVICE CONFIGURATION — fill in these values for each device
+  # =======================================================================
 
-<blockquote><strong>Tip:</strong> There is a small switch inside the VPE case labelled <strong>USB SELECT</strong> with two positions: <strong>ESP32</strong> and <strong>XU316</strong>. It should be in the <strong>ESP32</strong> position by default, and your computer should detect the USB port that it's connected to. However, if your device is not being detected when connected via USB, open the case and check this switch. Follow <a href="https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition">Step 1 of the Nabu Casa disassembly guide</a> to access it — you do not need to go further than Step 1 unless you have a custom case.</blockquote></li>
+  # ESPHome device name (slug, no spaces or dashes)
+  device_name: home_assistant_voice_lounge
 
-<li>Flash the firmware by selecting <strong>Install</strong> in the top right corner. This could take 5–10 minutes. ESPHome will tell you if and why it fails.</li>
+  # Friendly name shown in HA and ESPHome
+  device_friendly_name: Lounge VPE
 
-<li>Once flashed, <strong>fully power cycle your VPE</strong> — disconnect it from power, wait a few seconds, then reconnect. The device will then reconnect to Home Assistant automatically.</li>
+  # Pivot device suffix — unique per device, no spaces or dashes
+  # Must match exactly what you enter in the Pivot integration
+  device_suffix: ha_voice_lounge
+
+  # WiFi credentials — add these lines to your ESPHome secrets.yaml:
+  #   wifi_ssid: "Your Network Name"
+  #   wifi_password: "Your Password"
+  wifi_ssid: !secret wifi_ssid
+  wifi_password: !secret wifi_password
+
+  # API encryption key — use the one from Take Control, or generate one at:
+  # https://esphome.io/components/api.html#configuration-variables
+  api_encryption_key: "your-key-here"
+
+  # LED orientation:
+  #   '6'  flat on a surface, cable facing away (default)
+  #   '0'  upright on a stand, cable at the bottom
+  led_offset: '6'
+
+  # =======================================================================
+
+packages:
+  pivot:
+    url: https://github.com/alistairmerritt/pivot-firmware
+    ref: main
+    file: home-assistant-voice.yaml
+    refresh: 1d
+</code></pre>
+
+<p>The <code>packages:</code> block at the bottom tells ESPHome to fetch the full firmware from GitHub automatically — do not paste the contents of <code>home-assistant-voice.yaml</code> directly.</p>
+
+<p>The <code>device_suffix</code> must be unique per device with no spaces or dashes. You will enter this exact value when setting up the Pivot integration.</p>
+
+<blockquote><strong>WiFi credentials:</strong> The config uses <code>!secret</code> to keep credentials out of the YAML. Add <code>wifi_ssid</code> and <code>wifi_password</code> to your ESPHome <strong>Secrets</strong> file (the key icon in ESPHome Device Builder). If you prefer, you can paste the values directly as plain text instead.</blockquote>
+
+<blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code> and <code>api_encryption_key</code> somewhere safe. You will need both — the suffix when adding the Pivot integration, and the key if Home Assistant ever asks for it.</blockquote></li>
+
+<li><p><strong>Connect your VPE via USB</strong> for the initial flash — use a good quality cable. OTA (wireless) is used for all future updates once the device is running Pivot firmware.</p>
+
+<blockquote><strong>Tip:</strong> There is a small switch inside the VPE case labelled <strong>USB SELECT</strong> with two positions: <strong>ESP32</strong> and <strong>XU316</strong>. It should be in the <strong>ESP32</strong> position by default. If your device is not detected when connected via USB, open the case and check this switch. Follow <a href="https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition">Step 1 of the Nabu Casa disassembly guide</a> to access it — you do not need to go further than Step 1.</blockquote></li>
+
+<li>Click <strong>Install → Plug into this computer</strong>. ESPHome will fetch the firmware from GitHub, compile it, and flash it. This may take 5–10 minutes the first time.</li>
+
+<li>Once flashed, <strong>fully power cycle your VPE</strong> — disconnect from power, wait a few seconds, then reconnect. The device will reconnect to Home Assistant automatically.</li>
 </ol>
+
+> **Future updates** — once your device is running Pivot firmware and is online, all future updates are wireless. When a new firmware version is released, just open the device in ESPHome Device Builder and click **Install → Wirelessly**. No USB required.
 
 
 ---
