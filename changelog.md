@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.18
+- **Fix:** Timer finish alert now reliably dismisses on first button press — added `script.{suffix}_bank_toggle` as a second dismiss trigger alongside the `pivot_button_press` event. The script fires ~2-3 s after any press via the firmware's HA API call, catching presses that happened during the flash sequence when no event listener was active
+
 ### v0.0.17
 - **Fix:** LED gauge now shows correctly on timer banks — `timer` banks are no longer marked passive, which was preventing the firmware from displaying the value gauge
 
