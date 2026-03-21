@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.17
+- **Fix:** LED gauge now shows correctly on timer banks — `timer` banks are no longer marked passive, which was preventing the firmware from displaying the value gauge
+
 ### v0.0.16
 
 > **After updating:** two manual steps are required:
