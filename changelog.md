@@ -6,6 +6,14 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.16
+- **Fix:** Switches (e.g. Show Control Value, Control Mode) now correctly restore their state after a Home Assistant restart without needing to be toggled
+- **Fix:** Timer blueprint now requires the bank entity to be set to `timer` — the timer will no longer accidentally trigger when a real entity is assigned to the same bank
+- **Change:** Timer finish flash speed increased — LED flashes are now 150 ms each (was 400 ms), making the alert snappier and reducing the window in which a dismiss press can be missed
+- **Fix:** Dismiss press is now checked at the start of each alert loop iteration (200 ms pre-check), catching any press that fired during the previous flash sequence
+- **Change:** Announcements automation now uses `mode: restart` instead of `mode: single` — a new announcement immediately interrupts any in-progress announcement rather than being dropped
+- **Fix:** Bank toggle script no longer attempts to toggle `timer` as if it were a real entity — pressing the button on a timer bank now correctly fires only the `pivot_button_press` event
+
 ### v0.0.15
 - **New:** Timer finish now repeats — gauge flashes 3 times and the finish sound plays in a loop (up to 10 times) until dismissed with a single press on any bank, matching VPE timer behaviour
 - **Change:** Finish sound is now hardcoded to the VPE built-in `timer_finished.flac` — removed the user-facing "Finish Sound URL" input

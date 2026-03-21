@@ -36,11 +36,21 @@ The timer helpers are provisioned with every Pivot device but disabled by defaul
 
 All three must be enabled for the blueprint to work correctly.
 
-### Step 2 — Set your duration
+### Step 2 — Assign the bank to `timer`
+
+The timer blueprint only activates on a bank whose entity is set to the reserved keyword `timer`. This prevents the timer from triggering on banks that have a real entity assigned.
+
+1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
+2. On the bank assignment screen, type `timer` (lowercase, no quotes) into the entity field for your chosen bank
+3. Save
+
+Once set, the knob is automatically disabled for that bank (there is no entity to control), and `timer` appears as the assignment. The bank stays reserved for the timer until you change it.
+
+### Step 3 — Set your duration
 
 Open `number.{suffix}_timer_duration` and set your desired countdown length in minutes. The default is 25 minutes (a standard Pomodoro interval). You can change this any time — the new value takes effect the next time you start the timer.
 
-### Step 3 — Install the blueprint
+### Step 4 — Install the blueprint
 
 The Pivot Timer blueprint is not installed automatically. Click the button below to import it into Home Assistant:
 
@@ -52,7 +62,7 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot/pivot_timer.yaml
 ```
 
-### Step 4 — Create an automation from the blueprint
+### Step 5 — Create an automation from the blueprint
 
 1. Go to **Settings → Automations → Blueprints** and find **Pivot — Timer**.
 2. Click **Create Automation**.
@@ -61,9 +71,8 @@ https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/bluepri
 | Input | Description |
 | --- | --- |
 | **Device Suffix** | Your device suffix, e.g. `ha_voice_lounge` |
-| **Bank Number** | Which bank controls the timer (1–4) |
+| **Bank Number** | Which bank controls the timer (1–4) — must match the bank you set to `timer` |
 | **Media Player** | Speaker to play the finish sound |
-| **Finish Sound URL** | URL of the audio file to play (e.g. `/local/timer_done.mp3`) |
 | **TTS Entity** | Optional — text-to-speech entity for spoken finish announcement |
 | **Finish Message** | Optional — what to say when the timer finishes (default: "Timer finished") |
 
@@ -89,7 +98,7 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 **Using the gauge as a visual countdown** — The gauge starts full (100%) when the timer begins and drains to 0% as time runs out. When the timer finishes, it drops to 0. This gives a natural at-a-glance sense of how much time remains.
 
-**Assigning the bank** — Pick a bank that isn't already controlling another entity, or dedicate a specific bank (e.g. Bank 4) as your timer bank. The blueprint's bank input matches the bank number shown on the device (1–4).
+**Assigning the bank** — Set the bank entity to `timer` in Pivot's device configuration. The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
 
 **Changing duration mid-session** — Adjusting `number.{suffix}_timer_duration` while a timer is running does not affect the current session. The new value applies the next time you start a fresh timer.
 
