@@ -123,6 +123,29 @@ If a VPE is currently running Nabu Casa's stock firmware:
 
 ---
 
+## Updating the firmware
+
+**HA does not notify you when a new version of Pivot firmware is available.** Updates are always manual — you initiate them from ESPHome Device Builder.
+
+When a new firmware version is released:
+
+1. Open **ESPHome Device Builder** in Home Assistant
+2. Find the device you want to update
+3. Click **Install → Wirelessly**
+4. ESPHome fetches the latest firmware from GitHub, compiles it, and flashes it over WiFi
+
+That's it — no USB, no copying YAML, no manual steps. Each device takes 2–3 minutes.
+
+**USB is only ever needed for:**
+- The very first flash on a device that has never had ESPHome on it
+- Recovery if a device has lost its WiFi connection and can't be reached OTA
+
+Once a device is running Pivot firmware and is online, every future update is OTA.
+
+> **Note:** HA's Updates page (Settings → Updates) will notify you of new Pivot **integration** releases via HACS, but not firmware changes. Check the [changelog](/pivot/changelog/) to see what's changed.
+
+---
+
 ## Bank colours
 
 The LED ring colour for each bank is controlled by text entities created by the integration. Default colours:
@@ -154,7 +177,7 @@ Taking control simply imports the device into ESPHome Device Builder so you can 
 
 When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices — click **Show** in the top right corner if you don't see it. Click **Take Control**, give it a name, then click **Install**. This may take 3–5 minutes over Wi-Fi.
 
-Once you have taken control, replace the stock YAML with the entire Pivot firmware YAML (including your substitutions), then click **Install**.
+Once you have taken control, replace the stock YAML with your per-device config (from [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml)), then click **Install**. Do not paste the full `home-assistant-voice.yaml` — the per-device config fetches it from GitHub automatically.
 
 **Flashing via USB**
 
