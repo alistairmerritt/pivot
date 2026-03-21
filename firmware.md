@@ -65,13 +65,36 @@ Each VPE needs its own config file in ESPHome with a unique `device_suffix`. The
 
 ```yaml
 substitutions:
+  # =======================================================================
+  # PIVOT DEVICE CONFIGURATION — fill in these values for each device
+  # =======================================================================
+
+  # ESPHome device name (slug, no spaces or dashes)
   device_name: home_assistant_voice_lounge
+
+  # Friendly name shown in HA and ESPHome
   device_friendly_name: Lounge VPE
+
+  # Pivot device suffix — unique per device, no spaces or dashes
+  # Must match exactly what you enter in the Pivot integration
   device_suffix: ha_voice_lounge
+
+  # WiFi credentials — add these lines to your ESPHome secrets.yaml:
+  #   wifi_ssid: "Your Network Name"
+  #   wifi_password: "Your Password"
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
-  api_encryption_key: "generate-a-unique-key-per-device"
+
+  # API encryption key — generate a unique one per device at:
+  # https://esphome.io/components/api.html#configuration-variables
+  api_encryption_key: "generate-a-unique-key-here"
+
+  # LED orientation — set based on how your device is mounted:
+  #   '6'  flat on a surface, cable facing away (LEDs start at bottom)
+  #   '0'  upright on a stand, cable at the bottom (LEDs start at top)
   led_offset: '6'
+
+  # =======================================================================
 
 packages:
   pivot:
