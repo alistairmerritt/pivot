@@ -6,6 +6,10 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.6
+- **Fix:** Double-pressing to toggle control mode now plays the sound first, then speaks the announcement — previously the TTS could cut off the sound or play simultaneously. The LEDs update immediately on press; the HA switch change (which triggers the TTS) is delayed until the sound has finished (~1.2 s)
+- **Change:** Triple-pressing in normal/voice mode no longer plays the triple-press sound effect — it now just speaks the announcement ("Control mode off") the same way it does in control mode
+
 ### v0.0.5
 - **New:** When pressing and turning the knob to switch banks, the Bank Indicator quadrant now shows the bank's configured colour (Blue/Orange/Green/Purple, or your custom colour from the picker) instead of the mirrored light colour. This restores the visual bank identity when all your lights are the same colour (e.g. white). Requires a firmware reflash via ESPHome Device Builder → Install → Wirelessly.
 - **Fix:** `bank_mirror_r_0` global was missing from the firmware — bank 0's red mirror component was never declared. Fixed alongside the new feature.
