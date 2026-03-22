@@ -23,6 +23,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.21
+- **Fix:** `bank_N_configured_color` entities introduced in v0.0.20 were incorrectly marked as disabled by default (`entity_registry_enabled_default: False`). Disabled entities have no state in HA and cannot be subscribed to by ESPHome, so `bank_mirror_r/g/b_N` was never updated and the Bank Indicator always showed the default identity colour. Changed to `entity_category: diagnostic` — entities are now always enabled but tucked away in the UI. **If you installed v0.0.20:** you may need to manually enable the four `Bank N Configured Colour` entities under Settings → Devices & Services → Pivot → your device → Entities, or remove them from the entity registry and restart HA.
+
 ### v0.0.20
 - **New:** Added `bank_N_configured_color` text entities (one per bank, hidden). These store the user's chosen colour from the colour picker and are never overwritten by the mirror listener. Required by firmware v0.0.7 to reliably show the correct bank identity colour in the Bank Indicator.
 
