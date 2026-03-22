@@ -9,6 +9,7 @@ permalink: /changelog/
 ### v0.0.5
 - **New:** While the knob is actively being turned, the LED ring now shows the bank's configured colour (Blue/Orange/Green/Purple, or your custom colour from the picker) instead of the mirrored light colour. Once you stop turning and the knob is idle for ~1 second, the ring returns to mirroring the actual light colour. This restores the visual bank identity when all your lights are the same colour (e.g. white). Requires a firmware reflash via ESPHome Device Builder → Install → Wirelessly.
 - **Fix:** `bank_mirror_r_0` global was missing from the firmware — bank 0's red mirror component was never declared. Fixed alongside the new feature.
+- **Fix:** Configured-colour backup was being overwritten with the light's colour due to a race condition — when mirror was turned on, the integration wrote the light's colour to the colour entity before the mirror switch state reached the firmware, causing the backup to save the wrong colour. The backup update is now delayed by 500 ms so the mirror state is known before the decision is made.
 
 ---
 
