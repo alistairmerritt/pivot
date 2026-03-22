@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.8
+- **Fix:** Switches such as Show Control Value and Control Mode now apply correctly after a restart without needing to be toggled. After connecting to Home Assistant, the firmware now re-reads all display-affecting state from HA 2 seconds later (once HA has finished pushing entity values) and re-renders the LEDs. Previously, if the HA entity state matched the firmware's cached value, the `on_state` callback was skipped and the initial render could be based on stale defaults.
+
 ### v0.0.7
 - **Fix:** Bank Indicator (press+turn to switch banks) now always shows the colour set in the bank's colour picker, regardless of mirror state. Previously, when mirror light was on or the assigned light had no colour value, the indicator still showed the default bank colour (Blue/Orange/Green/Purple) instead of any custom colour you had set. Requires both a firmware reflash **and** an integration update to v0.0.20.
 - **Change:** Removed the `ha_initialized` startup guard and the `update_configured_colour_N` workaround scripts. The configured colour is now maintained via a dedicated `bank_N_configured_color` text entity (written by the integration's colour picker, never overwritten by the mirror listener) — eliminating the race conditions that made the old approach unreliable.

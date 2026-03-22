@@ -120,6 +120,14 @@ This was a bug in integration versions prior to v0.0.16 — switch states were n
 
 ---
 
+## Show Control Value (or another switch) is on but doesn't take effect until I toggle it off and on
+
+This was fixed in firmware **v0.0.8**. After reconnecting to Home Assistant, the firmware now waits 2 seconds for HA to finish pushing all entity states and then re-reads and re-applies them. On earlier firmware versions, if the entity state in HA matched what the firmware had cached from a previous session, the state-change callback was skipped and the LEDs could be in a stale state.
+
+**If you are on an earlier firmware version**, the workaround is to toggle the affected switch off and back on — this forces the callback to fire and the display to update. Reflashing to v0.0.8 eliminates the need for the workaround.
+
+---
+
 ## The timer blueprint triggers when I turn the knob on a bank with a real entity
 
 This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint now requires the bank's entity field to be set to the reserved keyword `timer` before it will respond — this prevents it from interfering with normally-assigned banks.
