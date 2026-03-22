@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.19
+- **Fix:** Announcements automation reverted to `mode: single` — `mode: restart` introduced in v0.0.16 caused bank change announcements to be silently cancelled when any secondary state change fired while TTS was in-flight
+
 ### v0.0.18
 - **Fix:** Timer finish alert now reliably dismisses on first button press — added `script.{suffix}_bank_toggle` as a second dismiss trigger alongside the `pivot_button_press` event. The script fires ~2-3 s after any press via the firmware's HA API call, catching presses that happened during the flash sequence when no event listener was active
 
