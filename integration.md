@@ -84,11 +84,14 @@ These entities are provisioned per device but **disabled by default**. Enable th
 
 Each bank has an optional **Mirror light colour** switch (`switch.{suffix}_bank_N_mirror_light`). When enabled for a bank that is assigned to an RGB light, the bank's LED ring colour will match the current colour of that light instead of the fixed default bank colour.
 
-- **Mirror on, light on** — LED ring uses the light's current RGB colour, updating whenever the light changes colour.
+- **Mirror on, knob idle** — LED ring uses the light's current RGB colour, updating whenever the light changes.
+- **Mirror on, knob active** — while you are turning the knob, the ring temporarily switches back to the bank's configured colour (Blue/Orange/Green/Purple or your custom colour from the picker), so you always know which bank you are controlling. Once you stop turning, the ring returns to the light colour after ~1 second.
 - **Mirror on, light off** — LED ring stays at the last mirrored colour until the light comes back on.
-- **Mirror off** — LED ring returns to the colour set in the bank's colour picker. If you haven't changed it, this will be the default bank colour (Blue, Orange, Green, or Purple).
+- **Mirror off** — LED ring shows the colour set in the bank's colour picker. If you haven't changed it, this will be the default bank colour (Blue, Orange, Green, or Purple).
 
 This is a persistent per-bank setting, not a temporary effect. It only applies to RGB lights — if the assigned entity is not a compatible RGB light, the bank falls back to its default colour automatically.
+
+> **Requires firmware v0.0.5 or later** for the knob-active colour restore behaviour. Update via ESPHome Device Builder → your device → **Install → Wirelessly**.
 
 ---
 
