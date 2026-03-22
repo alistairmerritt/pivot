@@ -6,6 +6,10 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.7
+- **Fix:** Bank Indicator (press+turn to switch banks) now always shows the colour set in the bank's colour picker, regardless of mirror state. Previously, when mirror light was on or the assigned light had no colour value, the indicator still showed the default bank colour (Blue/Orange/Green/Purple) instead of any custom colour you had set. Requires both a firmware reflash **and** an integration update to v0.0.20.
+- **Change:** Removed the `ha_initialized` startup guard and the `update_configured_colour_N` workaround scripts. The configured colour is now maintained via a dedicated `bank_N_configured_color` text entity (written by the integration's colour picker, never overwritten by the mirror listener) — eliminating the race conditions that made the old approach unreliable.
+
 ### v0.0.6
 - **Fix:** Double-pressing to toggle control mode now plays the sound first, then speaks the announcement — previously the TTS could cut off the sound or play simultaneously. The LEDs update immediately on press; the HA switch change (which triggers the TTS) is delayed until the sound has finished (~1.2 s)
 - **Change:** Triple-pressing in normal/voice mode no longer plays the triple-press sound effect — it now just speaks the announcement ("Control mode off") the same way it does in control mode
@@ -18,6 +22,9 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+### v0.0.20
+- **New:** Added `bank_N_configured_color` text entities (one per bank, hidden). These store the user's chosen colour from the colour picker and are never overwritten by the mirror listener. Required by firmware v0.0.7 to reliably show the correct bank identity colour in the Bank Indicator.
 
 ### v0.0.19
 - **Fix:** Announcements automation reverted to `mode: single` — `mode: restart` introduced in v0.0.16 caused bank change announcements to be silently cancelled when any secondary state change fired while TTS was in-flight
