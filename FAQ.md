@@ -1,3 +1,9 @@
+---
+layout: page
+title: FAQ
+permalink: /faq/
+---
+
 ## FAQ
 
 ### General
@@ -136,17 +142,17 @@ Pivot restores its state and continues working once Home Assistant is available 
 
 ### Timer
 
-**Can I use Pivot as a timer?**  
-Timer support is currently in development.
+**Can I use Pivot as a timer?**
+Yes. A bank can be assigned to a timer, allowing you to:
+- Set duration with the dial
+- Start/pause with a press
+- Receive alerts when the timer finishes
 
-When enabled, a bank can be assigned to a timer, allowing you to:
-- Set duration with the dial  
-- Start/pause with a press  
-- Receive alerts when the timer finishes  
+See the [Timer](/pivot/timer/) page for setup instructions.
 
 ---
 
-**Is the timer built-in?**  
-The timer feature is optional and uses additional entities and automations provided by Pivot.
+**Is the timer built-in?**
+The timer feature is optional and uses additional entities and automations provided by Pivot. It requires a small amount of setup — see the [Timer](/pivot/timer/) page.
 
 ---
