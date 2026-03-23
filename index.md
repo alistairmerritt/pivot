@@ -2,12 +2,54 @@
 layout: home
 ---
 
-Pivot turns your [Home Assistant Voice Preview Edition](https://www.home-assistant.io/voice-pe/) into a physical control knob for Home Assistant.
+Pivot turns your Home Assistant Voice Preview Edition into a physical control dial for Home Assistant while preserving its core voice functionality. It provides four colour-coded banks, each assigned to a different controllable entity, script, or scene. Turn to adjust the entity assigned to the active bank, or press to toggle or activate it.
 
-Assign any entity — a light, fan, media player, climate control, cover, scene, or script — to each of the four colour-coded banks. Turn the knob to adjust it. Press the button to toggle or activate it. The LED ring shows you which bank is active and reflects the current value (and RGB colour) in real time.
+Rather than opening apps, navigating dashboards, or relying on voice commands, you can simply reach out and control your home directly. The LED ring shows which bank is active and provides real-time feedback on its current value (e.g. brightness, volume, or temperature) and, where relevant, its RGB colour. Support for timers is also in development.
 
 ---
 
+## A better way to control Home Assistant
+
+- **No apps, no menus**  
+  Just turn to adjust, press to activate.
+
+- **Always know what you’re controlling**  
+  Each bank represents a different entity, with clear visual feedback from the LED ring and optional spoken announcements when switching.
+
+- **Fast and instinctive**  
+  Make adjustments in seconds, without breaking your flow.
+
+- **Works with (almost) anything**  
+  Works with controllable entities out of the box and can be extended even further through custom automations. If Home Assistant can control it, Pivot can too.
+
+- **Fully local and customisable**  
+  Built on ESPHome and Home Assistant, with no cloud dependency.
+
+---
+
+## Designed for real use
+
+Pivot adds a physical layer of control to Home Assistant for the things you use most often — not just to adjust them, but to quickly see their current state.
+
+Use it for the things you change (or check) often:
+- Lighting brightness/state
+- Thermostat temperature
+- Speaker volume
+- Fan speed
+- Blinds position
+- Timers (in development)
+
+With each bank assigned to something useful, Pivot gives you a faster way to control an entity and/or understand its current state — without opening a dashboard or asking a voice assistant.
+
+---
+
+## Simple interaction
+
+- Turn → adjust the current bank  
+- Press → activate / toggle  
+- Press + turn → switch banks
+
+---
 
 ## How it works
 
@@ -19,13 +61,11 @@ Pivot consists of two parts that work together, both of which are required for a
 
 ---
 
-
 ## Get started
 
 New to Pivot? Follow the [getting started guide](/pivot/getting-started/) — it walks you through flashing the firmware, installing the integration, and assigning entities.
 
 ---
-
 
 ## Repositories
 
