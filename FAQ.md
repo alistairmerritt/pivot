@@ -44,6 +44,24 @@ You can continue using voice as normal — Pivot simply adds a physical control 
 
 ---
 
+**Does Pivot change how voice is triggered?**  
+Yes. In the stock VPE firmware, a single press starts the voice input. In Pivot, that press is used for physical control instead.
+
+Voice functionality is still preserved, including wake word activation, but the stock press-to-talk shortcut is no longer the default behaviour while Pivot's control mode is enabled.
+
+If you would prefer a manual trigger as well, a good option is to use long press to run a Home Assistant automation that starts a conversation on the device. This is not built in by default, but can be configured manually.
+
+---
+
+**Can I switch between Pivot behaviour and the stock Voice Preview Edition behaviour?**  
+Yes. Double press toggles Pivot control mode on or off.
+
+When control mode is enabled, the dial controls your assigned entities using Pivot’s bank system. When control mode is disabled, the device behaves like a standard Voice Preview Edition again, including the default button actions (with exception of double press).
+
+This makes it easy to switch between Pivot and the stock experience at any time.
+
+---
+
 ### Setup & Installation
 
 **Do I need to flash custom firmware?**  
