@@ -4,8 +4,6 @@ title: FAQ
 permalink: /faq/
 ---
 
-## FAQ
-
 ### General
 
 **What is Pivot?**  
