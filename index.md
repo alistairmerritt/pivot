@@ -6,6 +6,8 @@ Pivot turns your Home Assistant Voice Preview Edition into a physical control di
 
 Rather than opening apps, navigating dashboards, or relying on voice commands, you can simply reach out and control your home directly. The LED ring shows which bank is active and provides real-time feedback on its current value (e.g. brightness, volume, or temperature) and, where relevant, its RGB colour. Support for timers is also in development.
 
+Pivot can be enabled or disabled at any time with a double press, allowing you to switch between physical control and the standard Voice Preview Edition behaviour whenever you need.
+
 ---
 
 ## A better way to control Home Assistant
