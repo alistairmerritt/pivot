@@ -10,5 +10,6 @@ header_pages:
   - integration.md
   - timer.md
   - FAQ.md
+  - custom_automations.md
   - troubleshooting.md
   - changelog.md
