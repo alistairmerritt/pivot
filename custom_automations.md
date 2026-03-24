@@ -3,8 +3,6 @@ layout: page
 title: Custom Automations
 ---
 
-# Custom Automations
-
 Pivot is designed to work out of the box, but because it exposes standard Home Assistant entities, you can also build your own custom automations on top of it.
 
 This makes it possible to add actions that are aware of:
@@ -27,7 +25,7 @@ In Home Assistant, `event` entities such as button press helpers are best handle
 
 This allows you to build custom actions without affecting other banks or normal Pivot behaviour.
 
-## Example: Play/Pause a Mac only when Bank 1 is assigned to Mac volume
+## Example: Play/Pause mac media while Bank 1 is assigned to Mac volume
 
 The example below triggers a shell command when all of the following are true:
 
@@ -85,3 +83,4 @@ actions:
   - action: shell_command.music_playpause
 
 mode: single
+```
