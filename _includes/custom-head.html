@@ -12,7 +12,7 @@
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 10px !important;
+    gap: 0 !important;
   }
 
   .site-title {
@@ -21,6 +21,7 @@
     align-items: center;
     font-size: 0 !important;
     letter-spacing: 0;
+    padding-bottom: 10px;
   }
 
   .site-title img.site-logo {
@@ -31,7 +32,7 @@
 
   .site-title:hover { text-decoration: none; }
 
-  /* Nav: single row, left-aligned, small font */
+  /* Nav: single row spanning full content width */
   .site-nav {
     float: none !important;
     line-height: normal !important;
@@ -42,8 +43,7 @@
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
-    gap: 1.4rem;
+    justify-content: space-between !important;
     padding-bottom: 0;
   }
 
@@ -51,7 +51,7 @@
     margin-left: 0 !important;
     margin-right: 0 !important;
     color: #111 !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     font-weight: 500;
     white-space: nowrap;
     line-height: normal !important;
