@@ -40,6 +40,7 @@ The setup mode can be changed at any time from the integration's **Configure** m
 | --- | --- |
 | `switch.{suffix}_control_mode` | Control Mode vs Normal (voice) Mode |
 | `switch.{suffix}_show_control_value` | Keep gauge LEDs permanently visible in control mode |
+| `switch.{suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
 | `switch.{suffix}_announcements` | Enable/disable spoken announcements |
 | `switch.{suffix}_bank_0_mirror_light` | Bank 1 — mirror assigned RGB light colour |
 | `switch.{suffix}_bank_1_mirror_light` | Bank 2 — mirror assigned RGB light colour |
@@ -96,6 +97,19 @@ This is a persistent per-bank setting, not a temporary effect. It only applies t
 
 ---
 
+## Dim LEDs when idle
+
+When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brightness after 2 seconds of no interaction and returns to full brightness the moment you touch the device again.
+
+- **Idle** means no knob turns, button presses, or bank switches for 2 seconds.
+- **Waking** is instant — LEDs snap back to full brightness on the first interaction.
+- **Fading** to dim is smooth — a 1.5 second transition so there is no sudden flicker.
+- This is a **pure brightness modifier** — it does not change colours, values, or any other behaviour.
+
+> **Requires Show Control Value to be on.** Dim when idle has no effect if the gauge is not permanently visible. Enable **Show Control Value** first, then enable **Dim LEDs When Idle**. Requires firmware v0.0.9 or later.
+
+---
+
 ## Supported entity domains
 
 When an assigned entity is changed externally — by a voice command, another dashboard, an automation, or a physical switch — Pivot automatically syncs the new state back into the bank value. The LED gauge will update to reflect the change without any additional configuration.
@@ -107,6 +121,7 @@ When an assigned entity is changed externally — by a voice command, another da
 | `fan` | Speed % | Toggle on/off |
 | `climate` | Temperature (16–30°C) | Toggle on/off |
 | `cover` | Position % | Toggle open/close |
+| `input_number` / `number` | Value scaled to entity min–max | — |
 | `switch` / `input_boolean` | — | Toggle |
 | `scene` | — | Activate |
 | `script` | — | Run |
