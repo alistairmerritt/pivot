@@ -39,7 +39,7 @@ body {
 // Navigation links
 .site-nav .page-link {
   color: #111;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.01em;
 
@@ -47,6 +47,34 @@ body {
     color: #555;
     text-decoration: none;
   }
+}
+
+
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.site-title {
+  margin-right: 2rem;
+}
+
+.site-nav {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.site-nav .trigger {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.site-nav .page-link {
+  margin-left: 0;
 }
 
 // Links
@@ -68,13 +96,13 @@ a {
 
 h1 {
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: #111;
 }
 
 h2 {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.0rem;
   color: #111;
   border-bottom: 1px solid #e0e0e0;
   padding-bottom: 6px;
@@ -83,7 +111,7 @@ h2 {
 
 h3 {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.90rem;
   color: #111;
 }
 
