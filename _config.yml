@@ -13,3 +13,7 @@ header_pages:
   - custom_automations.md
   - troubleshooting.md
   - changelog.md
+
+markdown: kramdown
+kramdown:
+  input: GFM
