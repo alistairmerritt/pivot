@@ -12,7 +12,7 @@ This makes it possible to add actions that are aware of:
 - which entity is assigned to that bank
 - which button press occurred, such as `single_press` or `long_press`
 
-This can be useful when you want a bank to behave differently depending on what it is controlling. For example, you might use a Pivot bank to adjust a Mac’s volume via an `input_number`, while using a button press on that same bank to trigger a shell command for media play/pause.
+This can be useful when you want a bank to behave differently depending on what it is controlling. For example, you might use a Pivot bank to adjust a computer’s volume via an `input_number`, while using a button press on that same bank to trigger a shell command for media play/pause.
 
 ## How it works
 
@@ -25,17 +25,17 @@ In Home Assistant, `event` entities such as button press helpers are best handle
 
 This allows you to build custom actions without affecting other banks or normal Pivot behaviour.
 
-## Example: Play/Pause mac media while Bank 1 is assigned to Mac volume
+## Example: Play/Pause computer media while Bank 1 is assigned to computer volume
 
 The example below triggers a shell command when all of the following are true:
 
 - the button event entity reports a `single_press`
 - the active Pivot bank is Bank 1
-- Bank 1 is assigned to a specific helper entity used for Mac volume control
+- Bank 1 is assigned to a specific helper entity used for computer volume control
 
 In this example, the helper entity is:
 
-`input_number.example_mac_volume`
+`input_number.example_computer_volume`
 
 and the shell command is:
 
@@ -45,7 +45,7 @@ and the shell command is:
 
 {% raw %}
 ```yaml
-alias: Pivot Example - MacBook Play Pause
+alias: Pivot Example - Computer Play Pause
 
 triggers:
   - trigger: state
@@ -69,7 +69,7 @@ conditions:
 
   - condition: template
     value_template: >
-      {{ states('text.example_pivot_bank_0_entity') == 'input_number.example_mac_volume' }}
+      {{ states('text.example_pivot_bank_0_entity') == 'input_number.example_computer_volume' }}
 
 actions:
   - action: shell_command.music_playpause
