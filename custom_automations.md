@@ -75,8 +75,7 @@ conditions:
   # Only continue if Bank 1 is currently assigned to the expected entity.
   # This checks the text helper that stores the assigned entity ID for Bank 1.
   - condition: template
-    value_template: >
-      {{ states('text.example_pivot_bank_0_entity') == 'input_number.example_mac_volume' }}
+    value_template: {{ states('text.example_pivot_ba nk_0_entity') == 'input_number.example_mac_volume' }}
 
 actions:
   # Run the shell command that handles media play/pause.
