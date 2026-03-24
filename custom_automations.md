@@ -43,12 +43,11 @@ and the shell command is:
 
 ### Example automation
 
+{% raw %}
 ```yaml
 alias: Pivot Example - MacBook Play Pause
 
 triggers:
-  # Trigger whenever the button press event entity updates. 
-  # Note: This entity_id should be the button press one from your original Voice Preview Edition device in the ESPHome integration, not an entity created by the Pivot integration.
   - trigger: state
     entity_id: event.example_vpe_button_press
     not_from:
@@ -58,28 +57,22 @@ triggers:
       - unknown
 
 conditions:
-  # Only continue if the latest button press was a single press.
   - condition: state
     entity_id: event.example_pivot_button_press
     attribute: event_type
     state: single_press
 
-  # Only continue if the currently active bank is Bank 1.
-  # Pivot bank numbering starts at 1, so:
-  # Bank 1 = above 0 and below 2
   - condition: numeric_state
     entity_id: number.example_pivot_active_bank
     above: 0
     below: 2
 
-  # Only continue if Bank 1 is currently assigned to the expected entity.
-  # This checks the text helper that stores the assigned entity ID for Bank 1.
   - condition: template
-    value_template: `{{ states('text.example_pivot_bank_0_entity') == 'input_number.example_mac_volume' }}`
+    value_template: "{{ states('text.example_pivot_bank_0_entity') == 'input_number.example_mac_volume' }}"
 
 actions:
-  # Run the shell command that handles media play/pause.
   - action: shell_command.music_playpause
 
 mode: single
 ```
+{% endraw %}
