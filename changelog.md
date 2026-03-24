@@ -26,6 +26,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.22
+- **New:** `input_number` and `number` entities are now supported. Assign one to a bank and the knob scales 0–100% across the entity's configured min/max range. The gauge syncs back automatically when the value is changed externally. Single press on a number bank does nothing (there is no meaningful toggle action).
+
 ### v0.0.21
 - **Fix:** `bank_N_configured_color` entities introduced in v0.0.20 were incorrectly marked as disabled by default (`entity_registry_enabled_default: False`). Disabled entities have no state in HA and cannot be subscribed to by ESPHome, so `bank_mirror_r/g/b_N` was never updated and the Bank Indicator always showed the default identity colour. Changed to `entity_category: diagnostic` — entities are now always enabled but tucked away in the UI. **If you installed v0.0.20:** you may need to manually enable the four `Bank N Configured Colour` entities under Settings → Devices & Services → Pivot → your device → Entities, or remove them from the entity registry and restart HA.
 
