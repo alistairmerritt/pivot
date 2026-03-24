@@ -68,7 +68,8 @@ conditions:
     below: 2
 
   - condition: template
-    value_template: "{{ states('text.example_pivot_bank_0_entity') == 'input_number.example_mac_volume' }}"
+    value_template: >
+      {{ states('text.example_pivot_bank_0_entity') == 'input_number.example_mac_volume' }}
 
 actions:
   - action: shell_command.music_playpause
