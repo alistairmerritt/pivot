@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.9
+- **New:** "Dim LEDs When Idle" feature. When enabled (via the new **Dim LEDs When Idle** switch in the integration), the control mode gauge dims to 50% brightness after 2 seconds of no interaction (no knob turns, button presses, or bank switches). LEDs snap back to full brightness instantly on next interaction. Fades smoothly to dim over 1.5 s. Only active when **Show Control Value** is also enabled. Requires integration v0.0.23.
+
 ### v0.0.8
 - **Fix:** Switches such as Show Control Value and Control Mode now apply correctly after a restart without needing to be toggled. After connecting to Home Assistant, the firmware now re-reads all display-affecting state from HA 2 seconds later (once HA has finished pushing entity values) and re-renders the LEDs. Previously, if the HA entity state matched the firmware's cached value, the `on_state` callback was skipped and the initial render could be based on stale defaults.
 
@@ -25,6 +28,9 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+### v0.0.23
+- **New:** Added **Dim LEDs When Idle** switch. When on, the control mode gauge dims to 50% brightness after 2 seconds of inactivity and snaps back to full brightness the moment you interact with the device. Has no effect unless **Show Control Value** is also enabled. Requires firmware v0.0.9.
 
 ### v0.0.22
 - **New:** `input_number` and `number` entities are now supported. Assign one to a bank and the knob scales 0–100% across the entity's configured min/max range. The gauge syncs back automatically when the value is changed externally. Single press on a number bank does nothing (there is no meaningful toggle action).
