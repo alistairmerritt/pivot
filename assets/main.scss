@@ -61,11 +61,12 @@ h3 { font-size: 0.9rem !important; font-weight: 500; letter-spacing: 0.01em; col
     display: flex;
     justify-content: flex-start;
     flex-wrap: nowrap;
-    gap: 1.4rem;
+    gap: 16px;
   }
 
   .page-link {
-    margin-left: 0;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
     color: #111;
     font-size: 11px !important;
     font-weight: 500;
