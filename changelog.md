@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.10
+- **Fix:** Passive banks (scene, script, switch, input_boolean) no longer show the full LED ring when **Show Control Value** is enabled. Previously, a solid full-brightness ring was displayed for passive banks, which looked identical to a 100% gauge and was misleading. Passive banks now show no gauge — the LEDs turn off — matching the fact that there is no value to display. The Bank Indicator ring still appears normally while pressing and turning to switch banks.
+
 ### v0.0.9
 - **New:** "Dim LEDs When Idle" feature. When enabled (via the new **Dim LEDs When Idle** switch in the integration), the control mode gauge dims to 50% brightness after 2 seconds of no interaction (no knob turns, button presses, or bank switches). LEDs snap back to full brightness instantly on next interaction. Fades smoothly to dim over 1.5 s. Only active when **Show Control Value** is also enabled. Requires integration v0.0.23.
 
