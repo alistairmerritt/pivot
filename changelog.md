@@ -29,7 +29,7 @@ permalink: /changelog/
 
 ## Integration
 
-### v0.0.28
+### v0.0.29
 - **Fix:** Passive banks (scene/script) now show no gauge — when switching to a passive bank the LED gauge immediately goes to 0. Previously the gauge held whatever value it had last, giving the false impression that the knob controlled something. Also zeros the gauge if the active bank's entity is reassigned to a passive entity while already on that bank.
 
 ### v0.0.26
