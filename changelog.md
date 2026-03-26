@@ -29,6 +29,10 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.25
+- **Fix (Timer blueprint):** Timer finish alert now reliably dismisses on first button press. Added a 200 ms pre-check at the start of each alert loop iteration to catch presses that fired during the previous iteration's flash sequence, when no event listener was active. If the pre-check catches a press, the flash and sound are skipped entirely.
+- **Fix:** Clamp timer duration to a minimum of 1 minute when set via the knob — prevents an out-of-range error when the knob is at 0%.
+
 ### v0.0.24
 - **New:** Timer banks now respond to the knob when the timer is idle. Turning the knob sets the timer duration (mapped across the entity's configured min–max range) and the gauge shows the selected duration as a proportion of the maximum. When the knob stops moving, the selected time is announced via TTS (e.g. *"25 minute timer — press to start"*). The knob is passive while the timer is running or paused. Switching to a timer bank while idle now syncs the current duration to the gauge. Requires the Timer blueprint to also be updated to v0.0.24.
 - **Change (Timer blueprint):** Timer switches to `mode: queued` to handle simultaneous gauge updates and duration announcements without blocking. Gauge fills to 100% immediately on start. Timer bank auto-switches back to its bank on finish before the alert loop (so the flash is visible from any bank).
