@@ -29,6 +29,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.27
+- **Fix:** Passive banks (scene/script) now show no gauge — when switching to a passive bank the LED gauge immediately goes to 0. Previously the gauge held whatever value it had last, giving the false impression that the knob controlled something. Also zeros the gauge if the active bank's entity is reassigned to a passive entity while already on that bank.
+
 ### v0.0.26
 - **Fix (Timer blueprint):** Pressing to dismiss the finish alert no longer immediately re-starts the timer. A queued automation instance from the dismiss press was reaching the start sequence after the alert exited. A 3-second hold after the alert loop makes the press stale before the queued instance runs.
 - **Change:** Timer duration maximum reduced from 120 to 60 minutes — the knob now spans 1–60 minutes. Update `number.{suffix}_timer_duration` on your device if you have an existing value above 60.
