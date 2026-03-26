@@ -47,7 +47,7 @@ Once set, `timer` appears as the bank assignment. The knob is active for duratio
 
 ### Step 3 — Set your duration
 
-Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 120 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on `number.{suffix}_timer_duration` in HA — the gauge will update the next time you switch to that bank.
+Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on `number.{suffix}_timer_duration` in HA — the gauge will update the next time you switch to that bank.
 
 ### Step 4 — Install the blueprint
 
@@ -85,7 +85,7 @@ That's it — single-press the bank to start.
 
 | Entity | Purpose |
 | --- | --- |
-| `number.{suffix}_timer_duration` | Duration in minutes (1–120, default 25) |
+| `number.{suffix}_timer_duration` | Duration in minutes (1–60, default 25) |
 | `select.{suffix}_timer_state` | State mirror — updated by blueprint (idle / running / paused) |
 | `text.{suffix}_timer_end` | Internal — stores ISO end time while running, remaining seconds while paused |
 

@@ -29,6 +29,10 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.26
+- **Fix (Timer blueprint):** Pressing to dismiss the finish alert no longer immediately re-starts the timer. A queued automation instance from the dismiss press was reaching the start sequence after the alert exited. A 3-second hold after the alert loop makes the press stale before the queued instance runs.
+- **Change:** Timer duration maximum reduced from 120 to 60 minutes — the knob now spans 1–60 minutes. Update `number.{suffix}_timer_duration` on your device if you have an existing value above 60.
+
 ### v0.0.25
 - **Fix (Timer blueprint):** Timer finish alert now reliably dismisses on first button press. Restructured the alert loop so `dismissed` is only ever set at the sequence top level — variables inside nested `if/then` blocks are not visible to `repeat…until` in HA, which was causing the loop to always run all 10 iterations. The pre-check now uses a `condition` action to abort the iteration when already dismissed, avoiding the nested scope entirely.
 - **Fix (Timer blueprint):** Long press now reliably cancels the timer. The 2-second staleness check was discarding long press events that had queued behind gauge sync instances — long press is now exempt from this check.
