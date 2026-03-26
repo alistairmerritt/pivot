@@ -126,7 +126,7 @@ When an assigned entity is changed externally — by a voice command, another da
 | `scene` | — | Activate |
 | `script` | — | Run |
 
-> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LED gauge is zeroed — there is no value for the knob to control, so showing a gauge fill would be misleading. The bank colour ring still shows briefly when switching banks as normal.
+> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LEDs turn off — there is no value for the knob to control, so nothing is shown. The bank colour ring still appears briefly while pressing and turning to switch banks as normal. Requires firmware v0.0.10 or later.
 
 ---
 

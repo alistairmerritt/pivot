@@ -220,5 +220,6 @@ Pivot firmware is based on the official Home Assistant Voice PE ESPHome configur
 - Control Mode added: hold+turn switches bank, turn adjusts the active bank's assigned entity value
 - Hold+turn in Normal mode retains stock behaviour — changes the LED ring colour (hue cycling)
 - Secondary scroll behaviour removed
+- Passive banks (scene, script, switch, input_boolean) show no gauge — LEDs turn off rather than showing a misleading full ring. Bank Indicator still fires normally during bank switching.
 
 All standard VPE functionality (voice assistant, wake word, mute button, LED colour change, etc.) remains intact.
