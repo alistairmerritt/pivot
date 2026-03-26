@@ -29,9 +29,6 @@ permalink: /changelog/
 
 ## Integration
 
-### v0.0.30
-- **Fix:** Passive banks (scene, script, switch, input_boolean) now correctly zero the LED gauge. The previous fix wrote to the HA bank value entity (`number.{suffix}_bank_N_value`), which the firmware does not read. The gauge is actually driven by `input_number.vpe_control_value` — the fix now writes 0 to that entity when switching to a passive bank, so the firmware gauge clears immediately.
-
 ### v0.0.29
 - **Fix:** Passive banks (scene, script, switch, input_boolean) now show no gauge — when switching to a passive bank the LED gauge immediately goes to 0. Previously the gauge held whatever value it had last, giving the false impression that the knob controlled something. Also zeros the gauge if the active bank's entity is reassigned to a passive entity while already on that bank, and on HA startup so the firmware cache is correct after a restart.
 
