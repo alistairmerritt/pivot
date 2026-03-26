@@ -73,7 +73,7 @@ These entities are provisioned per device but **disabled by default**. Enable th
 
 | Entity | Purpose |
 | --- | --- |
-| `number.{suffix}_timer_duration` | Timer duration in minutes (1–120, default 25) |
+| `number.{suffix}_timer_duration` | Timer duration in minutes (1–60, default 25) |
 | `select.{suffix}_timer_state` | Timer state — idle, running, or paused |
 | `text.{suffix}_timer_end` | Internal — stores the countdown end time while the timer is running |
 
@@ -125,6 +125,8 @@ When an assigned entity is changed externally — by a voice command, another da
 | `switch` / `input_boolean` | — | Toggle |
 | `scene` | — | Activate |
 | `script` | — | Run |
+
+> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LED gauge is zeroed — there is no value for the knob to control, so showing a gauge fill would be misleading. The bank colour ring still shows briefly when switching banks as normal.
 
 ---
 
