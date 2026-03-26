@@ -31,6 +31,8 @@ permalink: /changelog/
 
 ### v0.0.25
 - **Fix (Timer blueprint):** Timer finish alert now reliably dismisses on first button press. Added a 200 ms pre-check at the start of each alert loop iteration to catch presses that fired during the previous iteration's flash sequence, when no event listener was active. If the pre-check catches a press, the flash and sound are skipped entirely.
+- **Fix (Timer blueprint):** Long press now reliably cancels the timer. The 2-second staleness check was discarding long press events that had queued behind gauge sync instances — long press is now exempt from this check.
+- **New (Timer blueprint):** TTS announcements on start (*"25 minute timer started"*), pause (*"Timer paused. 12 minutes remaining"*), and resume (*"Timer resumed"*). Requires a TTS entity to be configured in the blueprint.
 - **Fix:** Clamp timer duration to a minimum of 1 minute when set via the knob — prevents an out-of-range error when the knob is at 0%.
 
 ### v0.0.24
