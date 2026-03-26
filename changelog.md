@@ -29,6 +29,10 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.24
+- **New:** Timer banks now respond to the knob when the timer is idle. Turning the knob sets the timer duration (mapped across the entity's configured min–max range) and the gauge shows the selected duration as a proportion of the maximum. When the knob stops moving, the selected time is announced via TTS (e.g. *"25 minute timer — press to start"*). The knob is passive while the timer is running or paused. Switching to a timer bank while idle now syncs the current duration to the gauge. Requires the Timer blueprint to also be updated to v0.0.24.
+- **Change (Timer blueprint):** Timer switches to `mode: queued` to handle simultaneous gauge updates and duration announcements without blocking. Gauge fills to 100% immediately on start. Timer bank auto-switches back to its bank on finish before the alert loop (so the flash is visible from any bank).
+
 ### v0.0.23
 - **New:** Added **Dim LEDs When Idle** switch. When on, the control mode gauge dims to 50% brightness after 2 seconds of inactivity and snaps back to full brightness the moment you interact with the device. Has no effect unless **Show Control Value** is also enabled. Requires firmware v0.0.9.
 
