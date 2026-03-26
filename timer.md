@@ -12,12 +12,11 @@ Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a
 
 Once set up, a single bank on your Pivot device becomes a timer controller:
 
+- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
 - **Single press** — start the timer if idle, pause if running, resume if paused
 - **Long press** — cancel and reset
-- **Gauge LEDs** — drain as the timer counts down (100% = just started, 0% = finished)
-- **Finish** — the gauge resets to 0, a sound plays through the media player, and optionally a TTS message is spoken
-
-The duration is set via the `number.{suffix}_timer_duration` entity (default: 25 minutes, range: 1–120 minutes).
+- **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
+- **Finish** — the device switches back to the timer bank, the gauge flashes, a sound plays, and optionally a TTS message is spoken; single press to dismiss
 
 ---
 
@@ -44,11 +43,11 @@ The timer blueprint only activates on a bank whose entity is set to the reserved
 2. On the bank assignment screen, type `timer` (lowercase, no quotes) into the entity field for your chosen bank
 3. Save
 
-Once set, the knob is automatically disabled for that bank (there is no entity to control), and `timer` appears as the assignment. The bank stays reserved for the timer until you change it.
+Once set, `timer` appears as the bank assignment. The knob is active for duration setting when the timer is idle, and passive while running or paused. The bank stays reserved for the timer until you change it.
 
 ### Step 3 — Set your duration
 
-Open `number.{suffix}_timer_duration` and set your desired countdown length in minutes. The default is 25 minutes (a standard Pomodoro interval). You can change this any time — the new value takes effect the next time you start the timer.
+Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 120 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on `number.{suffix}_timer_duration` in HA — the gauge will update the next time you switch to that bank.
 
 ### Step 4 — Install the blueprint
 
@@ -96,11 +95,13 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 ## Tips
 
-**Using the gauge as a visual countdown** — The gauge starts full (100%) when the timer begins and drains to 0% as time runs out. When the timer finishes, it drops to 0. This gives a natural at-a-glance sense of how much time remains.
+**Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and TTS announces the time once the knob settles. Turn right for more time, left for less.
+
+**Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains.
 
 **Assigning the bank** — Set the bank entity to `timer` in Pivot's device configuration. The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
 
-**Changing duration mid-session** — Adjusting `number.{suffix}_timer_duration` while a timer is running does not affect the current session. The new value applies the next time you start a fresh timer.
+**Changing duration mid-session** — Turning the knob while the timer is running or paused does nothing. To change the duration, cancel first (long press), then turn the knob to select a new time.
 
 **Multiple timers** — You can create multiple automations from the same blueprint, one per Pivot device, each with its own suffix and bank assignment.
 
