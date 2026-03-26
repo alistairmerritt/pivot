@@ -116,7 +116,22 @@ Each bank’s configured colour can be customised, so you can choose the colours
 
 ---
 
-**What does “mirror light colour” mean?**  
+**How do the LEDs work?**
+Pivot uses the LED ring to communicate both identity and value:
+- **Bank colour** → shows which bank is active
+- **Value display** → shows the current value of adjustable entities
+- **RGB lights** → reflect the light's colour
+- **Non-RGB entities** → use the bank colour as the value indicator
+- **Passive entities** → briefly show the bank colour, then turn off
+
+---
+
+**Why do the LEDs turn off on some banks?**
+If a bank is assigned to a passive entity (such as a switch, scene, or script), there is no adjustable value to display. In this case, the LED ring will briefly show the bank colour when selected, then turn off.
+
+---
+
+**What does “mirror light colour” mean?**
 When enabled, the LED ring will match the colour of the assigned light.
 
 When disabled, the LEDs use the bank’s configured colour instead.
