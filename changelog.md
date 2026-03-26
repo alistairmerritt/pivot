@@ -30,8 +30,9 @@ permalink: /changelog/
 ## Integration
 
 ### v0.0.25
-- **Fix (Timer blueprint):** Timer finish alert now reliably dismisses on first button press. Added a 200 ms pre-check at the start of each alert loop iteration to catch presses that fired during the previous iteration's flash sequence, when no event listener was active. If the pre-check catches a press, the flash and sound are skipped entirely.
+- **Fix (Timer blueprint):** Timer finish alert now reliably dismisses on first button press. Restructured the alert loop so `dismissed` is only ever set at the sequence top level — variables inside nested `if/then` blocks are not visible to `repeat…until` in HA, which was causing the loop to always run all 10 iterations. The pre-check now uses a `condition` action to abort the iteration when already dismissed, avoiding the nested scope entirely.
 - **Fix (Timer blueprint):** Long press now reliably cancels the timer. The 2-second staleness check was discarding long press events that had queued behind gauge sync instances — long press is now exempt from this check.
+- **Change (Timer blueprint):** Finish alert flash timing increased to 500 ms on / 300 ms off (was 150 ms) — more visible and easier to tap to dismiss.
 - **New (Timer blueprint):** TTS announcements on start (*"25 minute timer started"*), pause (*"Timer paused. 12 minutes remaining"*), and resume (*"Timer resumed"*). Requires a TTS entity to be configured in the blueprint.
 - **Fix:** Clamp timer duration to a minimum of 1 minute when set via the knob — prevents an out-of-range error when the knob is at 0%.
 
