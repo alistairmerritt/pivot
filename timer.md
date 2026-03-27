@@ -16,7 +16,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 - **Single press** — start the timer if idle, pause if running, resume if paused
 - **Long press** — cancel and reset (works from any bank — you don't need to switch back to the timer bank first)
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
-- **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press or "stop" wake word dismisses the alarm. The entire alarm cycle runs in firmware — no internet connection required.
+- **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press or "stop" wake word dismisses the alarm.
 
 ---
 
@@ -48,7 +48,7 @@ All three must be enabled for the blueprint to work correctly.
 
 ### Step 2 — Assign the bank to timer
 
-The timer blueprint only activates on a bank whose entity is set to the reserved keyword timer. This prevents the timer from triggering on banks that have a real entity assigned.
+The timer blueprint only activates on a bank whose entity is set to the reserved keyword `timer`. This prevents the timer from triggering on banks that have a real entity assigned.
 
 timer is not a real Home Assistant entity, so it cannot be set through the Configure screen — the entity picker will reject it. Instead, set it directly on the text entity:
 
@@ -83,12 +83,12 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 | **Device Suffix** | Your device suffix, e.g. ha_voice_lounge |
 | **Bank Number** | Which bank controls the timer (1–4) — must match the bank you set to timer |
 | **Media Player** | Speaker for TTS announcements (start, pause, resume, finish message) |
-| **TTS Entity** | Optional — text-to-speech entity for spoken finish announcement |
+| **TTS Entity** | Text-to-speech entity for spoken timer announcements. Required if you want the device to announce the selected duration when turning the knob. |
 | **Finish Message** | Optional — what to say when the timer finishes (default: "Timer finished") |
 
 4. Save the automation.
 
-That's it — single-press the bank to start.
+That's it — single-press the bank to start. Single-press to pause. Long-press to reset.
 
 ---
 
@@ -106,7 +106,7 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 ## Tips
 
-**Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and TTS announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
+**Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and if configured, TTS announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
 
 **Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains. The gauge syncs every 30 seconds — on a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
 
