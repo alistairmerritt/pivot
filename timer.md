@@ -39,9 +39,11 @@ All three must be enabled for the blueprint to work correctly.
 
 The timer blueprint only activates on a bank whose entity is set to the reserved keyword `timer`. This prevents the timer from triggering on banks that have a real entity assigned.
 
-1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
-2. On the bank assignment screen, type `timer` (lowercase, no quotes) into the entity field for your chosen bank
-3. Save
+`timer` is not a real Home Assistant entity, so it cannot be set through the Configure screen — the entity picker will reject it. Instead, set it directly on the text entity:
+
+1. Go to **Developer Tools → States** (or find the entity under your Pivot device)
+2. Locate `text.{suffix}_bank_N_entity` for your chosen bank (e.g. `text.ha_voice_lounge_bank_2_entity`)
+3. Set the value to `timer` (lowercase, no quotes)
 
 Once set, `timer` appears as the bank assignment. The knob is active for duration setting when the timer is idle, and passive while running or paused. The bank stays reserved for the timer until you change it.
 
@@ -99,7 +101,7 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 **Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains.
 
-**Assigning the bank** — Set the bank entity to `timer` in Pivot's device configuration. The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
+**Assigning the bank** — Set `text.{suffix}_bank_N_entity` to `timer` directly via Developer Tools → States (the Configure screen rejects it as it's not a real entity ID). The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
 
 **Changing duration mid-session** — Turning the knob while the timer is running or paused does nothing. To change the duration, cancel first (long press), then turn the knob to select a new time.
 
