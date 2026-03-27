@@ -20,6 +20,17 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 ---
 
+## Voice timers and Pivot timers
+
+Your VPE can still set timers by voice ("set a 10 minute timer") — that functionality is unchanged. However, the voice timer and the Pivot timer are completely separate systems with no shared state:
+
+- **Starting a timer by voice** uses the VPE's built-in timer pipeline, which runs entirely inside ESPHome. It doesn't update any Pivot entities, so the gauge won't reflect the countdown and the blueprint won't know it's running.
+- **Starting a timer with the knob** uses Pivot's HA entities and blueprint. It can't be queried by voice — asking *"how long is left on the timer?"* won't return the Pivot timer's remaining time.
+
+There's currently no way to bridge the two. They share the same alarm sound and LED ring effect when they finish (both use the device's built-in `timer_ringing` mechanism), but otherwise run independently. Use whichever suits the moment — they won't interfere with each other.
+
+---
+
 ## Getting started with timers
 
 ### Step 1 — Enable the timer entities
