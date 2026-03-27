@@ -32,6 +32,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.31
+- **Fix (Timer blueprint):** Finish alert dismiss is now more reliable. The dismiss branch no longer requires the button press to match the configured bank number — any press on the device dismisses the alarm. Previously, if `active_bank` in HA diverged from the blueprint's configured bank for any reason, the bank check silently failed and the dismiss branch was skipped. The press would fall through to the start/pause/resume handler, which did nothing (state was `alerting`, not `idle`/`running`/`paused`), leaving the alarm running indefinitely.
+
 ### v0.0.30
 - **Fix (Timer blueprint):** Finish alert now dismisses immediately on any press. The blueprint previously used `mode: queued`, which meant the alert loop held the automation queue — a button press could not run the dismiss handler until the loop reached a `wait_for_trigger` step. A press during `media_player.play_media` or any other service call was silently dropped, forcing the user to time the press precisely. The blueprint now uses `mode: parallel`: the button press fires a new instance that runs the dismiss branch immediately, regardless of what the alert loop is doing. The loop tracks `timer_state` rather than a local variable, so it exits at the next condition check once dismiss sets the state to `idle`.
 - **Fix (Timer blueprint):** The "1 minute timer — press to start" announcement no longer plays after dismissing the finish alert. The flash loop was setting the gauge to 0 while timer state was `idle`, which the integration interpreted as a knob turn mapping to 0 minutes (clamped to 1). Timer state is now set to `alerting` during the alert sequence — the integration returns early for any state other than `idle`, so gauge changes during the alert are ignored.
