@@ -16,7 +16,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 - **Single press** — start the timer if idle, pause if running, resume if paused
 - **Long press** — cancel and reset
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
-- **Finish** — the device switches back to the timer bank, the gauge flashes, a sound plays, and optionally a TTS message is spoken; single press to dismiss
+- **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press or "stop" wake word dismisses the alarm. The entire alarm cycle runs in firmware — no internet connection required.
 
 ---
 
@@ -51,7 +51,11 @@ Once set, `timer` appears as the bank assignment. The knob is active for duratio
 
 Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on `number.{suffix}_timer_duration` in HA — the gauge will update the next time you switch to that bank.
 
-### Step 4 — Install the blueprint
+### Step 4 — Ensure firmware v0.0.11 or later
+
+The timer alarm (sound, LED ring, dismiss) is handled entirely in firmware as of v0.0.11. If your device is running an earlier version, reflash via **ESPHome Device Builder → Install → Wirelessly** before using the timer.
+
+### Step 5 — Install the blueprint
 
 The Pivot Timer blueprint is not installed automatically. Click the button below to import it into Home Assistant:
 
@@ -63,7 +67,7 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot/pivot_timer.yaml
 ```
 
-### Step 5 — Create an automation from the blueprint
+### Step 6 — Create an automation from the blueprint
 
 1. Go to **Settings → Automations → Blueprints** and find **Pivot — Timer**.
 2. Click **Create Automation**.
@@ -73,7 +77,7 @@ https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/bluepri
 | --- | --- |
 | **Device Suffix** | Your device suffix, e.g. `ha_voice_lounge` |
 | **Bank Number** | Which bank controls the timer (1–4) — must match the bank you set to `timer` |
-| **Media Player** | Speaker to play the finish sound |
+| **Media Player** | Speaker for TTS announcements (start, pause, resume, finish message) |
 | **TTS Entity** | Optional — text-to-speech entity for spoken finish announcement |
 | **Finish Message** | Optional — what to say when the timer finishes (default: "Timer finished") |
 
@@ -88,7 +92,7 @@ That's it — single-press the bank to start.
 | Entity | Purpose |
 | --- | --- |
 | `number.{suffix}_timer_duration` | Duration in minutes (1–60, default 25) |
-| `select.{suffix}_timer_state` | State mirror — updated by blueprint (idle / running / paused) |
+| `select.{suffix}_timer_state` | State mirror — updated by blueprint and firmware (idle / running / paused / alerting) |
 | `text.{suffix}_timer_end` | Internal — stores ISO end time while running, remaining seconds while paused |
 
 All three entities are **disabled by default** and live under the Pivot device in the HA device registry. The `text.{suffix}_timer_end` entity is managed entirely by the blueprint; you don't need to interact with it directly.

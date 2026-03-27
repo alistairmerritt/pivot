@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.11
+- **New:** Timer alarm is now handled entirely in firmware. When the blueprint sets `timer_state` to `alerting`, the firmware subscribes via a new `ha_timer_state` text sensor and turns on the built-in `timer_ringing` switch — playing the alarm sound from local flash storage, pulsing the LED ring, and enabling the "stop" wake word, exactly as the stock voice-assistant timer does. When the alarm is dismissed (button press, "stop" wake word, or 15-minute auto-timeout), the firmware calls back to HA to set `timer_state` to `idle` and turn on `dim_when_idle`. This replaces the previous approach of streaming audio from a remote URL via `media_player.play_media`, which congested the WiFi/API connection and caused button press events to be silently dropped. Requires a firmware reflash.
+
 ### v0.0.10
 - **Fix:** Passive banks (scene, script, switch, input_boolean) no longer show the full LED ring when **Show Control Value** is enabled. Previously, a solid full-brightness ring was displayed for passive banks, which looked identical to a 100% gauge and was misleading. Passive banks now show no gauge — the LEDs turn off — matching the fact that there is no value to display. The Bank Indicator ring still appears normally while pressing and turning to switch banks.
 
@@ -31,6 +34,11 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+### v0.0.32
+- **Fix (Timer blueprint):** Timer alarm now dismisses reliably on the first press. The previous approach of streaming audio from a remote URL via `media_player.play_media` congested the ESPHome API connection, causing `pivot_button_press` events to be silently dropped — presses were never received by HA at all. The alarm is now handed off entirely to device firmware (v0.0.11+): the blueprint sets `timer_state` to `alerting`, the firmware starts the built-in alarm (local sound, LED ring, "stop" wake word), and dismiss is handled natively in firmware, which calls back to HA to reset the state. No blueprint-side dismiss logic, no remote audio download.
+- **Change (Timer blueprint):** Switched back to `mode: queued` — the parallel dismiss branch is no longer needed since dismiss is handled in firmware. Queue depth increased to 10.
+- **Change (Timer blueprint):** Long press during `alerting` state is now ignored — the guard `not is_state(timer_state_entity, 'alerting')` prevents a long press from corrupting the timer state while the firmware alarm is active.
 
 ### v0.0.31
 - **Fix (Timer blueprint):** Finish alert dismiss is now more reliable. The dismiss branch no longer requires the button press to match the configured bank number — any press on the device dismisses the alarm. Previously, if `active_bank` in HA diverged from the blueprint's configured bank for any reason, the bank check silently failed and the dismiss branch was skipped. The press would fall through to the start/pause/resume handler, which did nothing (state was `alerting`, not `idle`/`running`/`paused`), leaving the alarm running indefinitely.
