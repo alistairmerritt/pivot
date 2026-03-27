@@ -1,3 +1,25 @@
+---
+layout: page
+title: Timer
+permalink: /timer/
+---
+
+Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a focus block — controlled entirely from the device's button and reflected on the gauge LEDs. This is an optional feature: the timer entities are provisioned per device but disabled by default, and the blueprint is installed manually.
+
+---
+
+## How it works
+
+Once set up, a single bank on your Pivot device becomes a timer controller:
+
+- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
+- **Single press** — start the timer if idle, pause if running, resume if paused
+- **Long press** — cancel and reset (works from any bank — you don't need to switch back to the timer bank first)
+- **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
+- **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press or "stop" wake word dismisses the alarm. The entire alarm cycle runs in firmware — no internet connection required.
+
+---
+
 ## Getting started with timers
 
 ### Step 1 — Enable the timer entities
