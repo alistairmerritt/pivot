@@ -104,6 +104,79 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 ---
 
+## Template sensors
+
+You can expose timer state to dashboards and automations using HA template sensors. Add the following to your `configuration.yaml`, replacing `ha_voice_lounge` with your device suffix. Alternatively, create each one individually via **Settings → Helpers → Add Helper → Template**.
+
+```yaml
+template:
+  - sensor:
+
+      # Remaining time — MM:SS while running, "Paused — MM:SS" while paused.
+      - name: "Pivot Timer Remaining"
+        icon: mdi:timer-outline
+        state: >
+          {% set suffix = 'ha_voice_lounge' %}
+          {% set state = states('select.' ~ suffix ~ '_timer_state') %}
+          {% set end_str = states('text.' ~ suffix ~ '_timer_end') %}
+          {% if state == 'running' and end_str and not end_str.startswith('P') %}
+            {% set secs = [(as_datetime(end_str) - now()).total_seconds(), 0] | max | int %}
+            {% set h = secs // 3600 %}
+            {% set m = (secs % 3600) // 60 %}
+            {% set s = secs % 60 %}
+            {{ '%d:%02d:%02d' | format(h, m, s) if h > 0 else '%d:%02d' | format(m, s) }}
+          {% elif state == 'paused' and end_str and end_str.startswith('P') %}
+            {% set secs = end_str | replace('P','') | int(0) %}
+            {% set h = secs // 3600 %}
+            {% set m = (secs % 3600) // 60 %}
+            {% set s = secs % 60 %}
+            Paused — {{ '%d:%02d:%02d' | format(h, m, s) if h > 0 else '%d:%02d' | format(m, s) }}
+          {% elif state == 'alerting' %}
+            Finished
+          {% else %}
+            —
+          {% endif %}
+
+      # Finish time — wall-clock time the timer will end, e.g. "14:35".
+      - name: "Pivot Timer Ends At"
+        icon: mdi:clock-end
+        state: >
+          {% set suffix = 'ha_voice_lounge' %}
+          {% set state = states('select.' ~ suffix ~ '_timer_state') %}
+          {% set end_str = states('text.' ~ suffix ~ '_timer_end') %}
+          {% if state == 'running' and end_str and not end_str.startswith('P') %}
+            {{ as_datetime(end_str) | as_local | strftime('%H:%M') }}
+          {% else %}
+            —
+          {% endif %}
+
+      # Seconds remaining — for automations and progress bars.
+      - name: "Pivot Timer Seconds Remaining"
+        icon: mdi:timer-sand
+        unit_of_measurement: s
+        state: >
+          {% set suffix = 'ha_voice_lounge' %}
+          {% set state = states('select.' ~ suffix ~ '_timer_state') %}
+          {% set end_str = states('text.' ~ suffix ~ '_timer_end') %}
+          {% if state == 'running' and end_str and not end_str.startswith('P') %}
+            {{ [(as_datetime(end_str) - now()).total_seconds(), 0] | max | int }}
+          {% elif state == 'paused' and end_str and end_str.startswith('P') %}
+            {{ end_str | replace('P','') | int(0) }}
+          {% else %}
+            0
+          {% endif %}
+```
+
+| Sensor | Running | Paused | Idle |
+| --- | --- | --- | --- |
+| **Pivot Timer Remaining** | `12:30` | `Paused — 12:30` | `—` |
+| **Pivot Timer Ends At** | `14:35` | `—` | `—` |
+| **Pivot Timer Seconds Remaining** | `750` | `750` | `0` |
+
+**Pivot Timer Seconds Remaining** is the most useful for automations — trigger something when it drops below 60, or feed it into a progress bar card on a dashboard.
+
+---
+
 ## Tips
 
 **Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and if configured, TTS announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
