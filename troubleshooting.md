@@ -153,7 +153,23 @@ The v0.0.18 blueprint uses two independent dismiss signals — a direct event an
 1. Make sure all three timer entities are enabled: `number.{suffix}_timer_duration`, `select.{suffix}_timer_state`, and `text.{suffix}_timer_end`. All three must be enabled for the blueprint to work.
 2. Check the bank entity for the timer bank is set to `timer` (not left blank or set to a real entity).
 3. Confirm the timer automation is enabled — go to **Settings → Automations** and check it is toggled on.
-4. The gauge updates every 5 seconds, not continuously. A brief delay before the first update is normal.
+4. The gauge updates every 30 seconds, not continuously. A brief delay before the first update is normal.
+
+---
+
+## ESPHome build fails with "'.' is an invalid character for names"
+
+This happens when the `device_name` substitution in your device YAML includes the `.yaml` file extension. ESPHome device names cannot contain dots.
+
+Open your device YAML in ESPHome and find the `substitutions:` block. The `device_name` value should be the name only — no extension, lowercase, using hyphens or underscores:
+
+```yaml
+substitutions:
+  device_name: ha-voice-kitchen        # ✓ correct
+  device_name: ha-voice-kitchen.yaml   # ✗ causes this error
+```
+
+Remove the `.yaml` suffix, save, and retry the build.
 
 ---
 
