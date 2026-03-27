@@ -108,6 +108,7 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 You can expose timer state to dashboards and automations using HA template sensors. Add the following to your `configuration.yaml`, replacing `ha_voice_lounge` with your device suffix. Alternatively, create each one individually via **Settings → Helpers → Add Helper → Template**.
 
+{% raw %}
 ```yaml
 template:
   - sensor:
@@ -166,6 +167,7 @@ template:
             0
           {% endif %}
 ```
+{% endraw %}
 
 | Sensor | Running | Paused | Idle |
 | --- | --- | --- | --- |
