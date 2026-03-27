@@ -32,6 +32,11 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.30
+- **Fix (Timer blueprint):** Finish alert now dismisses reliably on any press. Previously, button presses during the ~1.6 s LED flash phase were silently dropped because no event listener was active during that window. Every flash delay is now a `wait_for_trigger`, so a press is catchable at any point in the cycle. Both single press and long press dismiss the alert.
+- **Fix (Timer blueprint):** The "1 minute timer — press to start" announcement no longer plays after dismissing the finish alert. The flash loop was setting the gauge to 0 while timer state was `idle`, which the integration interpreted as a knob turn mapping to 0 minutes (clamped to 1). Timer state is now set to `alerting` during the alert sequence — the integration returns early for any state other than `idle`, so gauge changes during the alert are ignored.
+- **New:** Added `alerting` as a valid `timer_state` select option. The integration already ignored gauge changes when state was not `idle`; `alerting` makes this explicit and allows the dismiss handler to intercept presses before any other branch runs.
+
 ### v0.0.29
 - **Fix:** Passive banks (scene, script, switch, input_boolean) now show no gauge — when switching to a passive bank the LED gauge immediately goes to 0. Previously the gauge held whatever value it had last, giving the false impression that the knob controlled something. Also zeros the gauge if the active bank's entity is reassigned to a passive entity while already on that bank, and on HA startup so the firmware cache is correct after a restart.
 
