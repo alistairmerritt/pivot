@@ -108,7 +108,7 @@ All three entities are **disabled by default** and live under the Pivot device i
 
 **Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and TTS announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
 
-**Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains.
+**Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains. The gauge syncs every 30 seconds — on a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
 
 **Assigning the bank** — Set text.{suffix}_bank_N_entity to timer directly via your device entities screen – Go to **Devices & Services → Pivot → Your Pivot Device** (the Configure screen rejects it as it's not a real entity ID). The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
 
