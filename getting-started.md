@@ -27,9 +27,6 @@ If you haven't done this yet, follow [Home Assistant's official VPE setup guide]
 
 If your VPE is already showing up in Home Assistant under ESPHome, you're ready to continue.
 
-> **Your VPE's voice and listening functionality is not affected by Pivot.** Wake word detection, voice commands, and all standard VPE features continue to work exactly as before. Pivot adds a new layer of control — it does not replace or interfere with anything already set up.
-
-
 ---
 
 ## Step 2. Enable Home Assistant actions
