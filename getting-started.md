@@ -26,8 +26,6 @@ Once set up, your Voice Preview Edition will:
 - Continue to respond to voice commands as normal
 - Allow you to switch back to the standard behaviour at any time (double press)
 
-Most users are up and running in around 15–30 minutes.
-
 ---
 
 ## Step 1. Set up your VPE in Home Assistant
