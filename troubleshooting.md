@@ -36,6 +36,16 @@ If your device isn't showing up in ESPHome, you may need to take control of it f
 
 ---
 
+## My VPE just has revolving blue lights after installing the firmware
+
+The revolving blue light pattern means the device is trying to connect but hasn't succeeded yet. There are two likely causes:
+
+**Encryption key mismatch** — check **Settings → Notifications** in Home Assistant. If there is an alert asking you to reconfigure a device, open it and enter the `api_encryption_key` from your firmware YAML's substitutions block.
+
+**WiFi credentials issue** — if there is no notification in Home Assistant, the device may not be reaching your network at all. Open your firmware YAML in ESPHome and double-check that your `wifi_ssid` and `wifi_password` are correct, then reflash.
+
+---
+
 ## The device won't connect to Home Assistant after flashing
 
 After flashing the Pivot firmware for the first time, **fully power cycle your VPE** — disconnect it from power completely, wait a few seconds, then reconnect. A simple restart is not always enough. The device should then reconnect and appear in Home Assistant automatically.
