@@ -35,6 +35,13 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.34
+- **Change:** Pivot-owned YAML files are now written to a `/config/pivot/` subfolder instead of the `/config/` root, keeping your config directory clean.
+- **Fix:** Automation filenames had a double `pivot_` prefix (`pivot_pivot_{suffix}_announcements.yaml`). Files are now named `pivot_{suffix}_announcements.yaml` as intended.
+- **Fix:** The duplicate include-line check was comparing exact strings — a format change between versions could bypass it and append a second entry, creating a duplicate YAML key that prevented HA from loading scripts or automations. The check now uses a filename-based marker, consistent with how removal already worked.
+- **Fix:** The write order for `scripts.yaml`/`automations.yaml` was not atomic — the old file could be deleted before the include line was updated, leaving a broken reference if anything interrupted the sequence. Each write now creates the new file first, then rewrites the parent YAML in one pass, then deletes any legacy files.
+- **Change:** The include-line write is now self-healing. On every load, Pivot strips all existing entries for its keys and writes the correct single line — stale, duplicate, or misformatted entries from any prior version are corrected automatically without user action. Migration from flat-path to subfolder layout is handled the same way.
+
 ### v0.0.33
 - **Fix (Timer blueprint):** Long press cancel now works from any bank on the device. The previous condition required the active bank to equal the configured timer bank at the exact moment of the long press — if you were on a different bank, the condition silently failed and nothing happened. Long press is a deliberate one-second hold, so the bank check is unnecessary; the suffix check still ensures the press comes from the correct device.
 - **Fix (Timer blueprint):** Long press is now correctly restricted to `running` and `paused` states. Pressing while `idle` or `alerting` does nothing (alerting is dismissed by single press in firmware).
