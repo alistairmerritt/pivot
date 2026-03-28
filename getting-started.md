@@ -4,7 +4,7 @@ title: Getting Started
 permalink: /getting-started/
 ---
 
-This guide walks you through everything needed to get Pivot running on a Home Assistant Voice Preview Edition device. The full process takes around 10–20 minutes, depending on how long the firmware compile and flash takes.
+This guide walks you through everything needed to get Pivot running on a Home Assistant Voice Preview Edition device. Setup takes around 15–30 minutes depending on your familiarity with Home Assistant and ESPHome.
 
 > **Pivot runs alongside your existing voice setup without interfering with it.** The ESPHome integration remains unchanged, and any settings already configured on your VPE — such as the voice assistant, wake word, volume, or listening-mode LED colour — are left exactly as they are. Pivot cannot read or modify those settings; it simply adds a separate layer of control on top.
 
