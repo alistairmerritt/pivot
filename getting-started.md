@@ -160,7 +160,9 @@ packages:
 
 You’re done. Turn the knob to control the active bank’s assigned entity, press the button to toggle or activate it, and hold the knob while turning to switch banks.
 
-> **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (setup mode, announcements) to reach it. Alternatively, you can assign entities directly by editing the `text.{suffix}_bank_N_entity` text entities from **Developer Tools → States**.
+> **Timer banks are configured differently** — they cannot be assigned through the entity picker. See the [Timer page](/pivot/timer/) for setup instructions.
+
+> **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (setup mode, announcements) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
 
 
 ---
