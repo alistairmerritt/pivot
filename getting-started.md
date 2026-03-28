@@ -6,7 +6,7 @@ permalink: /getting-started/
 
 This guide walks you through everything needed to get Pivot running on a Home Assistant Voice Preview Edition device.
 
-> **Pivot runs alongside your existing setup — it does not replace or interfere with any of it.** The ESPHome integration remains exactly as it was. Any settings you have already configured on your VPE — voice assistant, wake word, volume, LED colour in listening mode, and anything else — are completely unaffected. The Pivot integration adds a separate layer of control on top.
+> **Pivot runs alongside your existing setup and has no connection to it.** The ESPHome integration remains exactly as it was. Any settings you have configured on your VPE — voice assistant, wake word, volume, LED colour in listening mode, and anything else — are completely unaffected. Pivot cannot see or change any of those settings; from the Pivot integration's perspective, the ESPHome integration is entirely unrelated. Pivot simply adds a separate layer of control on top.
 
 ## What you need
 
