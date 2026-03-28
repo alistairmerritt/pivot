@@ -16,7 +16,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | --- | --- |
 | **Automatic** | Writes files to `/config/pivot/` and adds a single `!include` line to your `scripts.yaml` and `automations.yaml`. Fully managed — created and removed automatically. |
 | **Blueprints** | Copies blueprint files into `/config/blueprints/`. You create the automations yourself from the HA UI. |
-| **Manual** | Pivot does not touch any YAML files. Bank control and event firing still work — use the fired events to build your own automations. |
+| **Manual** | Pivot does not touch any YAML files. Bank control and event firing still work — see [Custom Automations](https://alistairmerritt.github.io/pivot/custom_automations.html) for a guide to building your own. |
 
 The setup mode can be changed at any time from the integration's **Configure** menu. Switching away from Automatic will remove the files Pivot created.
 
@@ -93,7 +93,6 @@ Each bank has an optional **Mirror light colour** switch (`switch.{suffix}_bank_
 
 This is a persistent per-bank setting, not a temporary effect. It only applies to RGB lights — if the assigned entity is not a compatible RGB light, the bank falls back to its default colour automatically.
 
-> **Requires firmware v0.0.5 or later** for the bank-switching colour restore behaviour. Update via ESPHome Device Builder → your device → **Install → Wirelessly**.
 
 ---
 
@@ -106,7 +105,7 @@ When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brigh
 - **Fading** to dim is smooth — a 1.5 second transition so there is no sudden flicker.
 - This is a **pure brightness modifier** — it does not change colours, values, or any other behaviour.
 
-> **Requires Show Control Value to be on.** Dim when idle has no effect if the gauge is not permanently visible. Enable **Show Control Value** first, then enable **Dim LEDs When Idle**. Requires firmware v0.0.9 or later.
+> **Requires Show Control Value to be on.** Dim when idle has no effect if the gauge is not permanently visible. Enable **Show Control Value** first, then enable **Dim LEDs When Idle**.
 
 ---
 
@@ -126,7 +125,7 @@ When an assigned entity is changed externally — by a voice command, another da
 | `scene` | — | Activate |
 | `script` | — | Run |
 
-> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LEDs turn off — there is no value for the knob to control, so nothing is shown. The bank colour ring still appears briefly while pressing and turning to switch banks as normal. Requires firmware v0.0.10 or later.
+> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LEDs turn off — there is no value for the knob to control, so nothing is shown. The bank colour ring still appears briefly while pressing and turning to switch banks as normal.
 
 ---
 
