@@ -3,7 +3,7 @@ layout: page
 title: Custom Automations
 ---
 
-> **New to Pivot's setup modes?** See the [Setup modes table](/pivot/integration/#setup-modes) on the Integration page for an overview of Automatic, Blueprints, and Manual — including what each mode does and does not create for you.
+> See the [Setup modes table](/pivot/integration/#setup-modes) on the Integration page if you are unfamiliar with the setup modes mentioned below.
 
 In Manual mode, Pivot creates all the required entities and fires events on the HA event bus, but does not create any scripts or automations itself — you build everything from scratch.
 
