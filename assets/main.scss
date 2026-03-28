@@ -64,6 +64,13 @@ h3 { font-size: 0.9rem !important; font-weight: 500; letter-spacing: 0.01em; col
   margin-right: 0;
   width: 100%;
 
+  // On mobile, Minima makes .site-nav position:absolute with a background colour.
+  // width:100% turns it into a full-width overlay that covers the logo.
+  @media screen and (max-width: 600px) {
+    width: auto;
+    background: transparent;
+  }
+
   .trigger {
     display: flex;
     justify-content: flex-start;
