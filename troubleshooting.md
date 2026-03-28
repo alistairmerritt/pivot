@@ -101,7 +101,7 @@ If you deleted or modified `pivot/pivot_{suffix}_bank_toggle.yaml` or the `!incl
 
 The quickest fix is to go to **Settings → Devices & Services → Pivot → your device → Configure** and save — this will recreate the file and re-add the `!include` line if it is missing.
 
-> **Warning:** If the `!include` line appears more than once in `scripts.yaml`, HA will throw a duplicate key error and fail to load scripts entirely. Go to **Studio Code Server** or another file editor and remove the duplicate line, then reload scripts from **Developer Tools → YAML → Scripts**.
+> **Warning:** If the `!include` line appears more than once in `scripts.yaml`, HA will throw a duplicate key error and fail to load scripts entirely. Go to **Studio Code Server** or another file editor and remove the duplicate line, then reload scripts from **Developer Tools → YAML → Scripts**. Once HA is running again, Pivot will automatically correct any remaining inconsistencies on its next load — you do not need to do anything further.
 
 ---
 

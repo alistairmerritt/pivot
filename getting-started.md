@@ -142,7 +142,7 @@ packages:
 2. Select your VPE from the dropdown
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
 4. Choose a **setup mode**:
-   - **Automatic** — Pivot creates and manages the required scripts and automations for you. Recommended for most users.
+   - **Automatic** — Pivot creates and manages the required scripts and automations for you, stored in a `/config/pivot/` subfolder. Recommended for most users. See [how Automatic mode manages files](/pivot/integration/#how-automatic-mode-manages-files) for details.
    - **Blueprints** — Pivot installs blueprint files. You create the automations yourself from the HA UI.
    - **Manual** — Pivot does not create any files. Use the fired events to build your own automations.
 5. Optionally configure announcements — select a text-to-speech service (TTS) and speaker to have Pivot speak the active bank name when you switch
