@@ -3,7 +3,7 @@ layout: page
 title: Custom Automations
 ---
 
-In Manual mode, Pivot creates all the required entities and fires events on the HA event bus, but does not create any scripts or automations itself — you build everything. This gives you complete control over what each button press and knob turn does, without any behaviour you did not explicitly set up.
+In Manual mode, Pivot creates all the required entities and fires events on the HA event bus, but does not create any scripts or automations itself — you build everything from scratch.
 
 If you use Automatic mode, custom automations are an optional layer you can add on top. Because Pivot fires events on every interaction regardless of mode, you can trigger your own automations in response to things the built-in behaviour does not handle — like using a button press on a specific bank to trigger a shell command or run a scene.
 
