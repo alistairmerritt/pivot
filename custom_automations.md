@@ -12,7 +12,7 @@ Pivot events carry enough context to let automations be as specific or as broad 
 - which Pivot device was used
 - which bank was active
 - which entity is assigned to that bank
-- which button press type occurred (`single_press`, `double_press`, `long_press`, etc.)
+- which button press type occurred (`single_press`, `long_press`, etc.)
 - the new value and direction of a knob turn
 
 ---
