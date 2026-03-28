@@ -39,15 +39,21 @@ h3 { font-size: 0.9rem !important; font-weight: 500; letter-spacing: 0.01em; col
   align-items: center;
   font-size: 0;
   letter-spacing: 0;
+  margin-bottom: 4px;
 
   img.site-logo {
     height: 40px;
     width: auto;
     display: block;
-    padding-bottom: 20px;
   }
 
   &:hover { text-decoration: none; }
+}
+
+// Prevent inherited overflow from Minima from clipping the logo
+.site-header,
+.site-header .wrapper {
+  overflow: visible;
 }
 
 // Navigation — all links in one row below the logo
