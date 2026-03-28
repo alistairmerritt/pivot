@@ -97,7 +97,7 @@ Work through these in order:
 
 ## The button press stopped working after editing scripts.yaml
 
-If you deleted or modified `pivot_{suffix}_bank_toggle.yaml` or the `!include` line Pivot added to your `scripts.yaml`, the bank toggle script will stop working.
+If you deleted or modified `pivot/pivot_{suffix}_bank_toggle.yaml` or the `!include` line Pivot added to your `scripts.yaml`, the bank toggle script will stop working.
 
 The quickest fix is to go to **Settings → Devices & Services → Pivot → your device → Configure** and save — this will recreate the file and re-add the `!include` line if it is missing.
 
