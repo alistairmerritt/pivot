@@ -14,7 +14,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 | Mode | What Pivot does |
 | --- | --- |
-| **Automatic** | Writes `pivot_{suffix}_bank_toggle.yaml` and `pivot_{suffix}_announcements.yaml`, adds a single `!include` line to your `scripts.yaml` and `automations.yaml`. Fully managed — created and removed automatically. |
+| **Automatic** | Writes files to `/config/pivot/` and adds a single `!include` line to your `scripts.yaml` and `automations.yaml`. Fully managed — created and removed automatically. |
 | **Blueprints** | Copies blueprint files into `/config/blueprints/`. You create the automations yourself from the HA UI. |
 | **Manual** | Pivot does not touch any YAML files. Bank control and event firing still work — use the fired events to build your own automations. |
 
@@ -178,17 +178,20 @@ Custom automations triggered by these events always stack on top of built-in beh
 
 ## How Automatic mode manages files
 
-Pivot writes its own dedicated files that it fully owns. It makes only two types of change to your `scripts.yaml` and `automations.yaml`:
-
-1. **On first setup** — appends a single `!include` line to each file. It never reads, parses, or rewrites the rest of the file content.
-2. **On removal or mode change** — removes only the `!include` line it previously added. Nothing else is touched.
+Pivot writes its own dedicated files to a `/config/pivot/` subfolder — they do not appear alongside your other config files in `/config/`.
 
 | File | Description |
 | --- | --- |
-| `pivot_{suffix}_bank_toggle.yaml` | Bank toggle script |
-| `pivot_{suffix}_announcements.yaml` | Announcements automation |
+| `pivot/pivot_{suffix}_bank_toggle.yaml` | Bank toggle script |
+| `pivot/pivot_{suffix}_announcements.yaml` | Announcements automation |
 
-Before appending the `!include` line for the first time, Pivot backs up your files:
+It adds a single `!include` line for each file into your `scripts.yaml` and `automations.yaml`. These are the only changes Pivot makes to those files — it never touches any other content.
+
+On every load, Pivot rewrites its own `!include` lines from scratch: any stale, duplicate, or broken entries for its keys are removed and replaced with a single correct line. This means the integration is self-healing — if an include line ever becomes inconsistent (e.g. after a manual edit or a failed update), it will be corrected automatically without any user action.
+
+On removal or mode change, Pivot removes the files it created and its `!include` lines from `scripts.yaml` and `automations.yaml`.
+
+Before modifying `scripts.yaml` or `automations.yaml` for the first time, Pivot creates a one-time backup:
 - `scripts.yaml.pivot_backup`
 - `automations.yaml.pivot_backup`
 
