@@ -14,8 +14,19 @@ This guide walks you through everything needed to get Pivot running on a Home As
 - Home Assistant with the ESPHome integration installed
 - The ESPHome application installed in Home Assistant
 - HACS installed in Home Assistant
-- Your WiFi credentials 
+- Your WiFi credentials
 
+## What you'll end up with
+
+Once set up, your Voice Preview Edition will:
+
+- Control up to four entities using the dial
+- Let you switch between them using press + turn
+- Show their current value on the LED ring
+- Continue to respond to voice commands as normal
+- Allow you to switch back to the standard behaviour at any time (double press)
+
+Most users are up and running in around 15–30 minutes.
 
 ---
 
