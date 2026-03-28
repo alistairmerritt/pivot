@@ -124,37 +124,11 @@ The quickest fix is to go to **Settings → Devices & Services → Pivot → you
 
 ---
 
-## Switches (Show Control Value, Control Mode, etc.) reset after a Home Assistant restart
-
-This was a bug in integration versions prior to v0.0.16 — switch states were not correctly published to Home Assistant on startup, so the device would not reflect the restored value until the switch was toggled. **Update to v0.0.16 or later** via HACS to fix this permanently.
-
----
-
-## Show Control Value (or another switch) is on but doesn't take effect until I toggle it off and on
-
-This was fixed in firmware **v0.0.8**. After reconnecting to Home Assistant, the firmware now waits 2 seconds for HA to finish pushing all entity states and then re-reads and re-applies them. On earlier firmware versions, if the entity state in HA matched what the firmware had cached from a previous session, the state-change callback was skipped and the LEDs could be in a stale state.
-
-**If you are on an earlier firmware version**, the workaround is to toggle the affected switch off and back on — this forces the callback to fire and the display to update. Reflashing to v0.0.8 eliminates the need for the workaround.
-
----
-
 ## The timer blueprint triggers when I turn the knob on a bank with a real entity
 
 This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint now requires the bank's entity field to be set to the reserved keyword `timer` before it will respond — this prevents it from interfering with normally-assigned banks.
 
 To fix: go to **Settings → Devices & Services → Pivot → your device → Configure**, set the bank entity for your timer bank to `timer` (lowercase), and save. If the timer bank has a real entity assigned, remove it first.
-
----
-
-## The timer finish alert doesn't stop when I press the button
-
-If the finish alert keeps playing after you press the button, the most likely cause is that your timer automation is running an older version of the blueprint.
-
-1. Go to **Settings → Automations**, find your Pivot Timer automation, and open it.
-2. Click **Save** to re-load the latest blueprint logic.
-3. Make sure you are on integration **v0.0.18 or later**.
-
-The v0.0.18 blueprint uses two independent dismiss signals — a direct event and the bank-toggle script state — so a press at any point during the alert (including during the flash sequence) is now reliably detected within a few seconds.
 
 ---
 
