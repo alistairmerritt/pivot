@@ -181,6 +181,60 @@ template:
 
 ---
 
+## Dashboard control
+
+You can start, pause, and resume the timer from a Home Assistant dashboard by firing the same `pivot_button_press` event the physical button does. The blueprint treats both identically — idle starts, running pauses, paused resumes.
+
+### Script
+
+Add a script to your `scripts.yaml` (replacing `ha_voice_lounge` and `2` with your suffix and bank number):
+
+```yaml
+pivot_timer_toggle_ha_voice_lounge:
+  alias: "Pivot Timer Toggle"
+  sequence:
+    - event: pivot_button_press
+      event_data:
+        suffix: ha_voice_lounge
+        bank: 2
+        press_type: single_press
+        bank_entity: timer
+        control_mode: true
+```
+
+### Dashboard button card
+
+Once the script exists, add a button card to your dashboard:
+
+```yaml
+type: button
+name: Timer
+tap_action:
+  action: perform-action
+  perform_action: script.turn_on
+  target:
+    entity_id: script.pivot_timer_toggle_ha_voice_lounge
+show_state: false
+```
+
+Or, to show the current timer state on the button, point it at a template sensor (see the Template sensors section above):
+
+```yaml
+type: button
+name: Timer
+entity: sensor.pivot_timer_remaining
+tap_action:
+  action: perform-action
+  perform_action: script.turn_on
+  target:
+    entity_id: script.pivot_timer_toggle_ha_voice_lounge
+show_state: true
+```
+
+> **Note:** The alarm can only be dismissed from the physical button or the "stop" wake word — not from a dashboard card. The button above handles start/pause/resume only.
+
+---
+
 ## Tips
 
 **Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and if configured, TTS announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
