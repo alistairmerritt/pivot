@@ -22,7 +22,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 ## Voice timers and Pivot timers
 
-Your VPE can still set timers by voice, such as “set a 25 minute timer” — that behaviour is unchanged.
+Your voice assistant can still set timers by voice, such as “set a 25 minute timer” — that behaviour is unchanged.
 
 However, the built-in voice timer and the Pivot timer are currently two separate systems, each with its own logic and state:
 
