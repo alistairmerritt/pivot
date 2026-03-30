@@ -39,6 +39,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.35
+- **Fix (Timer blueprint):** After a timer alarm is dismissed, the device now returns to bank 1 automatically. Previously, the finish sequence switched the device to the timer bank so the alarm LED was visible, but never switched back — leaving the device on the timer bank after dismissal. A subsequent button press would then immediately restart the timer. The blueprint now waits for `timer_state` to return to `idle` (covering all dismiss paths: button press, stop wake word, dashboard, or 15-minute auto-timeout) and then resets the active bank to 1. The same bank reset is applied when a timer is cancelled (long press) or auto-cancelled after 15 minutes paused.
+
 ### v0.0.34
 - **Change:** Pivot-owned YAML files are now written to a `/config/pivot/` subfolder instead of the `/config/` root, keeping your config directory clean.
 - **Fix:** Automation filenames had a double `pivot_` prefix (`pivot_pivot_{suffix}_announcements.yaml`). Files are now named `pivot_{suffix}_announcements.yaml` as intended.
