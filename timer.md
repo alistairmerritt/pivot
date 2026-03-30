@@ -16,7 +16,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 - **Single press** — start the timer if idle, pause if running, resume if paused
 - **Long press** — cancel and reset (works from any bank — you don't need to switch back to the timer bank first)
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
-- **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press or "stop" wake word dismisses the alarm.
+- **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press, "stop" wake word, or the dashboard button dismisses the alarm.
 
 ---
 
@@ -231,7 +231,7 @@ tap_action:
 show_state: true
 ```
 
-> **Note:** The alarm can only be dismissed from the physical button or the "stop" wake word — not from a dashboard card. The button above handles start/pause/resume only.
+> **Note:** The dashboard button handles all states — start, pause, resume, and alarm dismissal — identically to the physical button.
 
 ---
 
