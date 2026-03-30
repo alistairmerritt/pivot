@@ -41,6 +41,12 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.37
+- **Fix (Timer blueprint):** Dashboard alarm dismissal now works correctly. The previous approach constructed `switch.{suffix}_timer_ringing` to identify the alarm switch, but the ESPHome device name and the Pivot suffix are independent and don't have to match — the entity was never found. A new optional **Timer Ringing Switch** input lets you pick the correct entity directly. Leave it blank to use button/wake-word dismiss only.
+
+### v0.0.36
+- **New (Timer blueprint):** A dashboard button can now start, pause, resume, and dismiss the timer alarm by firing a `pivot_button_press` event — the same event the physical button fires. See the [Timer page](/timer) for setup instructions. Requires firmware v0.0.13.
+
 ### v0.0.34
 - **Change:** Pivot-owned YAML files are now written to a `/config/pivot/` subfolder instead of the `/config/` root, keeping your config directory clean.
 - **Fix:** Automation filenames had a double `pivot_` prefix (`pivot_pivot_{suffix}_announcements.yaml`). Files are now named `pivot_{suffix}_announcements.yaml` as intended.
