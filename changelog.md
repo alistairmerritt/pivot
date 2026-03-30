@@ -7,7 +7,6 @@ permalink: /changelog/
 ## Firmware
 
 ### v0.0.12
-- **New:** The timer alarm can now be stopped from a dashboard. Setting `select.{suffix}_timer_state` to `idle` (e.g. via a dashboard button card) dismisses the alarm on the device — the LED ring and alarm sound stop immediately. A `pivot_timer_active` global tracks whether the current alarm was started by Pivot, so native voice-assistant timer alerts are not affected.
 - **New:** A button press in control mode now cancels an active voice assistant session without firing a `pivot_button_press` event. Previously, pressing while voice was active sent a single_press event to HA (potentially triggering the bank toggle script) and then stopped the voice. Now the press is intercepted before the event fires — voice is cancelled cleanly and no bank action occurs.
 
 ### v0.0.11
@@ -38,9 +37,6 @@ permalink: /changelog/
 ---
 
 ## Integration
-
-### v0.0.35
-- **Fix (Timer blueprint):** After a timer alarm is dismissed, the device now returns to bank 1 automatically. Previously, the finish sequence switched the device to the timer bank so the alarm LED was visible, but never switched back — leaving the device on the timer bank after dismissal. A subsequent button press would then immediately restart the timer. The blueprint now waits for `timer_state` to return to `idle` (covering all dismiss paths: button press, stop wake word, dashboard, or 15-minute auto-timeout) and then resets the active bank to 1. The same bank reset is applied when a timer is cancelled (long press) or auto-cancelled after 15 minutes paused.
 
 ### v0.0.34
 - **Change:** Pivot-owned YAML files are now written to a `/config/pivot/` subfolder instead of the `/config/` root, keeping your config directory clean.
