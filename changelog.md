@@ -41,6 +41,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.38
+- **Fix (Timer blueprint):** Long press cancel now reliably triggers the automation. The previous blueprint used a single unfiltered `pivot_button_press` trigger and relied on conditions to match the right device and press type — causing long press traces to be silently displaced from the 5-entry history by gauge sync and other events before they could be inspected. Triggers now use `!input` to filter at the source: `single_press` matches suffix + bank + press type, `long_press` matches suffix + press type only (no bank — it works from any bank). The staleness check is also simplified, and redundant suffix/bank/press_type checks are removed from `choose` conditions throughout.
+
 ### v0.0.37
 - **Fix (Timer blueprint):** Dashboard alarm dismissal now works correctly. The previous approach constructed `switch.{suffix}_timer_ringing` to identify the alarm switch, but the ESPHome device name and the Pivot suffix are independent and don't have to match — the entity was never found. A new optional **Timer Ringing Switch** input lets you pick the correct entity directly. Leave it blank to use button/wake-word dismiss only.
 
