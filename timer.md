@@ -194,3 +194,11 @@ template:
 **Pausing and resuming** — Remaining time is stored in text.{suffix}_timer_end and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the gauge sync will detect this within 5 seconds of startup and trigger the finish sequence normally.
 
 **Paused auto-cancel** — If the timer is left paused for more than 15 minutes, it resets automatically: the gauge goes to 0 and `timer_state` returns to `idle`. This prevents the timer from being stuck in paused state indefinitely.
+
+---
+
+## Planned features
+
+> **Voice-activated timers** — Support for starting the Pivot timer by voice is being explored. The goal is to say something like *"set a timer for 25 minutes"* and have it start the Pivot timer directly — visible on the gauge, the LED ring, and a dashboard — rather than the stock VPE timer which has no dashboard visibility.
+
+> **Dashboard timer control** — A companion feature to replace the stock VPE timer entirely with a Pivot-backed one that can be read, configured, and adjusted from a Home Assistant dashboard card. No timeline on either feature yet.
