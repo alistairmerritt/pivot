@@ -29,6 +29,8 @@ Your VPE can still set timers by voice ("set a 10 minute timer") — that functi
 
 There's currently no way to bridge the two. They share the same alarm sound and LED ring effect when they finish (both use the device's built-in `timer_ringing` mechanism), but otherwise run independently. Use whichever suits the moment — they won't interfere with each other.
 
+> **Enhanced timer support** — Future improvements include a Pivot-backed timer experience that can be started by voice and fully surfaced in Home Assistant. The aim is to let users say something like *"set a timer for 25 minutes"* and have it run through Pivot instead of the stock VPE timer, with visibility and control across the gauge, LED ring, and dashboard. No current timelines.
+
 ---
 
 ## Getting started with timers
@@ -195,8 +197,3 @@ template:
 
 **Paused auto-cancel** — If the timer is left paused for more than 15 minutes, it resets automatically: the gauge goes to 0 and `timer_state` returns to `idle`. This prevents the timer from being stuck in paused state indefinitely.
 
----
-
-## Planned features
-
-> **Enhanced timer support** — Future improvements include a Pivot-backed timer experience that can be started by voice and fully surfaced in Home Assistant. The aim is to let users say something like *"set a timer for 25 minutes"* and have it run through Pivot instead of the stock VPE timer, with visibility and control across the gauge, LED ring, and dashboard. No current timelines.
