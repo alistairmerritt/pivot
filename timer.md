@@ -199,6 +199,4 @@ template:
 
 ## Planned features
 
-> **Voice-activated timers** — Support for starting the Pivot timer by voice is being explored. The goal is to say something like *"set a timer for 25 minutes"* and have it start the Pivot timer directly — visible on the gauge, the LED ring, and a dashboard — rather than the stock VPE timer which has no dashboard visibility.
-
-> **Dashboard timer control** — A companion feature to replace the stock VPE timer entirely with a Pivot-backed one that can be read, configured, and adjusted from a Home Assistant dashboard card. No timeline on either feature yet.
+> **Enhanced timer support** — Future improvements include a Pivot-backed timer experience that can be started by voice and fully surfaced in Home Assistant. The aim is to let users say something like *"set a timer for 25 minutes"* and have it run through Pivot instead of the stock VPE timer, with visibility and control across the gauge, LED ring, and dashboard. No current timelines.
