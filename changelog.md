@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.13
+- **New:** The `timer_ringing` switch is now exposed to Home Assistant. This allows a dashboard button (or any HA automation) to dismiss the timer alarm by calling `switch.turn_off` on `switch.{suffix}_timer_ringing` — the same path the physical button takes internally. Requires a reflash.
+
 ### v0.0.12
 - **New:** A button press in control mode now cancels an active voice assistant session without firing a `pivot_button_press` event. Previously, pressing while voice was active sent a single_press event to HA (potentially triggering the bank toggle script) and then stopped the voice. Now the press is intercepted before the event fires — voice is cancelled cleanly and no bank action occurs.
 
