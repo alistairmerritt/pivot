@@ -187,7 +187,7 @@ template:
 
 ## Dashboard control
 
-You can start, pause, and resume the timer from a Home Assistant dashboard by firing the same `pivot_button_press` event the physical button does. The blueprint treats both identically — idle starts, running pauses, paused resumes.
+You can start, pause, resume, and dismiss the timer alarm from a Home Assistant dashboard by firing the same `pivot_button_press` event the physical button does. The blueprint treats both identically — idle starts, running pauses, paused resumes, and alerting dismisses.
 
 ### Script
 
@@ -235,7 +235,7 @@ tap_action:
 show_state: true
 ```
 
-> **Note:** The dashboard button handles all states — start, pause, resume, and alarm dismissal — identically to the physical button.
+> **Note:** The dashboard button handles all states — start, pause, resume, and alarm dismissal — identically to the physical button. Alarm dismissal requires firmware v0.0.13 or later, and the **Timer Ringing Switch** input must be set in your timer blueprint automation (Settings → Automations → your timer automation → edit). Set it to the `timer_ringing` switch entity for your device, found under Settings → Devices & Services → ESPHome → your device.
 
 ---
 
