@@ -80,20 +80,21 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 
 ### Step 5 — Create an automation from the blueprint
 
-1. Go to **Settings → Automations → Blueprints** and find **Pivot — Timer**.
+1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot — Timer**.
 2. Click **Create Automation**.
 3. Fill in the inputs:
 
 | Input | Description |
-| --- | --- |
-| **Device Suffix** | Your device suffix, e.g. ha_voice_lounge |
-| **Bank Number** | Which bank controls the timer (1–4) — must match the bank you set to timer |
-| **Media Player** | Speaker for TTS announcements (start, pause, resume, finish message) |
-| **TTS Entity** | Text-to-speech entity for spoken timer announcements. Required if you want the device to announce the selected duration when turning the knob. |
-| **Finish Message** | Optional — what to say when the timer finishes (default: "Timer finished") |
+|---|---|
+| **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs are derived from this. |
+| **Bank Number** | Which bank controls the timer (`1–4`). This must match the bank you set to `timer`. |
+| **Pivot Device** | Your Pivot VPE device. The blueprint derives the media player and `timer_ringing` switch automatically from this device. |
+| **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. This is used to detect a long press for timer cancel. |
+| **TTS Entity** | Optional text-to-speech entity for spoken timer announcements. Leave blank to disable spoken announcements. |
+| **Finish Message** | Optional message to speak once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 
 4. Save the automation.
-
+5. 
 That's it — single-press the bank to start. Single-press to pause. Long-press to reset.
 
 ---
