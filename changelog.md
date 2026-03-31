@@ -41,6 +41,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.39
+- **Change (Timer blueprint):** Replaced separate **Media Player** and **Timer Ringing Switch** entity inputs with a single **Pivot Device** picker. The media player, timer ringing switch, and button event entity are now derived automatically from the selected device using `device_entities()` — no manual entity picking required, and it works regardless of how the ESPHome device is named in HA.
+
 ### v0.0.38
 - **Fix (Timer blueprint):** Long press cancel now reliably triggers the automation. The previous blueprint used a single unfiltered `pivot_button_press` trigger and relied on conditions to match the right device and press type — causing long press traces to be silently displaced from the 5-entry history by gauge sync and other events before they could be inspected. Triggers now use `!input` to filter at the source: `single_press` matches suffix + bank + press type, `long_press` matches suffix + press type only (no bank — it works from any bank). The staleness check is also simplified, and redundant suffix/bank/press_type checks are removed from `choose` conditions throughout.
 
