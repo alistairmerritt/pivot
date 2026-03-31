@@ -94,7 +94,7 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 | **Finish Message** | Optional message to speak once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 
 4. Save the automation.
-5. 
+   
 That's it — single-press the bank to start. Single-press to pause. Long-press to reset.
 
 ---
