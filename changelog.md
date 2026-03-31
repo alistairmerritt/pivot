@@ -41,6 +41,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.40
+- **Fix (Timer blueprint):** Long press cancel now works reliably. Adds a **Button Event Entity** input (pre-filtered to event entities on the selected Pivot device) and uses a direct state trigger on it instead of relying on `pivot_button_press` — which requires the Pivot integration to have a correctly configured device ID that is not always set. The condition checks `event_type == long_press` so single and double presses are ignored.
+
 ### v0.0.39
 - **Change (Timer blueprint):** Replaced separate **Media Player** and **Timer Ringing Switch** entity inputs with a single **Pivot Device** picker. The media player, timer ringing switch, and button event entity are now derived automatically from the selected device using `device_entities()` — no manual entity picking required, and it works regardless of how the ESPHome device is named in HA.
 
