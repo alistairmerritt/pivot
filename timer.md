@@ -14,7 +14,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 - **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
 - **Single press** — start the timer if idle, pause if running, resume if paused
-- **Long press** — cancel and reset (works from any bank — you don't need to switch back to the timer bank first)
+- **Long press** — cancel and reset
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
 - **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press, "stop" wake word, or the dashboard button dismisses the alarm.
 
