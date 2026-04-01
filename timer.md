@@ -4,7 +4,7 @@ title: Timer
 permalink: /timer/
 ---
 
-Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a focus block — controlled entirely from the device's button and reflected on the gauge LEDs. This is an optional feature: the timer entities are provisioned per device but disabled by default, and the blueprint is installed manually.
+Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a focus block — controlled from the device's knob and button, and reflected on the gauge LEDs. This is an optional feature: the timer entities are included with each device but disabled by default, and the blueprint is installed manually.
 
 ---
 
@@ -12,7 +12,7 @@ Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a
 
 Once set up, a single bank on your Pivot device becomes a timer controller:
 
-- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
+- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and, if TTS is configured, a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
 - **Single press** — start the timer if idle, pause if running, resume if paused
 - **Long press** — cancel and reset (only when the timer bank is active — long press on other banks is passed through for custom actions); announces *"Timer cancelled"* if TTS is configured
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
@@ -88,10 +88,10 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 |---|---|
 | **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs are derived from this. |
 | **Bank Number** | Which bank controls the timer (`1–4`). This must match the bank you set to `timer`. |
-| **Pivot Device** | Your Pivot VPE device. The blueprint derives the media player and `timer_ringing` switch automatically from this device. |
-| **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect a long press for timer cancel. Find it under Settings → Devices & Services → ESPHome → your device. |
-| **TTS Entity** | Optional text-to-speech entity for spoken timer announcements. Leave blank to disable spoken announcements. |
-| **Finish Message** | Optional message to speak once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
+| **Pivot Device** | Your Pivot VPE device. The media player and `timer_ringing` switch are derived automatically from this. |
+| **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect long press (cancel). Find it under Settings → Devices & Services → ESPHome → your device. |
+| **TTS Entity** | The text-to-speech engine that *generates* spoken announcements (start, pause, resume, knob, finish). Both a TTS entity and a media player (derived from **Pivot Device**) are required for any spoken timer announcements. Leave blank to disable all speech. |
+| **Finish Message** | Optional message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 | **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. Requires firmware v0.0.14 or later. |
 
 4. Save the automation.
@@ -106,7 +106,7 @@ That's it — single-press the bank to start. Single-press to pause. Long-press 
 | --- | --- |
 | number.{suffix}_timer_duration | Duration in minutes (1–60, default 25) |
 | select.{suffix}_timer_state | State mirror — updated by blueprint and firmware (idle / running / paused / alerting) |
-| text.{suffix}_timer_end | Internal — stores ISO end time while running, remaining seconds while paused |
+| text.{suffix}_timer_end | Internal — stores an ISO end timestamp while running, and a `P{seconds}` remaining-time value while paused |
 
 All three entities are **disabled by default** and live under the Pivot device in the HA device registry. The text.{suffix}_timer_end entity is managed entirely by the blueprint; you don't need to interact with it directly.
 
@@ -276,9 +276,11 @@ The cancel action only takes effect when the timer is running or paused — pres
 
 **Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and if configured, TTS announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
 
-**Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains. The gauge syncs every 30 seconds — on a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
+**Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains. While the timer is running, the gauge syncs every 30 seconds — on a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
 
 **Assigning the bank** — Set text.{suffix}_bank_N_entity to timer directly via your device entities screen – Go to **Devices & Services → Pivot → Your Pivot Device** (the Configure screen rejects it as it's not a real entity ID). The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
+
+**Long pressing from another bank** — Long press cancel only fires when the timer bank is the active bank. This is intentional — long press on other banks is left free for custom actions. If you're on a different bank and want to cancel, switch back to the timer bank first, then long press.
 
 **Changing duration mid-session** — Turning the knob while the timer is running or paused does nothing. To change the duration, switch to the timer bank, long press to cancel, then turn the knob to select a new time.
 
