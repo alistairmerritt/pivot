@@ -92,7 +92,7 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 | **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect long press (cancel). Find it under Settings → Devices & Services → ESPHome → your device. |
 | **TTS Entity** | The text-to-speech engine that *generates* spoken announcements (start, pause, resume, knob, finish). Both a TTS entity and a media player (derived from **Pivot Device**) are required for any spoken timer announcements. Leave blank to disable all speech. |
 | **Finish Message** | Optional message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
-| **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. Requires firmware v0.0.14 or later. |
+| **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. |
 
 4. Save the automation.
    
