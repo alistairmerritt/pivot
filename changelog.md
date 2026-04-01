@@ -44,6 +44,12 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.45
+- **Change (Timer blueprint):** Reverted the `/5s` gauge sync added in v0.0.44. With multiple devices each running an automation every 5 seconds, the idle overhead outweighs the benefit — ~86k evaluations per day across 5 devices when no timer is active. The single `/30s` trigger is restored.
+
+### v0.0.44
+- **Change (Timer blueprint):** Added a `/5s` gauge sync trigger for smoother gauge updates while running. Reverted in v0.0.45.
+
 ### v0.0.43
 - **Change (Timer blueprint):** Long press cancel is now restricted to the timer bank. Previously, a long press on any bank would cancel the timer — this conflicted with long press being reserved for custom actions on other banks. The cancel now only fires when `number.{suffix}_active_bank` matches the configured timer bank number. Long press on all other banks is ignored by the timer blueprint and remains free for custom use.
 
