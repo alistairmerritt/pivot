@@ -41,6 +41,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.41
+- **New (Timer blueprint):** A dedicated cancel button can now be added to the dashboard. The blueprint accepts `pivot_button_press` with `press_type: long_press` as a secondary cancel trigger alongside the physical long press — enabling a dashboard script to cancel in the same way the physical button does, including the *"Timer cancelled"* TTS announcement. See the [Timer page](/timer#cancel-button) for setup.
+
 ### v0.0.40
 - **Fix (Timer blueprint):** Long press cancel now works reliably. Adds a **Button Event Entity** input (pre-filtered to event entities on the selected Pivot device) and uses a direct state trigger on it instead of relying on `pivot_button_press` — which requires the Pivot integration to have a correctly configured device ID that is not always set. The condition checks `event_type == long_press` so single and double presses are ignored.
 

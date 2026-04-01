@@ -14,7 +14,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 - **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
 - **Single press** — start the timer if idle, pause if running, resume if paused
-- **Long press** — cancel and reset
+- **Long press** — cancel and reset (works from any bank — you don't need to switch back to the timer bank first); announces *"Timer cancelled"* if TTS is configured
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
 - **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press, "stop" wake word, or the dashboard button dismisses the alarm.
 
@@ -89,7 +89,7 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 | **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs are derived from this. |
 | **Bank Number** | Which bank controls the timer (`1–4`). This must match the bank you set to `timer`. |
 | **Pivot Device** | Your Pivot VPE device. The blueprint derives the media player and `timer_ringing` switch automatically from this device. |
-| **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. This is used to detect a long press for timer cancel. |
+| **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect a long press for timer cancel. Find it under Settings → Devices & Services → ESPHome → your device. |
 | **TTS Entity** | Optional text-to-speech entity for spoken timer announcements. Leave blank to disable spoken announcements. |
 | **Finish Message** | Optional message to speak once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 
@@ -236,7 +236,38 @@ tap_action:
 show_state: true
 ```
 
-> **Note:** The dashboard button handles all states — start, pause, resume, and alarm dismissal — identically to the physical button. Alarm dismissal requires firmware v0.0.13 or later, and the **Timer Ringing Switch** input must be set in your timer blueprint automation (Settings → Automations → your timer automation → edit). Set it to the `timer_ringing` switch entity for your device, found under Settings → Devices & Services → ESPHome → your device.
+> **Note:** The dashboard button handles all states — start, pause, resume, and alarm dismissal — identically to the physical button. Alarm dismissal requires firmware v0.0.13 or later.
+
+### Cancel button
+
+To add a dedicated cancel button, add a second script and button card. The cancel script fires `pivot_button_press` with `press_type: long_press` — the blueprint treats this identically to a physical long press, including the *"Timer cancelled"* announcement.
+
+```yaml
+pivot_timer_cancel_ha_voice_lounge:
+  alias: "Pivot Timer Cancel"
+  sequence:
+    - event: pivot_button_press
+      event_data:
+        suffix: ha_voice_lounge
+        bank: 2
+        press_type: long_press
+        bank_entity: timer
+        control_mode: true
+```
+
+```yaml
+type: button
+name: Cancel
+icon: mdi:timer-off-outline
+tap_action:
+  action: perform-action
+  perform_action: script.turn_on
+  target:
+    entity_id: script.pivot_timer_cancel_ha_voice_lounge
+show_state: false
+```
+
+The cancel action only takes effect when the timer is running or paused — pressing it while idle does nothing.
 
 ---
 
@@ -252,7 +283,7 @@ show_state: true
 
 **Multiple timers** — You can create multiple automations from the same blueprint, one per Pivot device, each with its own suffix and bank assignment.
 
-**Pausing and resuming** — Remaining time is stored in text.{suffix}_timer_end and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the gauge sync will detect this within 5 seconds of startup and trigger the finish sequence normally.
+**Pausing and resuming** — Remaining time is stored in text.{suffix}_timer_end and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the gauge sync will detect this within 30 seconds of startup and trigger the finish sequence normally.
 
 **Paused auto-cancel** — If the timer is left paused for more than 15 minutes, it resets automatically: the gauge goes to 0 and `timer_state` returns to `idle`. This prevents the timer from being stuck in paused state indefinitely.
 
