@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.14
+- **New:** Adds a `Timer Silent Mode` switch, exposed to Home Assistant. When on, the alarm sound is suppressed at the end of a Pivot timer — the LED ring still pulses and the "stop" wake word still activates, only the sound is silenced. Controlled automatically by the blueprint (v0.0.42+) based on the **Silent Mode** input. Off by default (`restore_mode: ALWAYS_OFF`), so existing behaviour is unchanged without a blueprint update. Requires a reflash.
+
 ### v0.0.13
 - **New:** The `timer_ringing` switch is now exposed to Home Assistant. This allows a dashboard button (or any HA automation) to dismiss the timer alarm by calling `switch.turn_off` on `switch.{suffix}_timer_ringing` — the same path the physical button takes internally. Requires a reflash.
 
@@ -41,6 +44,12 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.43
+- **Change (Timer blueprint):** Long press cancel is now restricted to the timer bank. Previously, a long press on any bank would cancel the timer — this conflicted with long press being reserved for custom actions on other banks. The cancel now only fires when `number.{suffix}_active_bank` matches the configured timer bank number. Long press on all other banks is ignored by the timer blueprint and remains free for custom use.
+
+### v0.0.42
+- **New (Timer blueprint):** Adds a **Silent Mode** boolean input (off by default). When enabled, the blueprint sets the `timer_silent_mode` switch on the device before triggering the alarm — suppressing the alarm sound while leaving the LED ring pulse and "stop" wake word intact. Requires firmware v0.0.14 or later; gracefully ignored on older firmware.
+
 ### v0.0.41
 - **New (Timer blueprint):** A dedicated cancel button can now be added to the dashboard. The blueprint accepts `pivot_button_press` with `press_type: long_press` as a secondary cancel trigger alongside the physical long press — enabling a dashboard script to cancel in the same way the physical button does, including the *"Timer cancelled"* TTS announcement. See the [Timer page](/timer#cancel-button) for setup.
 
@@ -51,7 +60,7 @@ permalink: /changelog/
 - **Change (Timer blueprint):** Replaced separate **Media Player** and **Timer Ringing Switch** entity inputs with a single **Pivot Device** picker. The media player, timer ringing switch, and button event entity are now derived automatically from the selected device using `device_entities()` — no manual entity picking required, and it works regardless of how the ESPHome device is named in HA.
 
 ### v0.0.38
-- **Fix (Timer blueprint):** Long press cancel now reliably triggers the automation. The previous blueprint used a single unfiltered `pivot_button_press` trigger and relied on conditions to match the right device and press type — causing long press traces to be silently displaced from the 5-entry history by gauge sync and other events before they could be inspected. Triggers now use `!input` to filter at the source: `single_press` matches suffix + bank + press type, `long_press` matches suffix + press type only (no bank — it works from any bank). The staleness check is also simplified, and redundant suffix/bank/press_type checks are removed from `choose` conditions throughout.
+- **Fix (Timer blueprint):** Long press cancel now reliably triggers the automation. The previous blueprint used a single unfiltered `pivot_button_press` trigger and relied on conditions to match the right device and press type — causing long press traces to be silently displaced from the 5-entry history by gauge sync and other events before they could be inspected. Triggers now use `!input` to filter at the source: `single_press` matches suffix + bank + press type, `long_press` matches suffix + press type only. The staleness check is also simplified, and redundant suffix/bank/press_type checks are removed from `choose` conditions throughout. Note: the any-bank behaviour was later revised in v0.0.43 to restrict cancel to the timer bank only.
 
 ### v0.0.37
 - **Fix (Timer blueprint):** Dashboard alarm dismissal now works correctly. The previous approach constructed `switch.{suffix}_timer_ringing` to identify the alarm switch, but the ESPHome device name and the Pivot suffix are independent and don't have to match — the entity was never found. A new optional **Timer Ringing Switch** input lets you pick the correct entity directly. Leave it blank to use button/wake-word dismiss only.

@@ -92,6 +92,7 @@ Or paste this URL into **Settings → Automations → Blueprints → Import Blue
 | **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect a long press for timer cancel. Find it under Settings → Devices & Services → ESPHome → your device. |
 | **TTS Entity** | Optional text-to-speech entity for spoken timer announcements. Leave blank to disable spoken announcements. |
 | **Finish Message** | Optional message to speak once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
+| **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. Requires firmware v0.0.14 or later. |
 
 4. Save the automation.
    
@@ -279,7 +280,7 @@ The cancel action only takes effect when the timer is running or paused — pres
 
 **Assigning the bank** — Set text.{suffix}_bank_N_entity to timer directly via your device entities screen – Go to **Devices & Services → Pivot → Your Pivot Device** (the Configure screen rejects it as it's not a real entity ID). The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
 
-**Changing duration mid-session** — Turning the knob while the timer is running or paused does nothing. To change the duration, cancel first (long press), then turn the knob to select a new time.
+**Changing duration mid-session** — Turning the knob while the timer is running or paused does nothing. To change the duration, switch to the timer bank, long press to cancel, then turn the knob to select a new time.
 
 **Multiple timers** — You can create multiple automations from the same blueprint, one per Pivot device, each with its own suffix and bank assignment.
 
