@@ -44,6 +44,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.46
+- **Fix (Timer blueprint):** Bank entity check is now case-insensitive. `Timer`, `TIMER`, etc. are all accepted alongside the recommended lowercase `timer`.
+
 ### v0.0.45
 - **Change (Timer blueprint):** Reverted the `/5s` gauge sync added in v0.0.44. With multiple devices each running an automation every 5 seconds, the idle overhead outweighs the benefit — ~86k evaluations per day across 5 devices when no timer is active. The single `/30s` trigger is restored.
 
