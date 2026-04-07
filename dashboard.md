@@ -1,12 +1,19 @@
 ---
 layout: page
-title: Dashboard
+title: Example Dashboard
 permalink: /dashboard/
 ---
 
-> **Experimental** — This dashboard is a community-built example and has not been extensively tested across all configurations. It requires several third-party HACS custom cards and involves editing raw dashboard YAML. It is intended for users who are comfortable with Home Assistant's advanced dashboard tools.
+> **Optional and experimental** — This is a community-built example dashboard, not an official part of Pivot. It has not been extensively tested across all configurations and requires several third-party HACS custom cards and raw dashboard YAML editing. It is intended for users who are comfortable with Home Assistant's advanced dashboard tools.
 
-The Pivot dashboard gives you a visual interface for all your Pivot devices: bank assignments, value sliders, active bank indicator, toggle controls, and timer controls — all in one place.
+This example dashboard gives you a visual interface for all your Pivot devices: bank assignments, value sliders, active bank indicator, toggle controls, and timer controls — all in one place.
+
+**At a glance — four steps to set up:**
+
+1. Install three HACS custom cards
+2. Paste the shared `button_card_templates` block into your dashboard YAML
+3. Add one `pivot_config_*` block per device, and update the volume slider entity per device
+4. Duplicate the device section YAML once per Pivot device
 
 ---
 
@@ -80,7 +87,7 @@ The dashboard uses `custom:button-card`'s template system. You define reusable t
 
 This means `pivot_banks` works for any device — you just pair it with the right `pivot_config_*` template.
 
-**Per-device config templates** (`pivot_config_kitchen`, `pivot_config_living`, etc.) are the only things you need to customise. They store your device-specific values: the device suffix, media player entity ID, and timer silent mode switch. Everything else is shared.
+**Per-device config templates** (`pivot_config_kitchen`, `pivot_config_living`, etc.) are what you customise per device — they store your device suffix, media player entity ID, and timer silent mode switch. There is one additional customisation per device: the volume slider in the device section YAML also uses the media player entity ID directly, because `custom:my-slider-v2` does not inherit button-card template variables. Both places are clearly marked in the examples below.
 
 ---
 
@@ -1516,9 +1523,12 @@ Each device section uses a three-column layout:
       column_span: 1
 ```
 
-Duplicate the entire section block for each additional device, replacing the template name (`pivot_config_kitchen`) and the volume slider entity ID throughout.
+For each additional device, duplicate this entire section block and make two changes:
 
-> **Note:** The volume slider uses `custom:my-slider-v2` and takes the media player entity ID directly — it is not inherited from the config template. Update `entity:` in that card to match the media player for each device.
+1. Replace every occurrence of `pivot_config_kitchen` with your device's config template name (e.g. `pivot_config_living`)
+2. Update the `entity:` field on the `custom:my-slider-v2` volume slider card to that device's media player entity ID
+
+The volume slider is the one card that cannot inherit from the config template, because `custom:my-slider-v2` is a standalone card rather than a `custom:button-card`. All other device-specific values come from the config template automatically.
 
 ---
 
