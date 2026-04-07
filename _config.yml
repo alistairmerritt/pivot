@@ -9,6 +9,7 @@ header_pages:
   - firmware.md
   - integration.md
   - timer.md
+  - dashboard.md
   - help.md
   - changelog.md
 

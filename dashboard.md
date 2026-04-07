@@ -1,0 +1,1544 @@
+---
+layout: page
+title: Dashboard
+permalink: /dashboard/
+---
+
+> **Experimental** — This dashboard is a community-built example and has not been extensively tested across all configurations. It requires several third-party HACS custom cards and involves editing raw dashboard YAML. It is intended for users who are comfortable with Home Assistant's advanced dashboard tools.
+
+The Pivot dashboard gives you a visual interface for all your Pivot devices: bank assignments, value sliders, active bank indicator, toggle controls, and timer controls — all in one place.
+
+---
+
+## On this page
+
+- [Prerequisites](#prerequisites)
+- [Install custom cards via HACS](#install-custom-cards-via-hacs)
+- [How the templates work](#how-the-templates-work)
+- [Step 1 — Add the button_card_templates](#step-1--add-the-button_card_templates)
+- [Step 2 — Add a device section](#step-2--add-a-device-section)
+- [Template reference](#template-reference)
+
+---
+
+## Prerequisites
+
+Before starting, you need:
+
+- [HACS](https://hacs.xyz) installed in Home Assistant
+- The following custom frontend cards installed via HACS:
+  - **custom:button-card** — the core card all templates are built on
+  - **custom:my-slider-v2** — used for bank value sliders and device volume
+  - **custom:layout-card** — used for internal card layout within templates
+
+---
+
+## Install custom cards via HACS
+
+### custom:button-card
+
+1. Go to **HACS → Frontend**
+2. Search for **Button Card**
+3. Select **Button Card** by RomRider
+4. Click **Download**
+5. Restart Home Assistant when prompted
+
+### custom:my-slider-v2
+
+1. Go to **HACS → Frontend**
+2. Search for **My Slider v2**
+3. Select **My Slider v2** by AnthonMS
+4. Click **Download**
+5. Restart Home Assistant when prompted
+
+### custom:layout-card
+
+1. Go to **HACS → Frontend**
+2. Search for **Layout Card**
+3. Select **Layout Card** by thomasloven
+4. Click **Download**
+5. Restart Home Assistant when prompted
+
+After installing all three, do a full browser refresh (Ctrl+Shift+R / Cmd+Shift+R) before continuing.
+
+---
+
+## How the templates work
+
+The dashboard uses `custom:button-card`'s template system. You define reusable templates once in a `button_card_templates` block at the top of your dashboard YAML, then reference them by name in your cards.
+
+**Template inheritance** is the key mechanism. Each card specifies a `template` list, and variables flow from left to right:
+
+```yaml
+- type: custom:button-card
+  template:
+    - pivot_config_kitchen   # sets device_suffix, media_player, timer_silent_toggle
+    - pivot_banks            # uses those variables to build the card
+  variables:
+    bank_number: 1           # card-level override
+```
+
+This means `pivot_banks` works for any device — you just pair it with the right `pivot_config_*` template.
+
+**Per-device config templates** (`pivot_config_kitchen`, `pivot_config_living`, etc.) are the only things you need to customise. They store your device-specific values: the device suffix, media player entity ID, and timer silent mode switch. Everything else is shared.
+
+---
+
+## Step 1 — Add the button_card_templates
+
+Open your Home Assistant dashboard in **Edit** mode, then click the three-dot menu and select **Edit dashboard YAML** (or **Raw configuration editor**).
+
+At the very top of the YAML, paste the following `button_card_templates` block. This defines all the shared templates used by the dashboard.
+
+Then add one `pivot_config_*` entry per Pivot device you have (see [Per-device config](#per-device-config) below).
+
+```yaml
+button_card_templates:
+
+  # ─── Per-device config ───────────────────────────────────────────────────────
+  # Add one block per Pivot device. Replace the values with your own.
+  # device_suffix       — matches the device_suffix in your firmware YAML
+  # media_player        — the media_player entity ID for your VPE
+  # timer_silent_toggle — the timer_silent_mode switch entity ID for your VPE
+  pivot_config_example:
+    variables:
+      device_name: Example Pivot
+      device_suffix: ha_voice_example
+      media_player: media_player.your_vpe_media_player
+      timer_silent_toggle: switch.your_vpe_timer_silent_mode
+
+  # ─── Shared component templates ──────────────────────────────────────────────
+  pivot_section_heading:
+    variables:
+      heading: null
+      subheading: null
+    show_state: false
+    show_icon: false
+    show_name: true
+    show_label: true
+    name: '[[[ return variables.heading; ]]]'
+    label: '[[[ return variables.subheading; ]]]'
+    styles:
+      card:
+        - background: transparent
+        - padding: 0px
+        - border-radius: 0px
+      name:
+        - justify-self: start
+        - font-size: 22px
+        - font-weight: 400
+        - color: var(--primary-text-color)
+      label:
+        - justify-self: start
+        - font-size: 14px
+        - font-weight: 400
+        - color: rgba(255,255,255,0.5)
+        - margin-top: '-8px'
+
+  pivot_active_bank:
+    variables:
+      active_bank_entity: '[[[ return `number.${variables.device_suffix}_active_bank`; ]]]'
+    show_name: false
+    show_state: false
+    show_icon: false
+    styles:
+      card:
+        - background: transparent
+        - border: none
+        - box-shadow: none
+        - padding: 0px
+      grid:
+        - grid-template-areas: '"bank"'
+        - grid-template-columns: 1fr
+        - width: 100%
+      custom_fields:
+        bank:
+          - width: 100%
+    custom_fields:
+      bank:
+        card:
+          type: custom:button-card
+          show_name: true
+          show_icon: false
+          name: |
+            [[[
+              const controlMode = states[`switch.${variables.device_suffix}_control_mode`]?.state;
+              if (controlMode !== 'on') return 'Control mode off';
+              const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
+              const bankNum = activeBank + 0;
+              const nameEntityId = states[`text.${variables.device_suffix}_bank_${activeBank - 1}_entity`]?.state;
+              const entityName = nameEntityId && states[nameEntityId]
+                ? (states[nameEntityId].attributes.friendly_name || nameEntityId)
+                : (nameEntityId || 'Unknown');
+              const titleCase = entityName.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+              return `Bank ${bankNum} - ${titleCase}`;
+            ]]]
+          tap_action:
+            action: more-info
+            entity: '[[[ return variables.active_bank_entity; ]]]'
+          styles:
+            grid:
+              - grid-template-areas: '"dot n"'
+              - grid-template-columns: 20px 1fr
+              - align-items: center
+              - gap: 10px
+            card:
+              - background: transparent
+              - border: none
+              - box-shadow: none
+              - padding: 0px
+              - height: 30px
+              - border-radius: 0px
+            name:
+              - color: '#ffffff'
+              - font-size: 14px
+              - font-weight: 400
+              - justify-self: start
+            custom_fields:
+              dot:
+                - width: 20px
+                - height: 20px
+          custom_fields:
+            dot:
+              card:
+                type: custom:button-card
+                entity: |
+                  [[[
+                    const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
+                    return `light.${variables.device_suffix}_bank_${activeBank - 1}_color_light`;
+                  ]]]
+                show_name: false
+                show_state: false
+                show_icon: true
+                icon: mdi:circle
+                styles:
+                  card:
+                    - background: transparent
+                    - border: none
+                    - box-shadow: none
+                    - padding: 0
+                    - width: 20px
+                    - height: 20px
+                    - min-height: unset
+                  icon:
+                    - color: |
+                        [[[
+                          const controlMode = states[`switch.${variables.device_suffix}_control_mode`]?.state;
+                          if (controlMode !== 'on') return '#545454';
+                          const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
+                          return states[`text.${variables.device_suffix}_bank_${activeBank - 1}_color`]?.state ?? '#ff5252';
+                        ]]]
+                    - width: 15px
+                    - height: 15px
+
+  pivot_toggle_row:
+    variables:
+      toggle_entity: null
+      depends_on_entity: null
+    entity: >-
+      [[[ return `switch.${variables.device_suffix}_${variables.toggle_entity}`;
+      ]]]
+    name: |
+      [[[
+        const labels = {
+          'control_mode': 'Control Mode',
+          'announcements': 'Announcements',
+          'show_control_value': 'Display Persistent Value',
+          'dim_when_idle': 'Dim Gauge LEDs While Idle',
+        };
+        return labels[variables.toggle_entity] ?? variables.toggle_entity;
+      ]]]
+    label: |
+      [[[
+        const labels = {
+          'control_mode': 'Enable or disable Pivot control',
+          'announcements': 'Announce bank changes using voice',
+          'show_control_value': 'Keep current value visible on the LED ring when idle',
+          'dim_when_idle': 'Reduce LED brightness when not interacting with dial',
+        };
+        return labels[variables.toggle_entity] ?? '';
+      ]]]
+    show_state: false
+    show_icon: false
+    show_name: true
+    show_label: true
+    tap_action:
+      action: toggle
+    double_tap_action:
+      action: more-info
+    hold_action:
+      action: more-info
+    styles:
+      grid:
+        - grid-template-areas: '"n btn" "l btn"'
+        - grid-template-columns: 1fr min-content
+        - grid-template-rows: min-content
+        - align-items: center
+      card:
+        - background: transparent
+        - padding: 0px
+        - border-radius: 0px
+        - height: 50px
+        - opacity: |
+            [[[
+              const deps = {
+                'dim_when_idle': `switch.${variables.device_suffix}_show_control_value`,
+              };
+              const dep = deps[variables.toggle_entity];
+              if (!dep) return '1';
+              return states[dep]?.state === 'on' ? '1' : '0.3';
+            ]]]
+        - pointer-events: |
+            [[[
+              const deps = {
+                'dim_when_idle': `switch.${variables.device_suffix}_show_control_value`,
+              };
+              const dep = deps[variables.toggle_entity];
+              if (!dep) return 'auto';
+              return states[dep]?.state === 'on' ? 'auto' : 'none';
+            ]]]
+      custom_fields:
+        btn:
+          - justify-content: end
+          - align-self: center
+      name:
+        - justify-self: start
+        - align-self: center
+        - font-size: 14px
+        - font-weight: 400
+        - color: var(--primary-text-color)
+      label:
+        - justify-self: start
+        - align-self: center
+        - font-size: 14px
+        - font-weight: 400
+        - color: rgba(255,255,255,0.5)
+        - margin-top: '-8px'
+    custom_fields:
+      btn:
+        card:
+          type: custom:layout-card
+          layout_type: custom:grid-layout
+          layout:
+            grid-template-columns: min-content
+            grid-template-rows: min-content
+            grid-template-areas: '"one"'
+          cards:
+            - type: custom:button-card
+              entity: >-
+                [[[ return
+                `switch.${variables.device_suffix}_${variables.toggle_entity}`;
+                ]]]
+              show_name: false
+              styles:
+                grid:
+                  - grid-template-areas: '"chips"'
+                card:
+                  - background: '#171717'
+                  - align-self: end
+                  - justify-self: end
+                  - height: 27px
+                  - width: 45px
+                  - padding: 2px
+                  - border-radius: 25px
+                  - margin-right: '-8px'
+              custom_fields:
+                chips:
+                  card:
+                    type: horizontal-stack
+                    cards:
+                      - type: custom:button-card
+                        entity: >-
+                          [[[ return
+                          `switch.${variables.device_suffix}_${variables.toggle_entity}`;
+                          ]]]
+                        show_state: false
+                        show_icon: false
+                        show_name: false
+                        tap_action:
+                          action: toggle
+                        state:
+                          - value: 'on'
+                            styles:
+                              card:
+                                - background: transparent
+                        styles:
+                          card:
+                            - background: '#545454'
+                            - height: 20px
+                            - border-radius: 25px
+                            - width: 20px
+                            - margin: 0px -10px 0px 0px
+                            - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                      - type: custom:button-card
+                        entity: >-
+                          [[[ return
+                          `switch.${variables.device_suffix}_${variables.toggle_entity}`;
+                          ]]]
+                        show_state: false
+                        show_icon: false
+                        show_name: false
+                        tap_action:
+                          action: toggle
+                        state:
+                          - value: 'off'
+                            styles:
+                              card:
+                                - background: transparent
+                        styles:
+                          card:
+                            - background: rgba(255,255,255,1)
+                            - height: 20px
+                            - border-radius: 25px
+                            - width: 20px
+                            - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+
+  pivot_banks:
+    variables:
+      bank_number: null
+      active_bank_entity: '[[[ return `number.${variables.device_suffix}_active_bank`; ]]]'
+      color_entity: >-
+        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number
+        - 1}_color`; ]]]
+      name_entity: >-
+        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number
+        - 1}_entity`; ]]]
+      value_entity: >-
+        [[[ return
+        `number.${variables.device_suffix}_bank_${variables.bank_number -
+        1}_value`; ]]]
+      passive_entity: >-
+        [[[ return
+        `binary_sensor.${variables.device_suffix}_bank_${variables.bank_number -
+        1}_passive`; ]]]
+      mirror_entity: >-
+        [[[ return
+        `switch.${variables.device_suffix}_bank_${variables.bank_number -
+        1}_mirror_light`; ]]]
+      color_light_entity: >-
+        [[[ return
+        `light.${variables.device_suffix}_bank_${variables.bank_number -
+        1}_color_light`; ]]]
+      timer_state_entity: '[[[ return `select.${variables.device_suffix}_timer_state`; ]]]'
+      timer_end_entity: '[[[ return `text.${variables.device_suffix}_timer_end`; ]]]'
+      timer_silent_toggle: null
+    show_name: false
+    show_state: false
+    show_icon: false
+    tap_action:
+      action: perform-action
+      perform_action: number.set_value
+      target:
+        entity_id: '[[[ return `number.${variables.device_suffix}_active_bank`; ]]]'
+      data:
+        value: '[[[ return variables.bank_number; ]]]'
+    styles:
+      card:
+        - border-radius: 20px
+        - box-shadow: none
+        - padding: 15px
+        - text-align: left
+        - border: |
+            [[[
+              const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
+              const isActive = activeBank === variables.bank_number;
+              return isActive ? '1px solid rgba(180,180,180,0.4)' : '1px solid transparent';
+            ]]]
+      grid:
+        - grid-template-areas: '"bank" "name" "slider" "timer-control" "timer-silent" "mirror"'
+        - grid-template-columns: 1fr
+        - grid-template-rows: auto auto auto auto auto
+        - width: 100%
+      custom_fields:
+        bank:
+          - width: 100%
+        name:
+          - width: 100%
+        slider:
+          - width: 100%
+        mirror:
+          - width: 100%
+        timer-control:
+          - width: 100%
+        timer-silent:
+          - width: 100%
+    custom_fields:
+      bank:
+        card:
+          type: custom:button-card
+          show_name: true
+          show_icon: false
+          name: '[[[ return ''Bank '' + variables.bank_number; ]]]'
+          tap_action:
+            action: perform-action
+            perform_action: number.set_value
+            target:
+              entity_id: '[[[ return `number.${variables.device_suffix}_active_bank`; ]]]'
+            data:
+              value: '[[[ return variables.bank_number; ]]]'
+          styles:
+            grid:
+              - grid-template-areas: '"dot n pencil"'
+              - grid-template-columns: 20px auto 1fr
+              - align-items: center
+              - gap: 10px
+            card:
+              - background: transparent
+              - border: none
+              - border-radius: 10px
+              - box-shadow: none
+              - padding: 0px
+              - height: 30px
+              - margin-top: '-5px'
+            name:
+              - color: var(--primary-text-color)
+              - font-size: 14px
+              - font-weight: 400
+              - justify-self: start
+            custom_fields:
+              dot:
+                - width: 20px
+                - height: 20px
+              pencil:
+                - justify-self: end
+          custom_fields:
+            dot:
+              card:
+                type: custom:button-card
+                entity: '[[[ return variables.color_light_entity; ]]]'
+                tap_action:
+                  action: more-info
+                  entity: '[[[ return variables.color_light_entity; ]]]'
+                show_name: false
+                show_state: false
+                show_icon: true
+                icon: mdi:circle
+                styles:
+                  card:
+                    - background: transparent
+                    - border: none
+                    - box-shadow: none
+                    - padding: 0
+                    - width: 20px
+                    - height: 20px
+                    - min-height: unset
+                  icon:
+                    - color: >-
+                        [[[return states[variables.color_entity]?.state ??
+                        '#ff5252';]]]
+                    - width: 15px
+                    - height: 15px
+            pencil:
+              card:
+                type: custom:button-card
+                show_name: true
+                show_icon: true
+                icon: mdi:pencil
+                name: EDIT ENTITY
+                tap_action:
+                  action: more-info
+                  entity: '[[[ return variables.name_entity; ]]]'
+                styles:
+                  grid:
+                    - grid-template-areas: '"n i"'
+                    - grid-template-columns: auto auto
+                    - align-items: end
+                  card:
+                    - background: transparent
+                    - border: none
+                    - box-shadow: none
+                    - height: 25px
+                    - width: 90px
+                    - border-radius: 0px
+                  name:
+                    - color: '#545454'
+                    - font-size: 10px
+                    - font-weight: 400
+                    - letter-spacing: 0.05em
+                  icon:
+                    - width: 15px
+                    - color: '#545454'
+      name:
+        card:
+          type: custom:button-card
+          entity: '[[[ return variables.name_entity; ]]]'
+          tap_action:
+            action: >-
+              [[[ const e = states[variables.name_entity]?.state; return
+              e?.toLowerCase() === 'timer' ? 'none' : 'more-info'; ]]]
+            entity: '[[[ return states[variables.name_entity]?.state; ]]]'
+          show_name: true
+          show_icon: false
+          name: |
+            [[[
+              const entityId = states[variables.name_entity]?.state;
+              const name = entityId && states[entityId]
+                ? (states[entityId].attributes.friendly_name || entityId)
+                : (entityId || 'Unknown');
+              return name.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+            ]]]
+          custom_fields:
+            pct:
+              card:
+                type: custom:button-card
+                show_name: true
+                show_state: false
+                show_icon: false
+                name: |
+                  [[[
+                    const passive = states[variables.passive_entity]?.state;
+                    const value = parseFloat(states[variables.value_entity]?.state ?? 0);
+                    if (passive === 'on') {
+                      const nameEntityId = states[variables.name_entity]?.state;
+                      const namedEntity = nameEntityId ? states[nameEntityId]?.state : undefined;
+                      if (namedEntity === 'on') return 'On';
+                      return value === 0 ? 'Off' : 'On';
+                    }
+                    const nameEntityId = states[variables.name_entity]?.state;
+                    if (nameEntityId?.toLowerCase() === 'timer') {
+                      const timerState = states[variables.timer_state_entity]?.state;
+                      if (timerState === 'alerting') return 'Timer Finished';
+                      if (timerState === 'running') {
+                        const endVal = states[variables.timer_end_entity]?.state;
+                        if (endVal?.match(/^\d{4}-\d{2}-\d{2}T/)) {
+                          const mins = Math.max(0, Math.round((new Date(endVal) - new Date()) / 60000));
+                          return `${mins} ${mins === 1 ? 'min' : 'mins'} remaining`;
+                        }
+                      }
+                      if (timerState === 'paused') {
+                        const endVal = states[variables.timer_end_entity]?.state;
+                        if (endVal?.match(/^P\d+$/)) {
+                          const mins = Math.round(parseInt(endVal.substring(1)) / 60);
+                          return `Paused – ${mins} ${mins === 1 ? 'min' : 'mins'} remaining`;
+                        }
+                      }
+                      const presets = { 24: 15, 50: 30, 75: 45, 100: 60 };
+                      const mins = presets[Math.round(value)] ?? Math.round((value / 100) * 60);
+                      return `${mins} ${mins === 1 ? 'min' : 'mins'}`;
+                    }
+                    return `${Math.round(value)}%`;
+                  ]]]
+                styles:
+                  card:
+                    - background: transparent
+                      border-radius: 0px
+                      height: 30px
+                      border: none
+                  name:
+                    - font-size: 25px
+                      color: '#545454'
+                      font-weight: 400
+          styles:
+            grid:
+              - grid-template-areas: '"n pct"'
+                grid-template-columns: 1fr
+                grid-template-rows: min-content min-content
+                align-content: center
+            card:
+              - padding: 0px 0px 0px 0px
+                margin: 5px -20px 0px 0px
+                background: transparent
+                border-radius: 10px
+                height: 40px
+                border: none
+            name:
+              - font-weight: 400
+                justify-self: start
+                padding-bottom: 0px
+                font-size: 25px
+      slider:
+        card:
+          type: custom:my-slider-v2
+          entity: '[[[ return variables.value_entity; ]]]'
+          mode: seekbar
+          min: 0
+          max: 100
+          styles:
+            card:
+              - height: 23px
+              - background: none
+              - margin: 10px 0px 0px 0px
+              - display: |
+                  [[[
+                    return states[variables.passive_entity]?.state === 'on'
+                      ? 'none'
+                      : 'block';
+                  ]]]
+            container:
+              - border-radius: 150px
+              - background: none
+              - padding: 0 0 0 0px
+              - height: 23px
+              - border: none
+            track:
+              - background: >
+                  [[[return (states[variables.color_entity]?.state ?? '#ff5252')
+                  + '33';]]]
+              - border-radius: 99px
+              - padding: 0 0px 0 0px
+              - height: 23px
+              - margin: 0px 0 0 0
+              - border: none
+            progress:
+              - background: >
+                  [[[return states[variables.color_entity]?.state ??
+                  '#ff5252';]]]
+              - border-radius: 25px 0px 0px 25px
+              - height: 23px
+              - margin: 0 0 0 0
+              - border: none
+            thumb:
+              - background: >
+                  [[[return states[variables.color_entity]?.state ??
+                  '#ff5252';]]]
+              - display: |
+                  [[[
+                    return parseFloat(states[variables.value_entity]?.state) === 0
+                      ? 'none'
+                      : 'block';
+                  ]]]
+              - width: 15px
+              - height: 23px
+              - margin-right: '-10px'
+              - border-radius: 0px 150px 150px 0px
+              - border: none
+      mirror:
+        card:
+          type: custom:button-card
+          entity: '[[[ return variables.mirror_entity; ]]]'
+          name: Mirror Light Colour
+          show_state: false
+          show_icon: true
+          show_name: true
+          icon: mdi:palette
+          tap_action:
+            action: toggle
+          double_tap_action:
+            action: more-info
+          hold_action:
+            action: more-info
+          styles:
+            grid:
+              - grid-template-areas: '"i n btn"'
+              - grid-template-columns: 20px 1fr min-content
+              - grid-template-rows: min-content
+              - align-items: center
+            icon:
+              - width: 20px
+                color: '#545454'
+                margin: 0px 0px 7px 0px
+                padding: 0px 0px 0px 0px
+            card:
+              - background: transparent
+              - padding: 0px 0px 10px 0px
+              - border-radius: 10px
+              - border: none
+              - height: 50px
+              - margin: 10px 0px -15px 0px
+              - display: |
+                  [[[
+                    const entityId = states[variables.name_entity]?.state;
+                    return entityId?.startsWith('light.') ? 'block' : 'none';
+                  ]]]
+            custom_fields:
+              btn:
+                - justify-content: end
+                - align-self: center
+            name:
+              - justify-self: start
+              - align-self: center
+              - font-size: 14px
+              - font-weight: 400
+              - color: var(--primary-text-color)
+              - margin-top: '-8px'
+                padding: 0px 0px 0px 10px
+          custom_fields:
+            btn:
+              card:
+                type: custom:layout-card
+                layout_type: custom:grid-layout
+                layout:
+                  grid-template-columns: min-content
+                  grid-template-rows: min-content
+                  grid-template-areas: '"one"'
+                cards:
+                  - type: custom:button-card
+                    entity: '[[[ return variables.mirror_entity; ]]]'
+                    show_name: false
+                    styles:
+                      grid:
+                        - grid-template-areas: '"chips"'
+                      card:
+                        - background: '#171717'
+                        - align-self: end
+                        - justify-self: end
+                        - height: 27px
+                        - width: 45px
+                        - padding: 2px
+                        - border-radius: 25px
+                        - margin-right: '-8px'
+                        - border: none
+                    custom_fields:
+                      chips:
+                        card:
+                          type: horizontal-stack
+                          cards:
+                            - type: custom:button-card
+                              entity: '[[[ return variables.mirror_entity; ]]]'
+                              show_state: false
+                              show_icon: false
+                              show_name: false
+                              tap_action:
+                                action: toggle
+                              state:
+                                - value: 'on'
+                                  styles:
+                                    card:
+                                      - background: transparent
+                              styles:
+                                card:
+                                  - background: '#545454'
+                                  - height: 20px
+                                  - border-radius: 25px
+                                  - width: 20px
+                                  - margin: 0px -10px 0px 0px
+                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - border: none
+                            - type: custom:button-card
+                              entity: '[[[ return variables.mirror_entity; ]]]'
+                              show_state: false
+                              show_icon: false
+                              show_name: false
+                              tap_action:
+                                action: toggle
+                              state:
+                                - value: 'off'
+                                  styles:
+                                    card:
+                                      - background: transparent
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,1)
+                                  - height: 20px
+                                  - border-radius: 25px
+                                  - width: 20px
+                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - border: none
+      timer-control:
+        card:
+          type: vertical-stack
+          cards:
+            - type: conditional
+              conditions:
+                - condition: state
+                  entity: '[[[ return variables.timer_state_entity; ]]]'
+                  state: alerting
+              card:
+                type: custom:button-card
+                styles:
+                  card:
+                    - background-color: '#171717'
+                    - border-radius: 10px
+                    - border: none
+                    - box-shadow: none
+                    - padding: 5px
+                    - display: |
+                        [[[
+                          const nameEntityId = states[variables.name_entity]?.state;
+                          return nameEntityId?.toLowerCase() === 'timer' ? 'block' : 'none';
+                        ]]]
+                    - margin: 20px 0px 0px 0px
+                  grid:
+                    - grid-template-areas: '"stop repeat"'
+                    - grid-template-columns: 1fr 1fr
+                    - width: 100%
+                    - column-gap: 5px
+                custom_fields:
+                  repeat:
+                    card:
+                      type: custom:button-card
+                      name: Repeat
+                      show_icon: true
+                      show_name: true
+                      icon: mdi:refresh
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on
+                        target:
+                          entity_id: script.pivot_timer_toggle
+                        data:
+                          variables:
+                            device_suffix: '[[[ return variables.device_suffix; ]]]'
+                            bank: '[[[ return variables.bank_number; ]]]'
+                      styles:
+                        grid:
+                          - grid-template-areas: '''i n'''
+                          - grid-template-columns: auto auto
+                          - justify-content: center
+                          - gap: 8px
+                        icon:
+                          - width: 20px
+                        img_cell:
+                          - width: 20px
+                          - height: 20px
+                        card:
+                          - height: 40px
+                          - border-radius: 10px
+                          - background-color: '#2a2a2a'
+                          - box-shadow: none
+                          - border: none
+                        name:
+                          - font-size: 14px
+                          - font-weight: 400
+                  stop:
+                    card:
+                      type: custom:button-card
+                      name: Stop
+                      show_icon: true
+                      show_name: true
+                      icon: mdi:close
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on
+                        target:
+                          entity_id: script.pivot_timer_toggle
+                        data:
+                          variables:
+                            device_suffix: '[[[ return variables.device_suffix; ]]]'
+                            bank: '[[[ return variables.bank_number; ]]]'
+                      styles:
+                        grid:
+                          - grid-template-areas: '''i n'''
+                          - grid-template-columns: auto auto
+                          - justify-content: center
+                          - gap: 8px
+                        icon:
+                          - width: 20px
+                            color: rgba(255,255,255,1)
+                        img_cell:
+                          - width: 20px
+                          - height: 20px
+                        card:
+                          - height: 40px
+                          - border-radius: 10px
+                          - background-color: '#545454'
+                          - box-shadow: none
+                          - border: none
+                        name:
+                          - font-size: 14px
+                          - font-weight: 400
+                          - color: rgba(255,255,255,1)
+            - type: conditional
+              conditions:
+                - condition: state
+                  entity: '[[[ return variables.timer_state_entity; ]]]'
+                  state_not: alerting
+              card:
+                type: custom:button-card
+                styles:
+                  card:
+                    - background-color: '#171717'
+                    - border-radius: 10px
+                    - box-shadow: none
+                    - padding: 5px
+                    - display: |
+                        [[[
+                          const nameEntityId = states[variables.name_entity]?.state;
+                          return nameEntityId?.toLowerCase() === 'timer' ? 'block' : 'none';
+                        ]]]
+                    - margin: 20px 0px 0px 0px
+                    - border: none
+                  grid:
+                    - grid-template-areas: '"play reset one two three four"'
+                    - grid-template-columns: 15% 15% 1fr 1fr 1fr 1fr
+                    - width: 100%
+                    - column-gap: 5px
+                custom_fields:
+                  play:
+                    card:
+                      type: custom:button-card
+                      entity: '[[[ return variables.timer_state_entity; ]]]'
+                      icon: mdi:play
+                      show_name: false
+                      state:
+                        - value: paused
+                          icon: mdi:play
+                        - value: running
+                          icon: mdi:pause
+                      tap_action:
+                        action: perform-action
+                        perform_action: script.turn_on
+                        target:
+                          entity_id: script.pivot_timer_toggle
+                        data:
+                          variables:
+                            device_suffix: '[[[ return variables.device_suffix; ]]]'
+                            bank: '[[[ return variables.bank_number; ]]]'
+                      styles:
+                        card:
+                          - height: 40px
+                          - border-radius: 10px
+                          - background-color: '#545454'
+                          - box-shadow: none
+                          - border: none
+                  reset:
+                    card:
+                      type: custom:button-card
+                      entity: '[[[ return variables.timer_state_entity; ]]]'
+                      show_name: false
+                      icon: mdi:refresh
+                      state:
+                        - value: paused
+                          icon: mdi:refresh
+                        - value: running
+                          icon: mdi:close
+                        - value: idle
+                          icon: mdi:close
+                          styles:
+                            icon:
+                              - color: rgba(255,255,255,0.3)
+                            card:
+                              - background-color: '#2a2a2a'
+                              - height: 40px
+                              - border-radius: 10px
+                              - box-shadow: none
+                              - border: none
+                      tap_action:
+                        action: perform-action
+                        perform_action: select.select_option
+                        target:
+                          entity_id: '[[[ return variables.timer_state_entity; ]]]'
+                        data:
+                          option: idle
+                      styles:
+                        card:
+                          - height: 40px
+                          - border-radius: 10px
+                          - background-color: '#545454'
+                          - box-shadow: none
+                          - border: none
+                  one:
+                    card:
+                      type: custom:button-card
+                      name: 15m
+                      entity: '[[[ return variables.value_entity; ]]]'
+                      show_icon: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: number.set_value
+                        target:
+                          entity_id: '[[[ return variables.value_entity; ]]]'
+                        data:
+                          value: '24'
+                      state:
+                        - operator: template
+                          value: |
+                            [[[
+                              const s = hass.states[variables.timer_state_entity]?.state;
+                              return s === 'running' || s === 'paused';
+                            ]]]
+                          styles:
+                            card:
+                              - background: transparent
+                              - height: 40px
+                            name:
+                              - color: rgba(255,255,255,0.3)
+                        - value: '24'
+                          styles:
+                            card:
+                              - background: '#545454'
+                              - height: 40px
+                            name:
+                              - color: white
+                      styles:
+                        card:
+                          - background-color: transparent
+                          - border-radius: 10px
+                          - font-size: 15px
+                          - box-shadow: none
+                          - font-weight: 400
+                          - height: 40px
+                          - border: none
+                        name:
+                          - color: rgba(255,255,255,0.7)
+                  two:
+                    card:
+                      type: custom:button-card
+                      name: 30m
+                      entity: '[[[ return variables.value_entity; ]]]'
+                      show_icon: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: number.set_value
+                        target:
+                          entity_id: '[[[ return variables.value_entity; ]]]'
+                        data:
+                          value: '50.0'
+                      state:
+                        - operator: template
+                          value: |
+                            [[[
+                              const s = hass.states[variables.timer_state_entity]?.state;
+                              return s === 'running' || s === 'paused';
+                            ]]]
+                          styles:
+                            card:
+                              - background: transparent
+                              - height: 40px
+                            name:
+                              - color: rgba(255,255,255,0.3)
+                        - value: '50.0'
+                          styles:
+                            card:
+                              - background: '#545454'
+                              - height: 40px
+                            name:
+                              - color: white
+                      styles:
+                        card:
+                          - background-color: transparent
+                          - border-radius: 10px
+                          - font-size: 15px
+                          - box-shadow: none
+                          - font-weight: 400
+                          - height: 40px
+                          - border: none
+                        name:
+                          - color: rgba(255,255,255,0.7)
+                  three:
+                    card:
+                      type: custom:button-card
+                      name: 45m
+                      entity: '[[[ return variables.value_entity; ]]]'
+                      show_icon: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: number.set_value
+                        target:
+                          entity_id: '[[[ return variables.value_entity; ]]]'
+                        data:
+                          value: '75.0'
+                      state:
+                        - operator: template
+                          value: |
+                            [[[
+                              const s = hass.states[variables.timer_state_entity]?.state;
+                              return s === 'running' || s === 'paused';
+                            ]]]
+                          styles:
+                            card:
+                              - background: transparent
+                              - height: 40px
+                            name:
+                              - color: rgba(255,255,255,0.3)
+                        - value: '75.0'
+                          styles:
+                            card:
+                              - background: '#545454'
+                              - height: 40px
+                            name:
+                              - color: white
+                      styles:
+                        card:
+                          - background-color: transparent
+                          - border-radius: 10px
+                          - font-size: 15px
+                          - box-shadow: none
+                          - font-weight: 400
+                          - height: 40px
+                          - border: none
+                        name:
+                          - color: rgba(255,255,255,0.7)
+                  four:
+                    card:
+                      type: custom:button-card
+                      name: 60m
+                      entity: '[[[ return variables.value_entity; ]]]'
+                      show_icon: false
+                      tap_action:
+                        action: perform-action
+                        perform_action: number.set_value
+                        target:
+                          entity_id: '[[[ return variables.value_entity; ]]]'
+                        data:
+                          value: '100.0'
+                      state:
+                        - operator: template
+                          value: |
+                            [[[
+                              const s = hass.states[variables.timer_state_entity]?.state;
+                              return s === 'running' || s === 'paused';
+                            ]]]
+                          styles:
+                            card:
+                              - background: transparent
+                              - height: 40px
+                            name:
+                              - color: rgba(255,255,255,0.3)
+                        - value: '100.0'
+                          styles:
+                            card:
+                              - background: '#545454'
+                              - height: 40px
+                            name:
+                              - color: white
+                      styles:
+                        card:
+                          - background-color: transparent
+                          - border-radius: 10px
+                          - font-size: 15px
+                          - box-shadow: none
+                          - font-weight: 400
+                          - height: 40px
+                          - border: none
+                        name:
+                          - color: rgba(255,255,255,0.7)
+      timer-silent:
+        card:
+          type: custom:button-card
+          entity: '[[[ return variables.timer_silent_toggle; ]]]'
+          name: Silent Timer
+          show_state: false
+          show_icon: true
+          show_name: true
+          icon: mdi:volume-mute
+          tap_action:
+            action: toggle
+          double_tap_action:
+            action: more-info
+          hold_action:
+            action: more-info
+          styles:
+            grid:
+              - grid-template-areas: '"i n btn"'
+              - grid-template-columns: 20px 1fr min-content
+              - grid-template-rows: min-content
+              - align-items: center
+            card:
+              - background: transparent
+              - padding: 0px
+              - border-radius: 10px
+              - height: 50px
+              - margin: 5px 0px -15px 0px
+              - display: |
+                  [[[
+                    const nameEntityId = states[variables.name_entity]?.state;
+                    return nameEntityId?.toLowerCase() === 'timer' ? 'block' : 'none';
+                  ]]]
+              - border: none
+            icon:
+              - width: 20px
+                color: '#545454'
+                margin: 0px 0px 7px 0px
+                padding: 0px 0px 0px 0px
+            custom_fields:
+              btn:
+                - justify-content: end
+                - align-self: center
+            name:
+              - justify-self: start
+              - align-self: center
+              - font-size: 14px
+              - font-weight: 400
+              - color: var(--primary-text-color)
+              - margin-top: '-8px'
+                padding: 0px 0px 0px 10px
+          custom_fields:
+            btn:
+              card:
+                type: custom:layout-card
+                layout_type: custom:grid-layout
+                layout:
+                  grid-template-columns: min-content
+                  grid-template-rows: min-content
+                  grid-template-areas: '"one"'
+                cards:
+                  - type: custom:button-card
+                    entity: '[[[ return variables.timer_silent_toggle; ]]]'
+                    show_name: false
+                    styles:
+                      grid:
+                        - grid-template-areas: '"chips"'
+                      card:
+                        - background: '#171717'
+                        - align-self: end
+                        - justify-self: end
+                        - height: 27px
+                        - width: 45px
+                        - padding: 2px
+                        - border-radius: 25px
+                        - border: none
+                        - margin-right: '-8px'
+                    custom_fields:
+                      chips:
+                        card:
+                          type: horizontal-stack
+                          cards:
+                            - type: custom:button-card
+                              entity: '[[[ return variables.timer_silent_toggle; ]]]'
+                              show_state: false
+                              show_icon: false
+                              show_name: false
+                              tap_action:
+                                action: toggle
+                              state:
+                                - value: 'on'
+                                  styles:
+                                    card:
+                                      - background: transparent
+                              styles:
+                                card:
+                                  - background: '#545454'
+                                  - height: 20px
+                                  - border-radius: 25px
+                                  - width: 20px
+                                  - margin: 0px -10px 0px 0px
+                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - border: none
+                            - type: custom:button-card
+                              entity: '[[[ return variables.timer_silent_toggle; ]]]'
+                              show_state: false
+                              show_icon: false
+                              show_name: false
+                              tap_action:
+                                action: toggle
+                              state:
+                                - value: 'off'
+                                  styles:
+                                    card:
+                                      - background: transparent
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,1)
+                                  - height: 20px
+                                  - border-radius: 25px
+                                  - width: 20px
+                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - border: none
+```
+
+---
+
+## Per-device config
+
+For each Pivot device, add a `pivot_config_*` entry to the `button_card_templates` block. The name can be anything — it just needs to match what you reference in your cards.
+
+```yaml
+pivot_config_kitchen:
+  variables:
+    device_name: Kitchen Pivot          # Display name shown at the top of the device section
+    device_suffix: ha_voice_yellow      # Must match device_suffix in your firmware YAML
+    media_player: media_player.home_assistant_voice_0954c7_media_player  # VPE media player entity
+    timer_silent_toggle: switch.kitchen_voice_pe_timer_silent_mode       # Timer silent mode switch
+```
+
+To find the correct entity IDs, go to **Settings → Devices & Services → ESPHome → your VPE** and look through the listed entities.
+
+---
+
+## Step 2 — Add a device section
+
+For each device, add a page section like the one below. Replace `pivot_config_kitchen` with your own config template name, and update the `media_player` entity ID in the volume slider.
+
+Each device section uses a three-column layout:
+- **Left (full width header)** — device name and active bank indicator
+- **Middle column** — four bank cards (one per bank)
+- **Right column** — device volume slider and behaviour toggles
+
+```yaml
+- type: sections
+  max_columns: 2
+  title: Kitchen VPE
+  path: kitchen-vpe
+  sections:
+    - type: grid
+      cards:
+        - type: custom:button-card
+          template: pivot_config_kitchen
+          show_name: true
+          show_state: false
+          show_icon: false
+          name: '[[[ return variables.device_name; ]]]'
+          styles:
+            card:
+              - background: transparent
+              - padding: 0px
+              - margin: 0px
+            name:
+              - font-size: 45px
+              - font-weight: 500
+              - justify-self: start
+          grid_options:
+            columns: full
+        - type: custom:gap-card
+          height: 10px
+          grid_options:
+            columns: full
+        - type: custom:button-card
+          template:
+            - pivot_config_kitchen
+            - pivot_active_bank
+          grid_options:
+            columns: full
+      column_span: 3
+    - type: grid
+      cards:
+        - type: custom:layout-card
+          layout_type: custom:vertical-layout
+          layout:
+            gap: 0px
+          card_mod:
+            style: |
+              ha-card {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+              }
+          cards:
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_banks
+              variables:
+                bank_number: 1
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_banks
+              variables:
+                bank_number: 2
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_banks
+              variables:
+                bank_number: 3
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_banks
+              variables:
+                bank_number: 4
+      column_span: 1
+    - type: grid
+      cards:
+        - type: custom:layout-card
+          layout_type: custom:vertical-layout
+          layout:
+            gap: 0px
+          card_mod:
+            style: |
+              ha-card {
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+              }
+          cards:
+            - type: custom:button-card
+              template: pivot_section_heading
+              variables:
+                heading: Device
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_toggle_row
+              variables:
+                toggle_entity: control_mode
+            - type: custom:button-card
+              template: pivot_config_kitchen
+              entity: '[[[ return variables.media_player; ]]]'
+              name: Pivot Device Volume
+              show_state: false
+              show_icon: false
+              show_name: true
+              show_label: false
+              styles:
+                card:
+                  - background: transparent
+                  - padding: 0px
+                  - border-radius: 0px
+                name:
+                  - justify-self: start
+                  - font-size: 14px
+                  - font-weight: 400
+                  - color: var(--primary-text-color)
+            - type: custom:my-slider-v2
+              entity: media_player.home_assistant_voice_0954c7_media_player
+              attribute: volume_level
+              min: 0
+              max: 100
+              step: 1
+              styles:
+                card:
+                  - height: 5px
+                  - background: none
+                  - margin: 0px 0px 40px 0px
+                container:
+                  - border-radius: 150px
+                  - background: none
+                  - height: 5px
+                track:
+                  - background: rgba(255,255,255,0.3)
+                  - border-radius: 99px
+                  - height: 5px
+                progress:
+                  - background: rgba(255,255,255,1)
+                  - border-radius: 25px 0px 0px 25px
+                  - height: 5px
+                thumb:
+                  - background: rgba(255,255,255,1)
+                  - width: 15px
+                  - height: 5px
+                  - margin-right: '-10px'
+                  - border-radius: 0px 150px 150px 0px
+            - type: custom:button-card
+              template: pivot_section_heading
+              variables:
+                heading: Behaviour
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_toggle_row
+              variables:
+                toggle_entity: announcements
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_toggle_row
+              variables:
+                toggle_entity: show_control_value
+            - type: custom:button-card
+              template:
+                - pivot_config_kitchen
+                - pivot_toggle_row
+              variables:
+                toggle_entity: dim_when_idle
+      column_span: 1
+```
+
+Duplicate the entire section block for each additional device, replacing the template name (`pivot_config_kitchen`) and the volume slider entity ID throughout.
+
+> **Note:** The volume slider uses `custom:my-slider-v2` and takes the media player entity ID directly — it is not inherited from the config template. Update `entity:` in that card to match the media player for each device.
+
+---
+
+## Template reference
+
+| Template | Purpose |
+| --- | --- |
+| `pivot_config_*` | Per-device config — sets `device_suffix`, `media_player`, and `timer_silent_toggle`. One per device. |
+| `pivot_section_heading` | Section label. Pass `heading` and optionally `subheading` as variables. |
+| `pivot_active_bank` | Shows the currently active bank name and colour dot. Reads control mode state. |
+| `pivot_toggle_row` | Toggle row for a single switch. Pass `toggle_entity` as the switch name suffix (e.g. `control_mode`, `announcements`). Automatically dims `dim_when_idle` if `show_control_value` is off. |
+| `pivot_banks` | Full bank card — bank number, entity name, value display, value slider, timer controls (when bank entity is `timer`), mirror light toggle, and silent timer toggle. Pass `bank_number` (1–4). |
+
+### pivot_banks in detail
+
+The `pivot_banks` template auto-adapts based on what is assigned to the bank:
+
+- **Normal entity** — shows entity name, current value as a percentage, a coloured slider, and the mirror light toggle (for light entities only)
+- **Timer bank** — hides the slider; shows remaining time, play/pause/reset controls, preset duration buttons (15m / 30m / 45m / 60m), and the silent timer toggle
+- **Passive entity** — hides the slider (there is no value to adjust)
+- **Active bank** — highlighted with a subtle border
+
+Tapping the card switches the physical device to that bank.
