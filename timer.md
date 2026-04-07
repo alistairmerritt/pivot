@@ -253,7 +253,7 @@ tap_action:
 show_state: true
 ```
 
-> **Note:** The dashboard button handles all states — start, pause, resume, and alarm dismissal — identically to the physical button. Alarm dismissal requires firmware v0.0.13 or later.
+> **Note:** The dashboard button handles all states — start, pause, resume, and alarm dismissal — identically to the physical button. 
 
 ### Cancel button
 
