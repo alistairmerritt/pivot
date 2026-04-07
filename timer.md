@@ -191,26 +191,23 @@ template:
 
 You can start, pause, resume, and dismiss the timer alarm from a Home Assistant dashboard by firing the same `pivot_button_press` event the physical button does. The blueprint treats both identically — idle starts, running pauses, paused resumes, and alerting dismisses.
 
-### Script
+Dashboard control requires a shared helper script. This is optional but recommended if you want to control timers from a dashboard.
 
-Add a script to your `scripts.yaml` (replacing `ha_voice_lounge` and `2` with your suffix and bank number):
+### Step 1 — Install the Timer Toggle script
 
-```yaml
-pivot_timer_toggle_ha_voice_lounge:
-  alias: "Pivot Timer Toggle"
-  sequence:
-    - event: pivot_button_press
-      event_data:
-        suffix: ha_voice_lounge
-        bank: 2
-        press_type: single_press
-        bank_entity: timer
-        control_mode: true
-```
+Import the script blueprint into Home Assistant:
 
-### Dashboard button card
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml)
 
-Once the script exists, add a button card to your dashboard:
+Or paste this URL into **Settings → Automations → Blueprints → Import Blueprint**:
+
+`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/script/pivot_timer_toggle.yaml`
+
+Then go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot — Timer Toggle Script**.
+
+> **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly by entity ID. The script only needs to be set up **once** — it works for all your Pivot devices, with the device suffix and bank number passed by each card at call time.
+
+### Step 2 — Add a dashboard button card
 
 ```yaml
 type: button
@@ -219,7 +216,11 @@ tap_action:
   action: perform-action
   perform_action: script.turn_on
   target:
-    entity_id: script.pivot_timer_toggle_ha_voice_lounge
+    entity_id: script.pivot_timer_toggle
+  data:
+    variables:
+      device_suffix: ha_voice_lounge
+      bank: 2
 show_state: false
 ```
 
@@ -233,7 +234,11 @@ tap_action:
   action: perform-action
   perform_action: script.turn_on
   target:
-    entity_id: script.pivot_timer_toggle_ha_voice_lounge
+    entity_id: script.pivot_timer_toggle
+  data:
+    variables:
+      device_suffix: ha_voice_lounge
+      bank: 2
 show_state: true
 ```
 
@@ -241,20 +246,7 @@ show_state: true
 
 ### Cancel button
 
-To add a dedicated cancel button, add a second script and button card. The cancel script fires `pivot_button_press` with `press_type: long_press` — the blueprint treats this identically to a physical long press, including the *"Timer cancelled"* announcement.
-
-```yaml
-pivot_timer_cancel_ha_voice_lounge:
-  alias: "Pivot Timer Cancel"
-  sequence:
-    - event: pivot_button_press
-      event_data:
-        suffix: ha_voice_lounge
-        bank: 2
-        press_type: long_press
-        bank_entity: timer
-        control_mode: true
-```
+To add a dedicated cancel button, set `timer_state` to `idle` directly:
 
 ```yaml
 type: button
@@ -262,13 +254,15 @@ name: Cancel
 icon: mdi:timer-off-outline
 tap_action:
   action: perform-action
-  perform_action: script.turn_on
+  perform_action: select.select_option
   target:
-    entity_id: script.pivot_timer_cancel_ha_voice_lounge
+    entity_id: select.ha_voice_lounge_timer_state
+  data:
+    option: idle
 show_state: false
 ```
 
-The cancel action only takes effect when the timer is running or paused — pressing it while idle does nothing.
+> **Note:** This resets the timer immediately. Unlike a physical long press, it does not trigger the *"Timer cancelled"* TTS announcement. Only takes effect when the timer is running or paused — pressing while idle does nothing.
 
 ---
 
