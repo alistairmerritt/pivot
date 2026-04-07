@@ -201,7 +201,7 @@ template:
 
 You can optionally control the timer from a Home Assistant dashboard by firing the same `pivot_button_press` event used by the physical button. The automation blueprint handles both in exactly the same way: idle starts, running pauses, paused resumes, and alerting dismisses.
 
-Dashboard control is optional, but this script is required if you want dashboard buttons to control the timer.
+Dashboard control is optional, but the below script is required if you want dashboard buttons to control the timer.
 
 ### Step 1 — Install the Timer Toggle script
 
