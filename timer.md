@@ -11,8 +11,9 @@ Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a
 ## On this page
 
 - [How it works](#how-it-works)  
-- [Setup](#setup)  
-- [Using the timer](#using-the-timer)  
+- [Getting started with timers](#getting-started-with-timers)  
+- [Timer entities](#timer-entities)  
+- [Template sensors](#template-sensors)  
 - [Dashboard control](#dashboard-control)  
 - [Tips](#tips)
 
