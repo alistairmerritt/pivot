@@ -189,9 +189,9 @@ template:
 
 ## Dashboard control
 
-You can start, pause, resume, and dismiss the timer alarm from a Home Assistant dashboard by firing the same `pivot_button_press` event the physical button does. The blueprint treats both identically — idle starts, running pauses, paused resumes, and alerting dismisses.
+You can optionally control the timer from a Home Assistant dashboard by firing the same `pivot_button_press` event used by the physical button. The automation blueprint handles both in exactly the same way: idle starts, running pauses, paused resumes, and alerting dismisses.
 
-Dashboard control requires a shared helper script. This is optional but recommended if you want to control timers from a dashboard.
+Dashboard control is optional, but this script is required if you want dashboard buttons to control the timer.
 
 ### Step 1 — Install the Timer Toggle script
 
