@@ -8,6 +8,16 @@ Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a
 
 ---
 
+## On this page
+
+- [How it works](#how-it-works)  
+- [Setup](#setup)  
+- [Using the timer](#using-the-timer)  
+- [Dashboard control](#dashboard-control)  
+- [Tips](#tips)
+
+---
+
 ## How it works
 
 Once set up, a single bank on your Pivot device becomes a timer controller:
