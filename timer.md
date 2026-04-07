@@ -4,7 +4,7 @@ title: Timer
 permalink: /timer/
 ---
 
-Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a focus block — controlled from the device's knob and button, and reflected on the gauge LEDs. This is an optional feature: the timer entities are included with each device but disabled by default, and the blueprint is installed manually.
+Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a focus block — controlled from the device's knob and button, and reflected on the gauge LEDs. This is an optional feature: the timer entities are included with each configured device but disabled by default, and the blueprint is installed manually.
 
 ---
 
