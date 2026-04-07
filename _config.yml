@@ -9,8 +9,7 @@ header_pages:
   - firmware.md
   - integration.md
   - timer.md
-  - FAQ.md
-  - troubleshooting.md
+  - help.md
   - changelog.md
 
 markdown: kramdown
