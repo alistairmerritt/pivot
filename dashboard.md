@@ -232,6 +232,6 @@ Mix in whichever other components you want alongside them.
 
 A complete, ready-to-paste dashboard YAML that includes all the template definitions and a full five-device layout. The config variables for each device are at the top of the file — update those and the volume slider entities, paste the whole thing into your raw dashboard YAML editor, and it should produce something like this:
 
-<img width="2217" height="1864" alt="full-dashboard" src="https://github.com/user-attachments/assets/585715cf-3083-4a2a-9ef5-5febac13aeb5" />
+![full-dashboard](https://github.com/user-attachments/assets/c93e51c5-af05-421a-855d-8950fe3aad83)
 
 The example uses `custom:layout-card` to achieve the column layout shown, but you can rearrange the bank cards however you like using any standard Home Assistant layout card.
