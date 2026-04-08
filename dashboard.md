@@ -5,6 +5,9 @@ permalink: /dashboard/
 ---
 
 This page documents a set of `custom:button-card` templates for building a Pivot control dashboard in Home Assistant.
+
+Although all of these settings can already be adjusted through the device menu, it is not always the quickest or most convenient place to manage them — especially if you are regularly changing banks, colours, values or behaviour settings. This dashboard provides a more central, glanceable way to view and adjust those controls from one place.
+
 Each component is independent, so you can use all of them, some of them, or just the bank cards on their own. The layout shown in the examples is simply a starting point.
 
 ![pivot-dashboard-mockup](https://github.com/user-attachments/assets/3a08ebc1-b6bb-479e-92b0-dfcfa2c8f511)
