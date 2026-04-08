@@ -47,7 +47,7 @@ Each bank card shows:
 
 Tapping the card switches the physical device to that bank.
 
-Below is an example of the bank card config that you would use on your dashboard. For one Pivot device, you would usually add four bank cards.
+Below is an example of the bank card config that you would use on your dashboard. For one Pivot device, you would usually add four bank cards to your dashboard. 
 
 ```yaml
 - type: custom:button-card
@@ -232,6 +232,6 @@ Mix in whichever other components you want alongside them.
 
 A complete, ready-to-paste dashboard YAML that includes all the template definitions and a full five-device layout. The config variables for each device are at the top of the file — update those and the volume slider entities, paste the whole thing into your raw dashboard YAML editor, and it should produce something like this:
 
-<!-- Replace this comment with your screenshot -->
+<img width="1121" height="929" alt="full-dash" src="https://github.com/user-attachments/assets/4c48adf4-e4bc-4018-9c22-c90ba9f41df4" />
 
 The example uses `custom:layout-card` to achieve the column layout shown, but you can rearrange the bank cards however you like using any standard Home Assistant layout card.
