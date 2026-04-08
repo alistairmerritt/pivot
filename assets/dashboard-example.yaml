@@ -3,10 +3,10 @@
 # ─────────────────────────────────────────────────────────────────────────────
 #
 # HOW TO USE
-# 1. Update the pivot_config_* variables at the top to match your devices.
-#    Add or remove config blocks to match how many Pivot devices you have.
-# 2. Search for "Update entity" comments in the views section and set each
-#    volume slider entity to match the device's media player.
+# 1. Update the pivot_config_* variables below to match your device.
+#    Duplicate the config block and the views section for each additional device.
+# 2. Update the volume slider entity in the views section to match your
+#    device's media player (search for "Update entity to match your device").
 # 3. Paste the entire file into your Home Assistant raw dashboard YAML editor.
 #
 # REQUIRED HACS CARDS
@@ -19,37 +19,17 @@
 button_card_templates:
 
   # ─── Per-device config ───────────────────────────────────────────────────────
-  # Add one entry per Pivot device. Match device_suffix to your firmware YAML.
-  pivot_config_study:
-    variables:
-      device_name: Study Pivot
-      device_suffix: ha_voice_orange
-      media_player: media_player.bedroom_vpe_media_player
-      timer_silent_toggle: switch.spare_vpe_timer_silent_mode
-  pivot_config_living:
+  # One entry per Pivot device. Duplicate this block for each additional device.
+  # device_name         — display name shown at the top of the dashboard page
+  # device_suffix       — must match the device_suffix in your firmware YAML
+  # media_player        — the media_player entity ID for this VPE
+  # timer_silent_toggle — the timer_silent_mode switch entity ID for this VPE
+  pivot_config_living_room:
     variables:
       device_name: Living Room Pivot
-      device_suffix: ha_voice_black
-      media_player: media_player.home_assistant_voice_092e7d_media_player
-      timer_silent_toggle: switch.home_assistant_voice_black
-  pivot_config_kitchen:
-    variables:
-      device_name: Kitchen Pivot
-      device_suffix: ha_voice_yellow
-      media_player: media_player.home_assistant_voice_0954c7_media_player
-      timer_silent_toggle: switch.kitchen_voice_pe_timer_silent_mode
-  pivot_config_nursery:
-    variables:
-      device_name: Nursery Pivot
-      device_suffix: ha_voice_blue
-      media_player: media_player.nursery_vpe_media_player
-      timer_silent_toggle: switch.spare_vpe_timer_silent_mode
-  pivot_config_bedroom:
-    variables:
-      device_name: Bedroom Pivot
-      device_suffix: ha_voice_grey
-      media_player: media_player.home_assistant_voice_09f8bd_media_player
-      timer_silent_toggle: switch.bedroom_vpe_pivot_timer_silent_mode
+      device_suffix: ha_voice_xxxxxx
+      media_player: media_player.your_vpe_media_player
+      timer_silent_toggle: switch.your_vpe_timer_silent_mode
 
   # ─── Shared component templates ──────────────────────────────────────────────
   pivot_section_heading:
@@ -1266,194 +1246,23 @@ button_card_templates:
 # Duplicate a section block to add more devices.
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Dashboard views — one page per device
+# Duplicate this entire section for each additional Pivot device.
+# ─────────────────────────────────────────────────────────────────────────────
+
 views:
   - type: sections
     max_columns: 2
-    title: Study VPE
-    path: study-vpe
-    sections:
-
-      # ── Header: device name + active bank ───────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:button-card
-            template: pivot_config_study
-            show_name: true
-            show_state: false
-            show_icon: false
-            name: '[[[ return variables.device_name; ]]]'
-            styles:
-              card:
-                - background: transparent
-                - padding: 0px
-                - margin: 0px
-              name:
-                - font-size: 45px
-                - font-weight: 500
-                - justify-self: start
-            grid_options:
-              columns: full
-          - type: custom:gap-card
-            height: 10px
-            grid_options:
-              columns: full
-          - type: custom:button-card
-            template:
-              - pivot_config_study
-              - pivot_active_bank
-            grid_options:
-              columns: full
-        column_span: 3
-
-      # ── Bank cards ──────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_banks
-                variables:
-                  bank_number: 1
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_banks
-                variables:
-                  bank_number: 2
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_banks
-                variables:
-                  bank_number: 3
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_banks
-                variables:
-                  bank_number: 4
-        column_span: 1
-
-      # ── Settings ────────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Device
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: control_mode
-              - type: custom:button-card
-                template: pivot_config_study
-                entity: '[[[ return variables.media_player; ]]]'
-                name: Pivot Device Volume
-                show_state: false
-                show_icon: false
-                show_name: true
-                show_label: false
-                styles:
-                  card:
-                    - background: transparent
-                    - padding: 0px
-                    - border-radius: 0px
-                  name:
-                    - justify-self: start
-                    - font-size: 14px
-                    - font-weight: 400
-                    - color: var(--primary-text-color)
-              # Update entity to match this device's media player
-              - type: custom:my-slider-v2
-                entity: media_player.bedroom_vpe_media_player
-                attribute: volume_level
-                min: 0
-                max: 100
-                step: 1
-                styles:
-                  card:
-                    - height: 5px
-                    - background: none
-                    - margin: 0px 0px 40px 0px
-                  container:
-                    - border-radius: 150px
-                    - background: none
-                    - height: 5px
-                  track:
-                    - background: rgba(255,255,255,0.3)
-                    - border-radius: 99px
-                    - height: 5px
-                  progress:
-                    - background: rgba(255,255,255,1)
-                    - border-radius: 25px 0px 0px 25px
-                    - height: 5px
-                  thumb:
-                    - background: rgba(255,255,255,1)
-                    - width: 15px
-                    - height: 5px
-                    - margin-right: '-10px'
-                    - border-radius: 0px 150px 150px 0px
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Behaviour
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: announcements
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: show_control_value
-              - type: custom:button-card
-                template:
-                  - pivot_config_study
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: dim_when_idle
-        column_span: 1
-
-  - type: sections
-    max_columns: 2
     title: Living Room VPE
-    path: living-vpe
+    path: living-room-vpe
     sections:
 
       # ── Header: device name + active bank ───────────────────────────────────
       - type: grid
         cards:
           - type: custom:button-card
-            template: pivot_config_living
+            template: pivot_config_living_room
             show_name: true
             show_state: false
             show_icon: false
@@ -1475,7 +1284,7 @@ views:
               columns: full
           - type: custom:button-card
             template:
-              - pivot_config_living
+              - pivot_config_living_room
               - pivot_active_bank
             grid_options:
               columns: full
@@ -1498,25 +1307,25 @@ views:
             cards:
               - type: custom:button-card
                 template:
-                  - pivot_config_living
+                  - pivot_config_living_room
                   - pivot_banks
                 variables:
                   bank_number: 1
               - type: custom:button-card
                 template:
-                  - pivot_config_living
+                  - pivot_config_living_room
                   - pivot_banks
                 variables:
                   bank_number: 2
               - type: custom:button-card
                 template:
-                  - pivot_config_living
+                  - pivot_config_living_room
                   - pivot_banks
                 variables:
                   bank_number: 3
               - type: custom:button-card
                 template:
-                  - pivot_config_living
+                  - pivot_config_living_room
                   - pivot_banks
                 variables:
                   bank_number: 4
@@ -1543,12 +1352,12 @@ views:
                   heading: Device
               - type: custom:button-card
                 template:
-                  - pivot_config_living
+                  - pivot_config_living_room
                   - pivot_toggle_row
                 variables:
                   toggle_entity: control_mode
               - type: custom:button-card
-                template: pivot_config_living
+                template: pivot_config_living_room
                 entity: '[[[ return variables.media_player; ]]]'
                 name: Pivot Device Volume
                 show_state: false
@@ -1565,9 +1374,9 @@ views:
                     - font-size: 14px
                     - font-weight: 400
                     - color: var(--primary-text-color)
-              # Update entity to match this device's media player
+              # Update entity to match your device's media player
               - type: custom:my-slider-v2
-                entity: media_player.home_assistant_voice_092e7d_media_player
+                entity: media_player.your_vpe_media_player
                 attribute: volume_level
                 min: 0
                 max: 100
@@ -1601,547 +1410,19 @@ views:
                   heading: Behaviour
               - type: custom:button-card
                 template:
-                  - pivot_config_living
+                  - pivot_config_living_room
                   - pivot_toggle_row
                 variables:
                   toggle_entity: announcements
               - type: custom:button-card
                 template:
-                  - pivot_config_living
+                  - pivot_config_living_room
                   - pivot_toggle_row
                 variables:
                   toggle_entity: show_control_value
               - type: custom:button-card
                 template:
-                  - pivot_config_living
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: dim_when_idle
-        column_span: 1
-
-  - type: sections
-    max_columns: 2
-    title: Kitchen VPE
-    path: kitchen-vpe
-    sections:
-
-      # ── Header: device name + active bank ───────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:button-card
-            template: pivot_config_kitchen
-            show_name: true
-            show_state: false
-            show_icon: false
-            name: '[[[ return variables.device_name; ]]]'
-            styles:
-              card:
-                - background: transparent
-                - padding: 0px
-                - margin: 0px
-              name:
-                - font-size: 45px
-                - font-weight: 500
-                - justify-self: start
-            grid_options:
-              columns: full
-          - type: custom:gap-card
-            height: 10px
-            grid_options:
-              columns: full
-          - type: custom:button-card
-            template:
-              - pivot_config_kitchen
-              - pivot_active_bank
-            grid_options:
-              columns: full
-        column_span: 3
-
-      # ── Bank cards ──────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_banks
-                variables:
-                  bank_number: 1
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_banks
-                variables:
-                  bank_number: 2
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_banks
-                variables:
-                  bank_number: 3
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_banks
-                variables:
-                  bank_number: 4
-        column_span: 1
-
-      # ── Settings ────────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Device
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: control_mode
-              - type: custom:button-card
-                template: pivot_config_kitchen
-                entity: '[[[ return variables.media_player; ]]]'
-                name: Pivot Device Volume
-                show_state: false
-                show_icon: false
-                show_name: true
-                show_label: false
-                styles:
-                  card:
-                    - background: transparent
-                    - padding: 0px
-                    - border-radius: 0px
-                  name:
-                    - justify-self: start
-                    - font-size: 14px
-                    - font-weight: 400
-                    - color: var(--primary-text-color)
-              # Update entity to match this device's media player
-              - type: custom:my-slider-v2
-                entity: media_player.home_assistant_voice_0954c7_media_player
-                attribute: volume_level
-                min: 0
-                max: 100
-                step: 1
-                styles:
-                  card:
-                    - height: 5px
-                    - background: none
-                    - margin: 0px 0px 40px 0px
-                  container:
-                    - border-radius: 150px
-                    - background: none
-                    - height: 5px
-                  track:
-                    - background: rgba(255,255,255,0.3)
-                    - border-radius: 99px
-                    - height: 5px
-                  progress:
-                    - background: rgba(255,255,255,1)
-                    - border-radius: 25px 0px 0px 25px
-                    - height: 5px
-                  thumb:
-                    - background: rgba(255,255,255,1)
-                    - width: 15px
-                    - height: 5px
-                    - margin-right: '-10px'
-                    - border-radius: 0px 150px 150px 0px
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Behaviour
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: announcements
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: show_control_value
-              - type: custom:button-card
-                template:
-                  - pivot_config_kitchen
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: dim_when_idle
-        column_span: 1
-
-  - type: sections
-    max_columns: 2
-    title: Nursery VPE
-    path: nursery-vpe
-    sections:
-
-      # ── Header: device name + active bank ───────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:button-card
-            template: pivot_config_nursery
-            show_name: true
-            show_state: false
-            show_icon: false
-            name: '[[[ return variables.device_name; ]]]'
-            styles:
-              card:
-                - background: transparent
-                - padding: 0px
-                - margin: 0px
-              name:
-                - font-size: 45px
-                - font-weight: 500
-                - justify-self: start
-            grid_options:
-              columns: full
-          - type: custom:gap-card
-            height: 10px
-            grid_options:
-              columns: full
-          - type: custom:button-card
-            template:
-              - pivot_config_nursery
-              - pivot_active_bank
-            grid_options:
-              columns: full
-        column_span: 3
-
-      # ── Bank cards ──────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_banks
-                variables:
-                  bank_number: 1
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_banks
-                variables:
-                  bank_number: 2
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_banks
-                variables:
-                  bank_number: 3
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_banks
-                variables:
-                  bank_number: 4
-        column_span: 1
-
-      # ── Settings ────────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Device
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: control_mode
-              - type: custom:button-card
-                template: pivot_config_nursery
-                entity: '[[[ return variables.media_player; ]]]'
-                name: Pivot Device Volume
-                show_state: false
-                show_icon: false
-                show_name: true
-                show_label: false
-                styles:
-                  card:
-                    - background: transparent
-                    - padding: 0px
-                    - border-radius: 0px
-                  name:
-                    - justify-self: start
-                    - font-size: 14px
-                    - font-weight: 400
-                    - color: var(--primary-text-color)
-              # Update entity to match this device's media player
-              - type: custom:my-slider-v2
-                entity: media_player.nursery_vpe_media_player
-                attribute: volume_level
-                min: 0
-                max: 100
-                step: 1
-                styles:
-                  card:
-                    - height: 5px
-                    - background: none
-                    - margin: 0px 0px 40px 0px
-                  container:
-                    - border-radius: 150px
-                    - background: none
-                    - height: 5px
-                  track:
-                    - background: rgba(255,255,255,0.3)
-                    - border-radius: 99px
-                    - height: 5px
-                  progress:
-                    - background: rgba(255,255,255,1)
-                    - border-radius: 25px 0px 0px 25px
-                    - height: 5px
-                  thumb:
-                    - background: rgba(255,255,255,1)
-                    - width: 15px
-                    - height: 5px
-                    - margin-right: '-10px'
-                    - border-radius: 0px 150px 150px 0px
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Behaviour
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: announcements
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: show_control_value
-              - type: custom:button-card
-                template:
-                  - pivot_config_nursery
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: dim_when_idle
-        column_span: 1
-
-  - type: sections
-    max_columns: 2
-    title: Bedroom VPE
-    path: bedroom-vpe
-    sections:
-
-      # ── Header: device name + active bank ───────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:button-card
-            template: pivot_config_bedroom
-            show_name: true
-            show_state: false
-            show_icon: false
-            name: '[[[ return variables.device_name; ]]]'
-            styles:
-              card:
-                - background: transparent
-                - padding: 0px
-                - margin: 0px
-              name:
-                - font-size: 45px
-                - font-weight: 500
-                - justify-self: start
-            grid_options:
-              columns: full
-          - type: custom:gap-card
-            height: 10px
-            grid_options:
-              columns: full
-          - type: custom:button-card
-            template:
-              - pivot_config_bedroom
-              - pivot_active_bank
-            grid_options:
-              columns: full
-        column_span: 3
-
-      # ── Bank cards ──────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
-                  - pivot_banks
-                variables:
-                  bank_number: 1
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
-                  - pivot_banks
-                variables:
-                  bank_number: 2
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
-                  - pivot_banks
-                variables:
-                  bank_number: 3
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
-                  - pivot_banks
-                variables:
-                  bank_number: 4
-        column_span: 1
-
-      # ── Settings ────────────────────────────────────────────────────────────
-      - type: grid
-        cards:
-          - type: custom:layout-card
-            layout_type: custom:vertical-layout
-            layout:
-              gap: 0px
-            card_mod:
-              style: |
-                ha-card {
-                  background: transparent !important;
-                  border: none !important;
-                  box-shadow: none !important;
-                }
-            cards:
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Device
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: control_mode
-              - type: custom:button-card
-                template: pivot_config_bedroom
-                entity: '[[[ return variables.media_player; ]]]'
-                name: Pivot Device Volume
-                show_state: false
-                show_icon: false
-                show_name: true
-                show_label: false
-                styles:
-                  card:
-                    - background: transparent
-                    - padding: 0px
-                    - border-radius: 0px
-                  name:
-                    - justify-self: start
-                    - font-size: 14px
-                    - font-weight: 400
-                    - color: var(--primary-text-color)
-              # Update entity to match this device's media player
-              - type: custom:my-slider-v2
-                entity: media_player.home_assistant_voice_09f8bd_media_player
-                attribute: volume_level
-                min: 0
-                max: 100
-                step: 1
-                styles:
-                  card:
-                    - height: 5px
-                    - background: none
-                    - margin: 0px 0px 40px 0px
-                  container:
-                    - border-radius: 150px
-                    - background: none
-                    - height: 5px
-                  track:
-                    - background: rgba(255,255,255,0.3)
-                    - border-radius: 99px
-                    - height: 5px
-                  progress:
-                    - background: rgba(255,255,255,1)
-                    - border-radius: 25px 0px 0px 25px
-                    - height: 5px
-                  thumb:
-                    - background: rgba(255,255,255,1)
-                    - width: 15px
-                    - height: 5px
-                    - margin-right: '-10px'
-                    - border-radius: 0px 150px 150px 0px
-              - type: custom:button-card
-                template: pivot_section_heading
-                variables:
-                  heading: Behaviour
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: announcements
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
-                  - pivot_toggle_row
-                variables:
-                  toggle_entity: show_control_value
-              - type: custom:button-card
-                template:
-                  - pivot_config_bedroom
+                  - pivot_config_living_room
                   - pivot_toggle_row
                 variables:
                   toggle_entity: dim_when_idle
