@@ -11,6 +11,8 @@ Each component is independent, so you can use all of them, some of them, or just
 
 > ⚠️ **Proceed with care** — Editing raw dashboard YAML carries risk. A mistake can corrupt, overwrite or completely wipe your existing dashboard. If you are not comfortable working directly in YAML, this is not recommended. **Before making any changes, copy your entire existing dashboard YAML and save it somewhere safe — even pasting it into a local text file is enough.** Please proceed at your own risk.
 
+![iphone-17-pro-mockup-on-gradient-background-front-view](https://github.com/user-attachments/assets/3a08ebc1-b6bb-479e-92b0-dfcfa2c8f511)
+
 ---
 
 ## On this page
