@@ -119,27 +119,21 @@ You can also add a device volume slider using `custom:my-slider-v2` — useful a
 - [HACS](https://hacs.xyz) installed in Home Assistant
 - The following HACS frontend cards:
   - **custom:button-card** — required for all Pivot templates
-  - **custom:my-slider-v2** — required for value sliders and volume slider
-  - **custom:layout-card** — required for toggle row internal layout
+  - **custom:my-slider-v2** — required if you want value sliders and the volume slider
 
-You only need `custom:my-slider-v2` if you are using sliders. You only need `custom:layout-card` if you are using the toggle rows.
+`custom:layout-card` is used in the example dashboard YAML for column layout, but it is not required. The bank cards work inside any standard layout — a grid card, a vertical stack, or whatever suits your dashboard.
 
 ### Installing via HACS
 
-For each card:
-
 1. Go to **HACS → Frontend**
-2. Search for the card name (see below)
-3. Click **Download**
-4. Restart Home Assistant when prompted
+2. Search for and download each card you need (see table below)
+3. Once all cards are downloaded, restart Home Assistant once
+4. Do a full browser refresh (Ctrl+Shift+R / Cmd+Shift+R)
 
 | Card | Search term | Author |
 | --- | --- | --- |
 | custom:button-card | Button Card | RomRider |
 | custom:my-slider-v2 | My Slider v2 | AnthonMS |
-| custom:layout-card | Layout Card | thomasloven |
-
-After installing, do a full browser refresh (Ctrl+Shift+R / Cmd+Shift+R).
 
 ---
 
