@@ -345,7 +345,6 @@ button_card_templates:
         1}_color_light`; ]]]
       timer_state_entity: '[[[ return `select.${variables.device_suffix}_timer_state`; ]]]'
       timer_end_entity: '[[[ return `text.${variables.device_suffix}_timer_end`; ]]]'
-      timer_silent_toggle: null
     show_name: false
     show_state: false
     show_icon: false
