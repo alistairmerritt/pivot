@@ -480,7 +480,10 @@ button_card_templates:
               const name = entityId && states[entityId]
                 ? (states[entityId].attributes.friendly_name || entityId)
                 : (entityId || 'Unknown');
-              return name.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+
+              return name?.toLowerCase() === 'timer'
+                ? 'Timer'
+                : name;
             ]]]
           custom_fields:
             pct:
