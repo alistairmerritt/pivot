@@ -41,11 +41,16 @@ The setup mode can be changed at any time from the integration's **Configure** m
 | `switch.{suffix}_control_mode` | Control Mode vs Normal (voice) Mode |
 | `switch.{suffix}_show_control_value` | Keep gauge LEDs permanently visible in control mode |
 | `switch.{suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
-| `switch.{suffix}_announcements` | Enable/disable spoken announcements |
+| `switch.{suffix}_announcements` | System Announcements — enable/disable bank-change and triple-press TTS announcements |
+| `switch.{suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, and timer) without changing other settings |
 | `switch.{suffix}_bank_0_mirror_light` | Bank 1 — mirror assigned RGB light colour |
 | `switch.{suffix}_bank_1_mirror_light` | Bank 2 — mirror assigned RGB light colour |
 | `switch.{suffix}_bank_2_mirror_light` | Bank 3 — mirror assigned RGB light colour |
 | `switch.{suffix}_bank_3_mirror_light` | Bank 4 — mirror assigned RGB light colour |
+| `switch.{suffix}_bank_0_announce_value` | Bank 1 — announce the entity value via TTS after the knob settles |
+| `switch.{suffix}_bank_1_announce_value` | Bank 2 — announce the entity value via TTS after the knob settles |
+| `switch.{suffix}_bank_2_announce_value` | Bank 3 — announce the entity value via TTS after the knob settles |
+| `switch.{suffix}_bank_3_announce_value` | Bank 4 — announce the entity value via TTS after the knob settles |
 
 ### Text entities
 
@@ -106,6 +111,39 @@ When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brigh
 - This is a **pure brightness modifier** — it does not change colours, values, or any other behaviour.
 
 > **Requires Show Control Value to be on.** Dim when idle has no effect if the gauge is not permanently visible. Enable **Show Control Value** first, then enable **Dim LEDs When Idle**.
+
+---
+
+## Announcements
+
+Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Announcements are handled by two optional blueprints.
+
+### Announce Bank
+
+The **Pivot — Announce Bank** blueprint speaks the name of the active bank's assigned entity whenever the bank changes or on triple press. Import it in Home Assistant:
+
+`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot_announce_bank.yaml`
+
+### Announce Value
+
+The **Pivot — Announce Value** blueprint speaks the current value of a bank's entity after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{suffix}_bank_N_announce_value`) — only banks with this switch on will announce. Import the blueprint:
+
+`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot/pivot_announce_value.yaml`
+
+Supported domains and what is spoken:
+
+| Domain | Announcement |
+| --- | --- |
+| `climate` | *"Temperature 22 degrees"* (reads `temperature` attribute) |
+| `cover` | *"50 percent open"* (reads `current_position` attribute) |
+| `light` | *"Brightness 60 percent"* (knob value) |
+| `media_player` | *"Volume 40 percent"* (knob value) |
+| `fan` | *"Speed 60 percent"* (knob value) |
+| `number` | *"Set to 25 watts"* (entity state + unit) |
+
+### Muting announcements
+
+**Mute Announcements** (`switch.{suffix}_mute_announcements`) silences all TTS across both announce blueprints and the timer blueprint without changing any other setting. Useful for quiet hours or when the device is in a shared space.
 
 ---
 

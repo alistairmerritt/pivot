@@ -44,6 +44,20 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.49
+- **New:** Per-bank **Announce Value** switches (`switch.{suffix}_bank_N_announce_value`, one per bank). When enabled, the value of the bank's assigned entity is announced via TTS after the knob settles (~600 ms debounce). Supports `climate` (speaks temperature), `cover` (speaks position), `light`, `media_player`, and `fan` (speak knob value as percent), and `number` (speaks entity state with unit). Off by default.
+- **New:** Global **Mute Announcements** switch (`switch.{suffix}_mute_announcements`). When on, all spoken announcements from the announce-bank, announce-value, and timer blueprints are suppressed — no other behaviour changes. Off by default.
+- **New:** `pivot_announce_value.yaml` blueprint — handles per-bank value announcements. Install once per device; uses `mode: restart` so only the settled value is spoken, not every step.
+- **Change:** **Announce Bank** (`pivot_announce_bank.yaml`) blueprint updated with an optional **Mute Announcements Switch** input, respecting the new global mute switch.
+- **Change:** **Pivot Timer** (`pivot_timer.yaml`) blueprint updated with an optional **Mute Announcements Switch** input. All six TTS sites (start, pause, resume, cancel, finish message, duration announcement) now respect the mute switch.
+- **Change:** Announcements switch renamed from "Announcements" to "System Announcements" for clarity. Entity ID is unchanged: `switch.{suffix}_announcements`.
+
+### v0.0.48
+- **New (Script blueprint):** Adds the **Pivot Timer Toggle** script blueprint. Install once — the script is shared across all Pivot devices, with `device_suffix` and `bank` passed as runtime variables by each dashboard card. Cards call `script.pivot_timer_toggle` directly by entity ID (do not rename it). Fires `pivot_button_press` with `press_type: single_press`, matching the physical button: idle starts, running pauses, paused resumes, alerting dismisses.
+
+### v0.0.47
+- **Fix (Timer blueprint):** Duration announcement now plays reliably when the knob is turned slowly. The debounce condition was comparing `states(duration_entity)` against `trigger.event.data.duration` — if the HA entity state hadn't updated within the 150 ms debounce window, the comparison silently failed and no announcement played. Duration is now read directly from the original trigger event data, which is always available immediately.
+
 ### v0.0.46
 - **Fix (Timer blueprint):** Bank entity check is now case-insensitive. `Timer`, `TIMER`, etc. are all accepted alongside the recommended lowercase `timer`.
 
