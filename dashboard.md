@@ -29,6 +29,8 @@ There are four template components. The bank cards are the most important — th
 
 ### Bank cards
 
+<img width="521" height="217" alt="bank-card" src="https://github.com/user-attachments/assets/a571cfcb-8c9c-49a9-a484-027520c20c67" />
+
 The hero component. Each bank card shows:
 
 - The bank number and colour dot
@@ -56,6 +58,8 @@ Below is an example of the bank card config that you would use on your dashboard
 
 ### Active bank indicator
 
+<img width="236" height="68" alt="active-bank" src="https://github.com/user-attachments/assets/054a02cd-606f-4927-8b61-11c0dc24c062" />
+
 Shows which bank is currently active on the physical device — its bank number, entity name, and colour dot. Useful as a live status line at the top of a device section.
 
 ```yaml
@@ -67,21 +71,9 @@ Shows which bank is currently active on the physical device — its bank number,
 
 ---
 
-### Heading card
-
-A minimal section label with an optional subheading. This is just a styled `custom:button-card` — you can replace it with any heading approach (eg. the stock Home Assistant heading card) that suits your dashboard theme.
-
-```yaml
-- type: custom:button-card
-  template: pivot_section_heading
-  variables:
-    heading: Kitchen Pivot
-    subheading: Home Assistant Voice PE
-```
-
----
-
 ### Settings — device and behaviour toggles
+
+<img width="567" height="440" alt="settings" src="https://github.com/user-attachments/assets/8b6ab67f-c02b-4953-a3c8-a0828096b2a0" />
 
 Individual toggle rows for the Pivot switches. Each row shows the switch name, a short description, and a styled toggle. Pass the switch name suffix as `toggle_entity`.
 
@@ -114,6 +106,20 @@ You can also add a device volume slider using `custom:my-slider-v2` — useful a
   min: 0
   max: 100
   step: 1
+```
+
+---
+
+### Heading card
+
+A minimal section label with an optional subheading. This is just a styled `custom:button-card` — you can replace it with any heading approach (eg. the stock Home Assistant heading card) that suits your dashboard theme.
+
+```yaml
+- type: custom:button-card
+  template: pivot_section_heading
+  variables:
+    heading: Kitchen Pivot
+    subheading: Home Assistant Voice PE
 ```
 
 ---
