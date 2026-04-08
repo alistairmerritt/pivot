@@ -223,3 +223,9 @@ Pivot firmware is based on the official Home Assistant Voice PE ESPHome configur
 - Passive banks (scene, script, switch, input_boolean) show no gauge — LEDs turn off rather than showing a misleading full ring. Bank Indicator still fires normally during bank switching.
 
 All standard VPE functionality (voice assistant, wake word, mute button, LED colour change, etc.) remains intact.
+
+## Upstream Voice Preview Edition changes
+
+Home Assistant’s Voice Preview Edition firmware continues to evolve, and new upstream features or fixes may be added over time. Where relevant, I will aim to review those changes and carry useful updates across into Pivot firmware where possible.
+
+Because Pivot is a custom firmware branch, upstream Voice Preview Edition changes will not always appear in Pivot immediately, and some updates may require additional work or testing before they are adopted.
