@@ -16,6 +16,7 @@ This page documents a set of `custom:button-card` templates that make it easy to
 - [Prerequisites](#prerequisites)
 - [Getting started](#getting-started)
 - [Template reference](#template-reference)
+- [Full example](#full-example)
 
 ---
 
@@ -209,3 +210,15 @@ Mix in whichever other components you want alongside them.
 | `pivot_active_bank` | Active bank name, entity, and colour dot. | — |
 | `pivot_section_heading` | Section label with optional subheading. | `heading`, `subheading` |
 | `pivot_toggle_row` | Toggle row for a Pivot switch. | `toggle_entity` |
+
+---
+
+## Full example
+
+**[dashboard-example.yaml](https://github.com/alistairmerritt/pivot/blob/main/assets/dashboard-example.yaml)**
+
+A complete, ready-to-paste dashboard YAML that includes all the template definitions and a full five-device layout. The config variables for each device are at the top of the file — update those and the volume slider entities, paste the whole thing into your raw dashboard YAML editor, and it should produce something like this:
+
+<!-- Replace this comment with your screenshot -->
+
+The example uses `custom:layout-card` to achieve the column layout shown, but you can rearrange the bank cards however you like using any standard Home Assistant layout card.
