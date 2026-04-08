@@ -29,7 +29,8 @@ There are four template components. The bank cards are the most important — th
 
 ### Bank cards
 
-<img width="574" height="775" alt="bank-cards" src="https://github.com/user-attachments/assets/cab612d2-4a81-4382-9853-e56785981a29" />
+<img width="537" height="738" alt="bank-cards" src="https://github.com/user-attachments/assets/6462366e-ddfd-4320-81bf-b58251415695" />
+
 
 The hero component. Each bank card shows:
 
@@ -73,7 +74,7 @@ Shows which bank is currently active on the physical device — its bank number,
 
 ### Settings — device and behaviour toggles
 
-<img width="567" height="440" alt="settings" src="https://github.com/user-attachments/assets/8b6ab67f-c02b-4953-a3c8-a0828096b2a0" />
+<img width="530" height="403" alt="settings" src="https://github.com/user-attachments/assets/e01ad4cd-ed05-4db5-95a3-5708d244ff22" />
 
 Individual toggle rows for the Pivot switches. Each row shows the switch name, a short description, and a styled toggle. Pass the switch name suffix as `toggle_entity`.
 
