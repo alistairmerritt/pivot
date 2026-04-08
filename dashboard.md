@@ -4,11 +4,12 @@ title: Dashboard
 permalink: /dashboard/
 ---
 
-> **Optional and experimental** — This is a community-built example dashboard, not an official part of Pivot. It has not been extensively tested across all configurations and requires editing raw dashboard YAML.
+This page documents a set of `custom:button-card` templates for building a Pivot control dashboard in Home Assistant.
+Each component is independent, so you can use all of them, some of them, or just the bank cards on their own. The layout shown in the examples is simply a starting point.
 
-> ⚠️ **Proceed with care** — Editing raw dashboard YAML carries real risk. A mistake can corrupt or completely wipe your existing dashboard. If you are not comfortable working directly in YAML, this is not recommended. **Before making any changes, copy your entire existing dashboard YAML and save it somewhere safe — even pasting it into a local text file is enough.** We cannot be held responsible for lost dashboards.
+> **Optional and experimental** — This is a community-built example dashboard, not an 'official' part of Pivot. It has not been extensively tested across all configurations and requires editing raw dashboard YAML.
 
-This page documents a set of `custom:button-card` templates that make it easy to build a Pivot control dashboard in Home Assistant. Each component is independent — use all of them, some of them, or just the bank cards on their own. The layout shown in the examples is just a starting point.
+> ⚠️ **Proceed with care** — Editing raw dashboard YAML carries risk. A mistake can corrupt, overwrite or completely wipe your existing dashboard. If you are not comfortable working directly in YAML, this is not recommended. **Before making any changes, copy your entire existing dashboard YAML and save it somewhere safe — even pasting it into a local text file is enough.** Please proceed at your own risk.
 
 ---
 
@@ -34,11 +35,13 @@ The hero component. Each bank card shows:
 - The entity currently assigned to that bank
 - The entity's current value (percentage, timer countdown, or on/off)
 - A coloured value slider (hidden for passive/binary entities)
-- A **Mirror Light Colour** toggle (visible only when a light entity is assigned)
-- **Timer controls** — play/pause, reset, and preset duration buttons (15m / 30m / 45m / 60m), shown automatically when the bank entity is set to `timer`
-- A **Silent Timer** toggle (shown on timer banks)
+- A `Mirror Light Colour` toggle (visible only when a light entity is assigned)
+- `Timer controls` — play/pause, reset, and preset duration buttons (15m / 30m / 45m / 60m), shown automatically when the bank entity is set to `timer`
+- A `Silent Timer` toggle (shown on timer banks)
 
 Tapping the card switches the physical device to that bank.
+
+Below is an example of the bank card config that you would use on your dashboard. Add one card per bank per device.
 
 ```yaml
 - type: custom:button-card
@@ -48,8 +51,6 @@ Tapping the card switches the physical device to that bank.
   variables:
     bank_number: 1           # 1, 2, 3, or 4
 ```
-
-Add one card per bank per device.
 
 ---
 
@@ -68,7 +69,7 @@ Shows which bank is currently active on the physical device — its bank number,
 
 ### Heading card
 
-A minimal section label with an optional subheading. This is just a styled `custom:button-card` — you can replace it with any heading approach that suits your dashboard theme.
+A minimal section label with an optional subheading. This is just a styled `custom:button-card` — you can replace it with any heading approach (eg. the stock Home Assistant heading card) that suits your dashboard theme.
 
 ```yaml
 - type: custom:button-card
@@ -104,7 +105,7 @@ Available values:
 
 The `dim_when_idle` row automatically dims and disables itself if `show_control_value` is off, since dimming only applies when the value is shown.
 
-You can also add a device volume slider using `custom:my-slider-v2` — useful as a central place to adjust the VPE speaker volume without going into device settings:
+You can also add a device volume slider using `custom:my-slider-v2` — useful as a central place to adjust the VPE speaker volume without going into device settings, but not absolutely necessary to include:
 
 ```yaml
 - type: custom:my-slider-v2
