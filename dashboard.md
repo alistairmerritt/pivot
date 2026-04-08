@@ -27,7 +27,7 @@ Each component is independent, so you can use all of them, some of them, or just
 
 ## Components
 
-There are four template components. The bank cards are the most important — the rest are optional additions.
+There are four template components. The bank cards are the most useful — the rest are optional additions.
 
 ### Bank cards
 
