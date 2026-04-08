@@ -29,7 +29,7 @@ There are four template components. The bank cards are the most important — th
 
 ### Bank cards
 
-<img width="521" height="217" alt="bank-card" src="https://github.com/user-attachments/assets/a571cfcb-8c9c-49a9-a484-027520c20c67" />
+<img width="574" height="775" alt="bank-cards" src="https://github.com/user-attachments/assets/cab612d2-4a81-4382-9853-e56785981a29" />
 
 The hero component. Each bank card shows:
 
