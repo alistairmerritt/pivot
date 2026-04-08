@@ -29,10 +29,11 @@ There are four template components. The bank cards are the most important — th
 
 ### Bank cards
 
+The hero component.
+
 <img width="537" height="738" alt="bank-cards" src="https://github.com/user-attachments/assets/6462366e-ddfd-4320-81bf-b58251415695" />
 
-
-The hero component. Each bank card shows:
+Each bank card shows:
 
 - The bank number and colour dot
 - The entity currently assigned to that bank
@@ -59,9 +60,9 @@ Below is an example of the bank card config that you would use on your dashboard
 
 ### Active bank indicator
 
-<img width="236" height="68" alt="active-bank" src="https://github.com/user-attachments/assets/054a02cd-606f-4927-8b61-11c0dc24c062" />
-
 Shows which bank is currently active on the physical device — its bank number, entity name, and colour dot. Useful as a live status line at the top of a device section.
+
+<img width="236" height="68" alt="active-bank" src="https://github.com/user-attachments/assets/054a02cd-606f-4927-8b61-11c0dc24c062" />
 
 ```yaml
 - type: custom:button-card
@@ -74,9 +75,9 @@ Shows which bank is currently active on the physical device — its bank number,
 
 ### Settings — device and behaviour toggles
 
-<img width="530" height="403" alt="settings" src="https://github.com/user-attachments/assets/e01ad4cd-ed05-4db5-95a3-5708d244ff22" />
-
 Individual toggle rows for the Pivot switches. Each row shows the switch name, a short description, and a styled toggle. Pass the switch name suffix as `toggle_entity`.
+
+<img width="530" height="403" alt="settings" src="https://github.com/user-attachments/assets/e01ad4cd-ed05-4db5-95a3-5708d244ff22" />
 
 Available values:
 
