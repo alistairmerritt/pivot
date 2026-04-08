@@ -7,11 +7,11 @@ permalink: /dashboard/
 This page documents a set of `custom:button-card` templates for building a Pivot control dashboard in Home Assistant.
 Each component is independent, so you can use all of them, some of them, or just the bank cards on their own. The layout shown in the examples is simply a starting point.
 
+![iphone-17-pro-mockup-on-gradient-background-front-view](https://github.com/user-attachments/assets/3a08ebc1-b6bb-479e-92b0-dfcfa2c8f511)
+
 > **Optional and experimental** — This is a community-built example dashboard, not an 'official' part of Pivot. It has not been extensively tested across all configurations and requires editing raw dashboard YAML.
 
 > ⚠️ **Proceed with care** — Editing raw dashboard YAML carries risk. A mistake can corrupt, overwrite or completely wipe your existing dashboard. If you are not comfortable working directly in YAML, this is not recommended. **Before making any changes, copy your entire existing dashboard YAML and save it somewhere safe — even pasting it into a local text file is enough.** Please proceed at your own risk.
-
-![iphone-17-pro-mockup-on-gradient-background-front-view](https://github.com/user-attachments/assets/3a08ebc1-b6bb-479e-92b0-dfcfa2c8f511)
 
 ---
 
