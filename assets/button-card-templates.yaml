@@ -147,7 +147,8 @@ button_card_templates:
       [[[
         const labels = {
           'control_mode': 'Control Mode',
-          'announcements': 'Announcements',
+          'announcements': 'System Announcements',
+          'mute_announcements': 'Mute Announcements',
           'show_control_value': 'Display Persistent Value',
           'dim_when_idle': 'Dim Gauge LEDs While Idle',
         };
@@ -157,7 +158,8 @@ button_card_templates:
       [[[
         const labels = {
           'control_mode': 'Enable or disable Pivot control',
-          'announcements': 'Announce bank changes using voice',
+          'announcements': 'Announce bank changes and triple-press via voice',
+          'mute_announcements': 'Silence all spoken announcements temporarily',
           'show_control_value': 'Keep current value visible on the LED ring when idle',
           'dim_when_idle': 'Reduce LED brightness when not interacting with dial',
         };
@@ -326,6 +328,10 @@ button_card_templates:
         1}_color_light`; ]]]
       timer_state_entity: '[[[ return `select.${variables.device_suffix}_timer_state`; ]]]'
       timer_end_entity: '[[[ return `text.${variables.device_suffix}_timer_end`; ]]]'
+      announce_value_entity: >-
+        [[[ return
+        `switch.${variables.device_suffix}_bank_${variables.bank_number -
+        1}_announce_value`; ]]]
     show_name: false
     show_state: false
     show_icon: false
@@ -349,7 +355,7 @@ button_card_templates:
               return isActive ? '1px solid rgba(180,180,180,0.4)' : '1px solid transparent';
             ]]]
       grid:
-        - grid-template-areas: '"bank" "name" "slider" "timer-control" "timer-silent" "mirror"'
+        - grid-template-areas: '"bank" "name" "slider" "timer-control" "timer-silent" "mirror" "announce-value"'
         - grid-template-columns: 1fr
         - grid-template-rows: auto auto auto auto auto
         - width: 100%
@@ -365,6 +371,8 @@ button_card_templates:
         timer-control:
           - width: 100%
         timer-silent:
+          - width: 100%
+        announce-value:
           - width: 100%
     custom_fields:
       bank:
@@ -1204,6 +1212,130 @@ button_card_templates:
                                   - border: none
                             - type: custom:button-card
                               entity: '[[[ return variables.timer_silent_toggle; ]]]'
+                              show_state: false
+                              show_icon: false
+                              show_name: false
+                              tap_action:
+                                action: toggle
+                              state:
+                                - value: 'off'
+                                  styles:
+                                    card:
+                                      - background: transparent
+                              styles:
+                                card:
+                                  - background: rgba(255,255,255,1)
+                                  - height: 20px
+                                  - border-radius: 25px
+                                  - width: 20px
+                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - border: none
+      announce-value:
+        card:
+          type: custom:button-card
+          entity: '[[[ return variables.announce_value_entity; ]]]'
+          name: Announce Value
+          show_state: false
+          show_icon: true
+          show_name: true
+          icon: mdi:volume-high
+          tap_action:
+            action: toggle
+          double_tap_action:
+            action: more-info
+          hold_action:
+            action: more-info
+          styles:
+            grid:
+              - grid-template-areas: '"i n btn"'
+              - grid-template-columns: 20px 1fr min-content
+              - grid-template-rows: min-content
+              - align-items: center
+            icon:
+              - width: 20px
+                color: '#545454'
+                margin: 0px 0px 7px 0px
+                padding: 0px 0px 0px 0px
+            card:
+              - background: transparent
+              - padding: 0px 0px 10px 0px
+              - border-radius: 10px
+              - border: none
+              - height: 50px
+              - margin: 10px 0px -15px 0px
+              - display: |
+                  [[[
+                    const entityId = states[variables.name_entity]?.state;
+                    const domain = entityId?.split('.')?.[0];
+                    const supported = ['light', 'media_player', 'fan', 'climate', 'cover', 'number'];
+                    return supported.includes(domain) ? 'block' : 'none';
+                  ]]]
+            custom_fields:
+              btn:
+                - justify-content: end
+                - align-self: center
+            name:
+              - justify-self: start
+              - align-self: center
+              - font-size: 14px
+              - font-weight: 400
+              - color: var(--primary-text-color)
+              - margin-top: '-8px'
+                padding: 0px 0px 0px 10px
+          custom_fields:
+            btn:
+              card:
+                type: custom:layout-card
+                layout_type: custom:grid-layout
+                layout:
+                  grid-template-columns: min-content
+                  grid-template-rows: min-content
+                  grid-template-areas: '"one"'
+                cards:
+                  - type: custom:button-card
+                    entity: '[[[ return variables.announce_value_entity; ]]]'
+                    show_name: false
+                    styles:
+                      grid:
+                        - grid-template-areas: '"chips"'
+                      card:
+                        - background: '#171717'
+                        - align-self: end
+                        - justify-self: end
+                        - height: 27px
+                        - width: 45px
+                        - padding: 2px
+                        - border-radius: 25px
+                        - border: none
+                        - margin-right: '-8px'
+                    custom_fields:
+                      chips:
+                        card:
+                          type: horizontal-stack
+                          cards:
+                            - type: custom:button-card
+                              entity: '[[[ return variables.announce_value_entity; ]]]'
+                              show_state: false
+                              show_icon: false
+                              show_name: false
+                              tap_action:
+                                action: toggle
+                              state:
+                                - value: 'on'
+                                  styles:
+                                    card:
+                                      - background: transparent
+                              styles:
+                                card:
+                                  - background: '#545454'
+                                  - height: 20px
+                                  - border-radius: 25px
+                                  - width: 20px
+                                  - margin: 0px -10px 0px 0px
+                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - border: none
+                            - type: custom:button-card
+                              entity: '[[[ return variables.announce_value_entity; ]]]'
                               show_state: false
                               show_icon: false
                               show_name: false

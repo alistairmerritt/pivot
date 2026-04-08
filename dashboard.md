@@ -47,6 +47,7 @@ Each bank card shows:
 - A `Mirror Light Colour` toggle (visible only when a light entity is assigned)
 - `Timer controls` — play/pause, reset, and preset duration buttons (15m / 30m / 45m / 60m), shown automatically when the bank entity is set to `timer`
 - A `Silent Timer` toggle (shown on timer banks)
+- An `Announce Value` toggle (shown for supported entity types: light, media player, fan, climate, cover, number) — enables spoken value announcements after the knob settles
 
 Tapping the card switches the physical device to that bank.
 
@@ -89,7 +90,8 @@ Available values:
 | `toggle_entity` | Switch |
 | --- | --- |
 | `control_mode` | Enable or disable Pivot control |
-| `announcements` | Announce bank changes by voice |
+| `announcements` | Announce bank changes and triple-press by voice (System Announcements) |
+| `mute_announcements` | Silence all spoken announcements temporarily |
 | `show_control_value` | Keep value visible on LED ring when idle |
 | `dim_when_idle` | Dim gauge LEDs while not interacting |
 
