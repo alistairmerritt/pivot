@@ -31,7 +31,7 @@ There are four template components. The bank cards are the most important — th
 
 ### Bank cards
 
-The hero component.
+The primary card for Pivot control.
 
 <img width="537" height="738" alt="bank-cards" src="https://github.com/user-attachments/assets/6462366e-ddfd-4320-81bf-b58251415695" />
 
@@ -47,7 +47,7 @@ Each bank card shows:
 
 Tapping the card switches the physical device to that bank.
 
-Below is an example of the bank card config that you would use on your dashboard. Add one card per bank per device.
+Below is an example of the bank card config that you would use on your dashboard. For one Pivot device, you would usually add four bank cards.
 
 ```yaml
 - type: custom:button-card
