@@ -44,14 +44,14 @@ permalink: /changelog/
 
 ## Integration
 
-### v0.0.41
+### v0.0.54
 - **Fix:** Blueprint files are now bundled inside `custom_components/pivot/blueprints/` so HACS ships them correctly. Previously they lived at the repo root (`blueprints/`) which HACS does not install — `_install_blueprints` was silently copying nothing.
 - **Change:** Legacy per-device blueprint files (e.g. `pivot_ha_voice_orange_announcements.yaml`) and backup files (`automations.yaml.pivot_backup`, `scripts.yaml.pivot_backup`) left by a previous Automatic mode installation are now removed automatically on startup.
 
-### v0.0.40
-- **Fix:** Fixed an `IndentationError` introduced in v0.0.39 — a missing `return` inside the `context.parent_id` guard in the timer bank branch left an empty `if` block, preventing the integration from loading.
+### v0.0.53
+- **Fix:** Fixed an `IndentationError` introduced in v0.0.52 — a missing `return` inside the `context.parent_id` guard in the timer bank branch left an empty `if` block, preventing the integration from loading.
 
-### v0.0.39
+### v0.0.52
 - **Change:** Automatic (managed) mode removed. The integration no longer writes to `scripts.yaml`, `automations.yaml`, or `/config/pivot/`. Any device previously configured in Automatic mode is migrated to Blueprint mode automatically on next restart, and the files Pivot wrote are cleaned up.
 - **New:** `pivot_bank_changed` event added. Fired whenever the active bank changes, with `suffix`, `bank`, and `bank_entity` fields. The announce blueprint uses this instead of a state trigger, meaning no entity IDs need to be entered as blueprint inputs.
 - **Fix:** Value announcements no longer fire when an entity is changed externally (motion, dashboard, automation). The `pivot_knob_turn` event now only fires when the change originates from a physical knob turn — detected via `context.parent_id`.
