@@ -161,6 +161,13 @@ packages:
 
 When you add your device in Blueprint mode, Pivot copies four blueprint files into your HA config and shows a persistent notification confirming it. You then create scripts and automations from those blueprints in the HA UI.
 
+| Blueprint | Type | Required? | What it does |
+| --- | --- | --- | --- |
+| **Pivot — Bank Toggle** | Script | Yes | Called by the firmware on every button press — toggles or activates the entity assigned to the active bank |
+| **Pivot — Announce** | Automation | Optional | Speaks the active bank's entity name when switching banks or on triple press, and announces the entity value after the knob settles |
+| **Pivot — Timer** | Automation | Optional | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
+| **Pivot — Timer Toggle** | Script | Optional | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
+
 > **Do this before assigning entities to banks.** The bank toggle script must exist before the button will work.
 
 ### Bank Toggle script — required
