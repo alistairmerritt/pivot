@@ -275,6 +275,10 @@ show_state: false
 
 > **Note:** This resets the timer immediately. Unlike a physical long press, it does not trigger the *"Timer cancelled"* TTS announcement. Only takes effect when the timer is running or paused — pressing while idle does nothing.
 
+### Complete dashboard examples
+
+The cards above are intentionally minimal. If you want a fully worked example — timer state display, start/pause/cancel controls, and a progress indicator all built into a polished device card — the [Dashboard](/pivot/dashboard/) page has complete, working examples built around `custom:button-card` that include timer bank support.
+
 ---
 
 ## Tips
