@@ -191,7 +191,7 @@ This script is called by the firmware every time you press the button. Without i
 1. Go to **Settings → Scripts → Create Script**
 2. Select **Pivot — Bank Toggle** from the blueprint list
 3. Enter your `device_suffix`
-4. Save. **Important:** The firmware calls `{suffix}_bank_toggle` directly, so the script entity ID must match this exact ID. The friendly name of the script can be whatever you want, as long as the entity ID matches `{suffix}_bank_toggle` (e.g. `script.lounge_bank_toggle`). Either can be adjusted after saving the script.
+4. Save the script as `device_suffix`. **Important:**  the script entity ID must remain  `script.{device_suffix}_bank_toggle` (for example, `script.ha_voice_lounge_bank_toggle`). The friendly name can be changed, but the entity ID must not. Either can be adjusted after saving the script.
 
 ### Announce automation — optional
 
