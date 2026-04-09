@@ -157,7 +157,45 @@ packages:
 
 ---
 
-## Step 6. Assign entities to banks
+## Step 6. Set up blueprints
+
+When you add your device in Blueprint mode, Pivot copies four blueprint files into your HA config and shows a persistent notification confirming it. You then create scripts and automations from those blueprints in the HA UI.
+
+> **Do this before assigning entities to banks.** The bank toggle script must exist before the button will work.
+
+### Bank Toggle script — required
+
+This script is called by the firmware every time you press the button. Without it, button presses do nothing.
+
+1. Go to **Settings → Scripts → Create Script**
+2. Select **Pivot — Bank Toggle** from the blueprint list
+3. Enter your `device_suffix`
+4. **Before saving**, click the script name at the top and set the **Script ID** to `{suffix}_bank_toggle` (e.g. `ha_voice_lounge_bank_toggle`). This exact ID is required — the firmware calls it directly.
+5. Save
+
+Repeat this for every Pivot device you have.
+
+### Announce automation — optional
+
+Speaks the active bank’s entity name when you switch banks or triple-press, and announces the entity value after the knob settles (e.g. *"Brightness 60 percent"*). Requires a TTS provider such as Home Assistant Cloud.
+
+1. Go to **Settings → Automations → Create Automation**
+2. Select **Pivot — Announce** from the blueprint list
+3. Enter your `device_suffix`, choose your media player, and choose your TTS engine
+4. Save
+
+Repeat for each device you want announcements on.
+
+### Timer blueprints — optional, only if using timer banks
+
+If you want to use a bank as a countdown timer, two additional blueprints are needed. See the [Timer page](/pivot/timer/) for full setup instructions.
+
+- **Pivot — Timer** (automation) — manages the timer: start, pause, resume, finish alarm, and LED countdown gauge
+- **Pivot — Timer Toggle** (script) — optional dashboard helper that lets a card control the timer the same way the physical button does
+
+---
+
+## Step 7. Assign entities to banks
 
 1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
 2. Assign a Home Assistant entity to each bank
