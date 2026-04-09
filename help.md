@@ -320,8 +320,12 @@ Work through these in order:
 ### The button press does nothing
 
 1. **Check bank assignment** — go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check the script entity ID** — go to **Settings → Scripts** and look for your bank toggle script. Its entity ID must be `script.{device_suffix}_bank_toggle` where `{device_suffix}` matches your `device_suffix` exactly. If the ID looks wrong, you may have entered the wrong script ID when creating it from the blueprint — delete the script and recreate it, making sure to set the Script ID to `{device_suffix}_bank_toggle` before saving.
-3. **Check the script exists** — go to **Settings → Scripts** and search for your device suffix. If it's not there, create it from the **Pivot — Bank Toggle** blueprint. See the [getting started guide](/pivot/getting-started/#bank-toggle-script--required) for instructions.
+2. **Check the bank toggle script exists** — go to **Settings → Scripts** and search for your device suffix. If it's not there, create it from the **Pivot — Bank Toggle** blueprint. See the [getting started guide](/pivot/getting-started/#bank-toggle-script--required) for instructions.
+3. **Check the script ID is correct** — this is the most common cause of button presses doing nothing after setting up the script. The firmware calls `script.{device_suffix}_bank_toggle` directly by entity ID. If the Script ID doesn't match exactly, the call silently fails.
+
+   To check: go to **Settings → Scripts**, find your bank toggle script, and click the ⚙️ icon → **Edit**. The Script ID field (not the name) must be `{device_suffix}_bank_toggle` — for example, if your suffix is `ha_voice_lounge`, the ID must be `ha_voice_lounge_bank_toggle`.
+
+   If it's wrong, note down the correct ID, delete the script, and recreate it from the **Pivot — Bank Toggle** blueprint — setting the Script ID correctly before saving. The friendly name can be anything you like.
 
 ---
 
