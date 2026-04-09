@@ -281,19 +281,6 @@ Then restart Home Assistant again.
 
 ---
 
-### My entities are all disabled
-
-The simplest fix is to remove and re-add the Pivot integration from **Settings → Devices & Services** — your bank assignments are stored in the text entities and will be restored automatically.
-
-If you would prefer not to re-add the integration, you can re-enable the entities manually:
-
-1. Go to **Settings → Devices & Services → Pivot → your device**
-2. Click on each disabled entity and use the toggle to re-enable it
-
-If entities are disabled at the config entry level rather than individually, that requires editing an internal HA storage file via SSH. Only proceed if you are comfortable with that — a clean reinstall is safer.
-
----
-
 ### Nothing happens after installing everything
 
 Start here before anything else:
@@ -325,7 +312,7 @@ Work through these in order:
 
    To check: go to **Settings → Scripts**, find your bank toggle script, and click the ⚙️ icon → **Edit**. The Script ID field (not the name) must be `{device_suffix}_bank_toggle` — for example, if your suffix is `ha_voice_lounge`, the ID must be `ha_voice_lounge_bank_toggle`.
 
-   If it's wrong, note down the correct ID, delete the script, and recreate it from the **Pivot — Bank Toggle** blueprint — setting the Script ID correctly before saving. The friendly name can be anything you like.
+    If the Script ID is wrong, update it so it matches `{device_suffix}_bank_toggle`. If Home Assistant does not allow the ID to be changed directly, delete the script and recreate it from the **Pivot — Bank Toggle** blueprint, making sure the Script ID is set correctly before saving. The friendly name can be anything you like.
 
 ---
 
