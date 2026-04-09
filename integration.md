@@ -4,7 +4,7 @@ title: Integration
 permalink: /integration/
 ---
 
-The Pivot HA integration provisions all required entities for a Pivot device and, depending on setup mode, can create the required scripts and automations automatically.
+The Pivot HA integration provisions all required entities for a Pivot device and, in Blueprint mode, installs the blueprint files you use to create the required scripts and automations.
 
 Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
@@ -14,11 +14,10 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 | Mode | What Pivot does |
 | --- | --- |
-| **Automatic** | Writes files to `/config/pivot/` and adds a single `!include` line to your `scripts.yaml` and `automations.yaml`. Fully managed — created and removed automatically. |
-| **Blueprints** | Copies blueprint files into `/config/blueprints/`. You create the automations yourself from the HA UI. |
+| **Blueprints** | Copies blueprint files into `/config/blueprints/`. You create the script and automation yourself from the HA UI — a one-time setup. Recommended for most users. |
 | **Manual** | Pivot does not touch any YAML files. Bank control and event firing still work — see [Custom Automations](#custom-automations) below for a guide to building your own. |
 
-The setup mode can be changed at any time from the integration's **Configure** menu. Switching away from Automatic will remove the files Pivot created.
+The setup mode can be changed at any time from the integration's **Configure** menu.
 
 ---
 
@@ -116,21 +115,19 @@ When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brigh
 
 ## Announcements
 
-Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Announcements are handled by two optional blueprints.
+Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Both are handled by a single **Pivot — Announce** blueprint, installed automatically in Blueprint mode.
 
-### Announce Bank
+### Pivot — Announce blueprint
 
-The **Pivot — Announce Bank** blueprint speaks the name of the active bank's assigned entity whenever the bank changes or on triple press. Import it in Home Assistant:
+The blueprint handles three announcement types in one automation:
 
-`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot_announce_bank.yaml`
+- **Bank change** — speaks the assigned entity's name whenever you switch banks (Control Mode only). Requires the **System Announcements** switch to be on.
+- **Triple press** — re-announces the current bank's entity name. Requires **System Announcements** to be on.
+- **Value announcement** — speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{suffix}_bank_N_announce_value`) — only banks with this switch on will announce.
 
-### Announce Value
+The blueprint takes three inputs: **Device Suffix**, **Media Player**, and **TTS Engine**. All entity IDs are derived automatically.
 
-The **Pivot — Announce Value** blueprint speaks the current value of a bank's entity after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{suffix}_bank_N_announce_value`) — only banks with this switch on will announce. Import the blueprint:
-
-`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot/pivot_announce_value.yaml`
-
-Supported domains and what is spoken:
+Supported domains and what is spoken for value announcements:
 
 | Domain | Announcement |
 | --- | --- |
@@ -141,9 +138,11 @@ Supported domains and what is spoken:
 | `fan` | *"Speed 60 percent"* (knob value) |
 | `number` | *"Set to 25 watts"* (entity state + unit) |
 
+Value announcements only fire when the knob is physically turned — changes made by external automations, dashboards, or voice commands are not announced.
+
 ### Muting announcements
 
-**Mute Announcements** (`switch.{suffix}_mute_announcements`) silences all TTS across both announce blueprints and the timer blueprint without changing any other setting. Useful for quiet hours or when the device is in a shared space.
+**Mute Announcements** (`switch.{suffix}_mute_announcements`) silences all TTS from the announce and timer blueprints without changing any other setting. Useful for quiet hours or when the device is in a shared space.
 
 ---
 
@@ -203,7 +202,7 @@ Fired on every button press regardless of mode.
 
 | Press type | Built-in behaviour |
 | --- | --- |
-| `single_press` | Toggles or activates the active bank's assigned entity (Automatic mode only, requires entity assigned) |
+| `single_press` | Toggles or activates the active bank's assigned entity (requires entity assigned and bank toggle script set up) |
 | `double_press` | Toggles Control Mode on/off |
 | `triple_press` | Announces the active bank's assigned entity name via TTS (if announcements configured) |
 | `long_press` | No built-in behaviour |
@@ -221,7 +220,7 @@ Custom automations triggered by these events always stack on top of built-in beh
 
 In Manual mode, Pivot creates all the required entities and fires events on the HA event bus, but does not create any scripts or automations itself — you build everything from scratch.
 
-If you use Automatic mode, custom automations are an optional layer you can add on top. Because Pivot fires events on every interaction regardless of mode, you can trigger your own automations in response to things the built-in behaviour does not handle — like using a button press on a specific bank to trigger a shell command or run a scene.
+In Blueprint mode, custom automations are an optional layer you can add on top of the installed blueprints. Because Pivot fires events on every interaction regardless of mode, you can trigger your own automations in response to things the built-in behaviour does not handle — like using a button press on a specific bank to trigger a shell command or run a scene.
 
 Pivot events carry enough context to let automations be as specific or as broad as you need:
 
@@ -292,7 +291,7 @@ Create one pair of automations like this per bank. You can use any entity domain
 
 ### Example: Play/Pause computer media while Bank 1 is assigned to computer volume
 
-This example adds behaviour on top of Automatic mode. Bank 1 is already controlling computer volume via an `input_number` helper — this automation adds a play/pause shell command to the same button press, but only fires it when that specific helper is assigned to Bank 1. Any other bank behaves normally.
+This example adds extra behaviour on top of the bank toggle script. Bank 1 is already controlling computer volume via an `input_number` helper — this automation adds a play/pause shell command to the same button press, but only fires it when that specific helper is assigned to Bank 1. Any other bank behaves normally.
 
 The helper entity is `input_number.example_computer_volume` and the shell command is `shell_command.music_playpause`.
 
@@ -331,25 +330,3 @@ mode: single
 ```
 {% endraw %}
 
----
-
-## How Automatic mode manages files
-
-Pivot writes its own dedicated files to a `/config/pivot/` subfolder — they do not appear alongside your other config files in `/config/`.
-
-| File | Description |
-| --- | --- |
-| `pivot/pivot_{suffix}_bank_toggle.yaml` | Bank toggle script |
-| `pivot/pivot_{suffix}_announcements.yaml` | Announcements automation |
-
-It adds a single `!include` line for each file into your `scripts.yaml` and `automations.yaml`. These are the only changes Pivot makes to those files — it never touches any other content.
-
-On every load, Pivot rewrites its own `!include` lines from scratch: any stale, duplicate, or broken entries for its keys are removed and replaced with a single correct line. This means the integration is self-healing — if an include line ever becomes inconsistent (e.g. after a manual edit or a failed update), it will be corrected automatically without any user action.
-
-On removal or mode change, Pivot removes the files it created and its `!include` lines from `scripts.yaml` and `automations.yaml`.
-
-Before modifying `scripts.yaml` or `automations.yaml` for the first time, Pivot creates a one-time backup:
-- `scripts.yaml.pivot_backup`
-- `automations.yaml.pivot_backup`
-
-Pivot also validates its generated YAML before writing — if anything is invalid, it aborts and logs an error rather than writing a broken file.
