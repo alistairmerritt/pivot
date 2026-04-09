@@ -69,16 +69,16 @@ The timer blueprint only activates on a bank whose entity is set to the reserved
 
 1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
 2. Step through to the **Bank Entity Assignment** screen
-3. Under **Timer banks**, tick the bank you want to use as a timer
+3. Under **Timer banks**, tick the bank you want to use as a timer (note: any entity selected for a chosen bank will be ignored).
 4. Save
 
 Once set, the knob is active for duration setting when the timer is idle, and passive while running or paused. The bank stays reserved for the timer until you untick it.
 
-> You can also set this directly by writing `timer` (lowercase) to `text.{suffix}_bank_N_entity` via Developer Tools or any HA service call — the Configure screen and the text entity stay in sync.
+> You can also set this directly by writing `timer` (lowercase) to `text.{suffix}_bank_N_entity` in the device settings – the Configure screen and the text entity stay in sync.
 
 ### Step 3 — Set your duration
 
-Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on number.{suffix}_timer_duration in HA — the gauge will update the next time you switch to that bank.
+Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS (if Mute Announcements is not active) announces the selected time once you stop turning. You can also set the duration directly on `number.{suffix}_timer_duration` in HA — the gauge will update the next time you switch to that bank.
 
 ### Step 4 — Create an automation from the blueprint
 
