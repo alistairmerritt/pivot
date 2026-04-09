@@ -27,38 +27,38 @@ The setup mode can be changed at any time from the integration's **Configure** m
 
 | Entity | Purpose |
 | --- | --- |
-| `number.{suffix}_bank_0_value` | Bank 1 value (0–100%) |
-| `number.{suffix}_bank_1_value` | Bank 2 value (0–100%) |
-| `number.{suffix}_bank_2_value` | Bank 3 value (0–100%) |
-| `number.{suffix}_bank_3_value` | Bank 4 value (0–100%) |
-| `number.{suffix}_active_bank` | Active bank (1–4) |
+| `number.{device_suffix}_bank_0_value` | Bank 1 value (0–100%) |
+| `number.{device_suffix}_bank_1_value` | Bank 2 value (0–100%) |
+| `number.{device_suffix}_bank_2_value` | Bank 3 value (0–100%) |
+| `number.{device_suffix}_bank_3_value` | Bank 4 value (0–100%) |
+| `number.{device_suffix}_active_bank` | Active bank (1–4) |
 
 ### Switch entities
 
 | Entity | Purpose |
 | --- | --- |
-| `switch.{suffix}_control_mode` | Control Mode vs Normal (voice) Mode |
-| `switch.{suffix}_show_control_value` | Keep gauge LEDs permanently visible in control mode |
-| `switch.{suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
-| `switch.{suffix}_announcements` | System Announcements — enable/disable bank-change and triple-press TTS announcements |
-| `switch.{suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, and timer) without changing other settings |
-| `switch.{suffix}_bank_0_mirror_light` | Bank 1 — mirror assigned RGB light colour |
-| `switch.{suffix}_bank_1_mirror_light` | Bank 2 — mirror assigned RGB light colour |
-| `switch.{suffix}_bank_2_mirror_light` | Bank 3 — mirror assigned RGB light colour |
-| `switch.{suffix}_bank_3_mirror_light` | Bank 4 — mirror assigned RGB light colour |
-| `switch.{suffix}_bank_0_announce_value` | Bank 1 — announce the entity value via TTS after the knob settles |
-| `switch.{suffix}_bank_1_announce_value` | Bank 2 — announce the entity value via TTS after the knob settles |
-| `switch.{suffix}_bank_2_announce_value` | Bank 3 — announce the entity value via TTS after the knob settles |
-| `switch.{suffix}_bank_3_announce_value` | Bank 4 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_control_mode` | Control Mode vs Normal (voice) Mode |
+| `switch.{device_suffix}_show_control_value` | Keep gauge LEDs permanently visible in control mode |
+| `switch.{device_suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
+| `switch.{device_suffix}_announcements` | System Announcements — enable/disable bank-change and triple-press TTS announcements |
+| `switch.{device_suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, and timer) without changing other settings |
+| `switch.{device_suffix}_bank_0_mirror_light` | Bank 1 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_1_mirror_light` | Bank 2 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_2_mirror_light` | Bank 3 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_3_mirror_light` | Bank 4 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_0_announce_value` | Bank 1 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_bank_1_announce_value` | Bank 2 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_bank_2_announce_value` | Bank 3 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_bank_3_announce_value` | Bank 4 — announce the entity value via TTS after the knob settles |
 
 ### Text entities
 
 | Entity | Purpose |
 | --- | --- |
-| `text.{suffix}_bank_0_entity` | Entity assigned to Bank 1 |
-| `text.{suffix}_bank_1_entity` | Entity assigned to Bank 2 |
-| `text.{suffix}_bank_2_entity` | Entity assigned to Bank 3 |
-| `text.{suffix}_bank_3_entity` | Entity assigned to Bank 4 |
+| `text.{device_suffix}_bank_0_entity` | Entity assigned to Bank 1 |
+| `text.{device_suffix}_bank_1_entity` | Entity assigned to Bank 2 |
+| `text.{device_suffix}_bank_2_entity` | Entity assigned to Bank 3 |
+| `text.{device_suffix}_bank_3_entity` | Entity assigned to Bank 4 |
 
 > **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). The knob has no effect on a timer bank — the LED gauge is managed entirely by the blueprint. Any other value is treated as a Home Assistant entity ID.
 
@@ -66,10 +66,10 @@ The setup mode can be changed at any time from the integration's **Configure** m
 
 | Entity | Purpose |
 | --- | --- |
-| `binary_sensor.{suffix}_bank_0_passive` | On when Bank 1 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{suffix}_bank_1_passive` | On when Bank 2 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{suffix}_bank_2_passive` | On when Bank 3 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{suffix}_bank_3_passive` | On when Bank 4 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_0_passive` | On when Bank 1 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_1_passive` | On when Bank 2 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_2_passive` | On when Bank 3 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_3_passive` | On when Bank 4 entity is a scene, script, switch, or input_boolean (knob disabled) |
 
 ### Timer entities
 
@@ -77,9 +77,9 @@ These entities are provisioned per device but **disabled by default**. Enable th
 
 | Entity | Purpose |
 | --- | --- |
-| `number.{suffix}_timer_duration` | Timer duration in minutes (1–60, default 25) |
-| `select.{suffix}_timer_state` | Timer state — idle, running, or paused |
-| `text.{suffix}_timer_end` | Internal — stores the countdown end time while the timer is running |
+| `number.{device_suffix}_timer_duration` | Timer duration in minutes (1–60, default 25) |
+| `select.{device_suffix}_timer_state` | Timer state — idle, running, or paused |
+| `text.{device_suffix}_timer_end` | Internal — stores the countdown end time while the timer is running |
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
@@ -87,7 +87,7 @@ These entities are provisioned per device but **disabled by default**. Enable th
 
 ## Mirror light colour
 
-Each bank has an optional **Mirror light colour** switch (`switch.{suffix}_bank_N_mirror_light`). When enabled for a bank that is assigned to an RGB light, the bank's LED ring colour will match the current colour of that light instead of the fixed default bank colour.
+Each bank has an optional **Mirror light colour** switch (`switch.{device_suffix}_bank_N_mirror_light`). When enabled for a bank that is assigned to an RGB light, the bank's LED ring colour will match the current colour of that light instead of the fixed default bank colour.
 
 - **Mirror on, knob idle** — LED ring uses the light's current RGB colour, updating whenever the light changes.
 - **Mirror on, knob turning (value change)** — the gauge arc shows the light's current colour as it updates the brightness or volume, just as at idle.
@@ -123,7 +123,7 @@ The blueprint handles three announcement types in one automation:
 
 - **Bank change** — speaks the assigned entity's name whenever you switch banks (Control Mode only). Requires the **System Announcements** switch to be on.
 - **Triple press** — re-announces the current bank's entity name. Requires **System Announcements** to be on.
-- **Value announcement** — speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{suffix}_bank_N_announce_value`) — only banks with this switch on will announce.
+- **Value announcement** — speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{device_suffix}_bank_N_announce_value`) — only banks with this switch on will announce.
 
 The blueprint takes three inputs: **Device Suffix**, **Media Player**, and **TTS Engine**. All entity IDs are derived automatically.
 
@@ -142,7 +142,7 @@ Value announcements only fire when the knob is physically turned — changes mad
 
 ### Muting announcements
 
-**Mute Announcements** (`switch.{suffix}_mute_announcements`) silences all TTS from the announce and timer blueprints without changing any other setting. Useful for quiet hours or when the device is in a shared space.
+**Mute Announcements** (`switch.{device_suffix}_mute_announcements`) silences all TTS from the announce and timer blueprints without changing any other setting. Useful for quiet hours or when the device is in a shared space.
 
 ---
 

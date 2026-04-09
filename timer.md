@@ -56,9 +56,9 @@ The timer helpers are provisioned with every Pivot device but disabled by defaul
 
 1. Go to **Settings → Devices & Services → Pivot** and open your device.
 2. Find the three timer entities listed under the device:
-   - number.{suffix}_timer_duration — duration in minutes
-   - select.{suffix}_timer_state — state mirror (idle / running / paused)
-   - text.{suffix}_timer_end — internal countdown tracker
+   - number.{device_suffix}_timer_duration — duration in minutes
+   - select.{device_suffix}_timer_state — state mirror (idle / running / paused)
+   - text.{device_suffix}_timer_end — internal countdown tracker
 3. Click each entity, go to **Settings**, and toggle **Enable**.
 
 All three must be enabled for the blueprint to work correctly.
@@ -69,16 +69,16 @@ The timer blueprint only activates on a bank whose entity is set to the reserved
 
 1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
 2. Step through to the **Bank Entity Assignment** screen
-3. Under **Timer banks**, tick the bank you want to use as a timer (note: any entity selected for a chosen bank will be ignored).
+3. Under **Timer banks**, tick the bank you want to use as a timer
 4. Save
 
 Once set, the knob is active for duration setting when the timer is idle, and passive while running or paused. The bank stays reserved for the timer until you untick it.
 
-> You can also set this directly by writing `timer` (lowercase) to `text.{suffix}_bank_N_entity` in the device settings – the Configure screen and the text entity stay in sync.
+> You can also set this directly by writing `timer` (lowercase) to `text.{device_suffix}_bank_N_entity` via Developer Tools or any HA service call — the Configure screen and the text entity stay in sync.
 
 ### Step 3 — Set your duration
 
-Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS (if Mute Announcements is not active) announces the selected time once you stop turning. You can also set the duration directly on `number.{suffix}_timer_duration` in HA — the gauge will update the next time you switch to that bank.
+Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on number.{device_suffix}_timer_duration in HA — the gauge will update the next time you switch to that bank.
 
 ### Step 4 — Create an automation from the blueprint
 
@@ -114,11 +114,11 @@ That's it — single-press the bank to start. Single-press to pause. Long-press 
 
 | Entity | Purpose |
 | --- | --- |
-| number.{suffix}_timer_duration | Duration in minutes (1–60, default 25) |
-| select.{suffix}_timer_state | State mirror — updated by blueprint and firmware (idle / running / paused / alerting) |
-| text.{suffix}_timer_end | Internal — stores an ISO end timestamp while running, and a `P{seconds}` remaining-time value while paused |
+| number.{device_suffix}_timer_duration | Duration in minutes (1–60, default 25) |
+| select.{device_suffix}_timer_state | State mirror — updated by blueprint and firmware (idle / running / paused / alerting) |
+| text.{device_suffix}_timer_end | Internal — stores an ISO end timestamp while running, and a `P{seconds}` remaining-time value while paused |
 
-All three entities are **disabled by default** and live under the Pivot device in the HA device registry. The text.{suffix}_timer_end entity is managed entirely by the blueprint; you don't need to interact with it directly.
+All three entities are **disabled by default** and live under the Pivot device in the HA device registry. The text.{device_suffix}_timer_end entity is managed entirely by the blueprint; you don't need to interact with it directly.
 
 ---
 
@@ -282,7 +282,7 @@ The cards above are intentionally minimal. If you want a fully worked example �
 
 **Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains. While the timer is running, the gauge syncs every 30 seconds — on a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
 
-**Assigning the bank** — Tick the bank under **Timer banks** in the Configure screen, or write `timer` (lowercase) directly to `text.{suffix}_bank_N_entity` via Developer Tools. The timer blueprint only runs on banks assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
+**Assigning the bank** — Tick the bank under **Timer banks** in the Configure screen, or write `timer` (lowercase) directly to `text.{device_suffix}_bank_N_entity` via Developer Tools. The timer blueprint only runs on banks assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
 
 **Long pressing from another bank** — Long press cancel only fires when the timer bank is the active bank. This is intentional — long press on other banks is left free for custom actions. If you're on a different bank and want to cancel, switch back to the timer bank first, then long press.
 
@@ -290,7 +290,7 @@ The cards above are intentionally minimal. If you want a fully worked example �
 
 **Multiple timers** — You can create multiple automations from the same blueprint, one per Pivot device, each with its own suffix and bank assignment.
 
-**Pausing and resuming** — Remaining time is stored in text.{suffix}_timer_end and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the gauge sync will detect this within 30 seconds of startup and trigger the finish sequence normally.
+**Pausing and resuming** — Remaining time is stored in text.{device_suffix}_timer_end and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the gauge sync will detect this within 30 seconds of startup and trigger the finish sequence normally.
 
 **Paused auto-cancel** — If the timer is left paused for more than 15 minutes, it resets automatically: the gauge goes to 0 and `timer_state` returns to `idle`. This prevents the timer from being stuck in paused state indefinitely.
 

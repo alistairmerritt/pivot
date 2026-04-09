@@ -153,7 +153,7 @@ packages:
 5. Optionally configure announcements — select a text-to-speech service (TTS) and speaker to have Pivot speak the active bank name when you switch
 
 
-> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
+> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
 ---
 
@@ -167,7 +167,7 @@ The knob will now control each bank's assigned entity. Button presses won't work
 
 > **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default — you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
 
-> **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (setup mode, announcements) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
+> **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (setup mode, announcements) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{device_suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
 
 ---
 

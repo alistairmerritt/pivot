@@ -314,15 +314,15 @@ Work through these in order:
 1. **Check bank assignment** — go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
 2. **Check the entity domain** — the entity must be a supported type: light, fan, media player, climate, or cover. Scenes and scripts are passive (knob does nothing, button only).
 3. **Check Control Mode is on** — go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
-4. **Check the bank toggle script exists** (Automatic mode only) — go to **Developer Tools → Template** and enter `{% raw %}{{ states('script.{suffix}_bank_toggle') }}{% endraw %}`. If it returns `unknown`, the script is missing. Go to **Configure** on the integration and save to re-trigger the file write.
+4. **Check the bank toggle script exists** — go to **Developer Tools → Template** and enter `{% raw %}{{ states('script.{device_suffix}_bank_toggle') }}{% endraw %}`. If it returns `unknown`, the script is missing. Go to **Settings → Scripts → Create Script**, select the **Pivot — Bank Toggle** blueprint, and follow the setup instructions in the [getting started guide](/pivot/getting-started/#bank-toggle-script--required).
 
 ---
 
 ### The button press does nothing
 
 1. **Check bank assignment** — go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check the script entity ID** (Automatic mode only) — go to **Settings → Devices & Services → Pivot → your device** and look for a script entity. Its entity ID must be `script.{suffix}_bank_toggle` where `{suffix}` matches your `device_suffix` exactly. If the ID looks wrong, the suffix in your firmware YAML may not match what you entered during integration setup.
-3. **Check the script exists** — go to **Settings → Scripts** and search for your device suffix. If it's not there, go to **Configure** on the integration and save to re-trigger the file write.
+2. **Check the script entity ID** — go to **Settings → Scripts** and look for your bank toggle script. Its entity ID must be `script.{device_suffix}_bank_toggle` where `{device_suffix}` matches your `device_suffix` exactly. If the ID looks wrong, you may have entered the wrong script ID when creating it from the blueprint — delete the script and recreate it, making sure to set the Script ID to `{device_suffix}_bank_toggle` before saving.
+3. **Check the script exists** — go to **Settings → Scripts** and search for your device suffix. If it's not there, create it from the **Pivot — Bank Toggle** blueprint. See the [getting started guide](/pivot/getting-started/#bank-toggle-script--required) for instructions.
 
 ---
 
@@ -333,21 +333,21 @@ Work through these in order:
 1. Go to **Settings → Devices & Services → Pivot → your device** and check that the **Announcements** switch is on.
 2. Go to **Configure** on the integration and confirm a text-to-speech service and speaker are selected.
 3. Test your TTS service independently — go to **Developer Tools → Actions**, find `tts.speak`, select your TTS entity and media player, and send a test message. If this doesn't work, the issue is with your TTS setup rather than Pivot.
-4. In Automatic mode, check the announcements automation exists — go to **Settings → Automations** and search for your device suffix. If it's missing, go to **Configure** on the integration and save to re-trigger the file write.
+4. Check the announce automation exists — go to **Settings → Automations** and search for your device suffix. If it's missing, create it from the **Pivot — Announce** blueprint. See the [getting started guide](/pivot/getting-started/#announce-automation--optional) for instructions.
 
 ---
 
 ### The timer blueprint triggers when I turn the knob on a bank with a real entity
 
-This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint requires the bank's entity field to be set to the reserved keyword `timer` before it will respond — this prevents it from interfering with normally-assigned banks.
+This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint requires the bank to be set as a timer bank before it will respond — this prevents it from interfering with normally-assigned banks.
 
-To fix: go to **Settings → Devices & Services → Pivot → your device → Configure**, set the bank entity for your timer bank to `timer` (lowercase), and save. If the timer bank has a real entity assigned, remove it first.
+To fix: go to **Settings → Devices & Services → Pivot → your device → Configure**, step through to the **Bank Entity Assignment** screen, select the correct bank under **Timer bank (optional)**, and save. This clears the entity assignment for that bank automatically.
 
 ---
 
 ### The timer gauge (LED ring) does not update while the timer is running
 
-1. Make sure all three timer entities are enabled: `number.{suffix}_timer_duration`, `select.{suffix}_timer_state`, and `text.{suffix}_timer_end`. All three must be enabled for the blueprint to work.
+1. Make sure all three timer entities are enabled: `number.{device_suffix}_timer_duration`, `select.{device_suffix}_timer_state`, and `text.{device_suffix}_timer_end`. All three must be enabled for the blueprint to work.
 2. Check the bank entity for the timer bank is set to `timer` (not left blank or set to a real entity).
 3. Confirm the timer automation is enabled — go to **Settings → Automations** and check it is toggled on.
 4. The gauge updates every 30 seconds, not continuously. A brief delay before the first update is normal.
@@ -356,26 +356,10 @@ To fix: go to **Settings → Devices & Services → Pivot → your device → Co
 
 ### File & config issues
 
-### The button press stopped working after editing scripts.yaml
+### The bank toggle script has stopped working
 
-If you deleted or modified `pivot/pivot_{suffix}_bank_toggle.yaml` or the `!include` line Pivot added to your `scripts.yaml`, the bank toggle script will stop working.
+The bank toggle script is a standard HA script created from the **Pivot — Bank Toggle** blueprint. If it stops working, check:
 
-The quickest fix is to go to **Settings → Devices & Services → Pivot → your device → Configure** and save — this will recreate the file and re-add the `!include` line if it is missing.
-
-> **Warning:** If the `!include` line appears more than once in `scripts.yaml`, HA will throw a duplicate key error and fail to load scripts entirely. Go to **Studio Code Server** or another file editor and remove the duplicate line, then reload scripts from **Developer Tools → YAML → Scripts**. Once HA is running again, Pivot will automatically correct any remaining inconsistencies on its next load — you do not need to do anything further.
-
----
-
-### Restoring from a Pivot backup
-
-Before Pivot appends its `!include` line to your `scripts.yaml` or `automations.yaml` for the first time, it automatically creates a backup:
-
-- `scripts.yaml.pivot_backup`
-- `automations.yaml.pivot_backup`
-
-These backups reflect the state of your files before Pivot ever touched them. To restore via SSH:
-
-```bash
-cp /config/scripts.yaml.pivot_backup /config/scripts.yaml
-cp /config/automations.yaml.pivot_backup /config/automations.yaml
-```
+1. Go to **Settings → Scripts** and confirm the script exists and is enabled.
+2. Check its entity ID is `script.{device_suffix}_bank_toggle` — if it was renamed or recreated with the wrong ID, the firmware won't find it.
+3. If the script is missing, recreate it from the blueprint. See the [getting started guide](/pivot/getting-started/#bank-toggle-script--required) for instructions.

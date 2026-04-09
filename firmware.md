@@ -157,7 +157,7 @@ The LED ring colour for each bank is controlled by text entities created by the 
 | 3 | Green `#97FF3D` |
 | 4 | Purple `#C800FF` |
 
-You can change bank colours from within Home Assistant using the light entities the integration creates for each bank (`light.{suffix}_bank_1_color_light` etc.).
+You can change bank colours from within Home Assistant using the light entities the integration creates for each bank (`light.{device_suffix}_bank_1_color_light` etc.).
 
 ---
 
