@@ -44,12 +44,15 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.50
+- **Fix:** Fixes a 500 error in the Home Assistant automation editor when opening automations created from the `pivot_announce_bank.yaml` or `pivot_timer.yaml` blueprints after the `mute_entity` input was added. The `entity` selector with `default: ""` was invalid — changed to a `text` selector so an empty value is accepted. Also tightens the mute condition to handle `null` as well as empty string (`not mute_entity or ...`).
+
 ### v0.0.49
 - **New:** Per-bank **Announce Value** switches (`switch.{suffix}_bank_N_announce_value`, one per bank). When enabled, the value of the bank's assigned entity is announced via TTS after the knob settles (~600 ms debounce). Supports `climate` (speaks temperature), `cover` (speaks position), `light`, `media_player`, and `fan` (speak knob value as percent), and `number` (speaks entity state with unit). Off by default.
-- **New:** Global **Mute Announcements** switch (`switch.{suffix}_mute_announcements`). When on, all spoken announcements from the announce-bank, announce-value, and timer blueprints are suppressed — no other behaviour changes. Off by default.
-- **New:** `pivot_announce_value.yaml` blueprint — handles per-bank value announcements. Install once per device; uses `mode: restart` so only the settled value is spoken, not every step.
-- **Change:** **Announce Bank** (`pivot_announce_bank.yaml`) blueprint updated with an optional **Mute Announcements Switch** input, respecting the new global mute switch.
-- **Change:** **Pivot Timer** (`pivot_timer.yaml`) blueprint updated with an optional **Mute Announcements Switch** input. All six TTS sites (start, pause, resume, cancel, finish message, duration announcement) now respect the mute switch.
+- **New:** Global **Mute Announcements** switch (`switch.{suffix}_mute_announcements`). When on, all spoken announcements are suppressed — no other behaviour changes. Off by default.
+- **Change:** The auto-generated Announcements automation now includes value announcement logic directly — no separate blueprint import needed. The existing `pivot_{suffix}_announcements.yaml` file is regenerated on next HA restart to include bank-value triggers and the debounced value-announcement branch. Per-bank `announce_value` switches gate value announcements; the system `announcements` switch and `mute_announcements` switch gate bank-change and triple-press announcements as before.
+- **Change:** Automation mode changed from `single` to `restart` so the 600 ms debounce delay resets on each knob turn and is cancelled automatically when the bank changes.
+- **Change:** **Pivot Timer** (`pivot_timer.yaml`) and **Announce Bank** (`pivot_announce_bank.yaml`) blueprints updated with an optional **Mute Announcements Switch** input.
 - **Change:** Announcements switch renamed from "Announcements" to "System Announcements" for clarity. Entity ID is unchanged: `switch.{suffix}_announcements`.
 
 ### v0.0.48
