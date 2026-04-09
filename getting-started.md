@@ -173,6 +173,8 @@ This script is called by the firmware every time you press the button. Without i
 4. **Before saving**, click the script name at the top and set the **Script ID** to `{suffix}_bank_toggle` (e.g. `ha_voice_lounge_bank_toggle`). This exact ID is required — the firmware calls it directly.
 5. Save
 
+Once saved, you can give the script a friendlier name without breaking anything. Open the script, click the name at the top, change the **Name** field to whatever you like (e.g. *"Lounge VPE — Bank Toggle"*), and save. The name is just a label — the Script ID (entity ID) is what the firmware uses and is not affected by renaming.
+
 Repeat this for every Pivot device you have.
 
 ### Announce automation — optional
