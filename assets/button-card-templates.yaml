@@ -332,6 +332,7 @@ button_card_templates:
         [[[ return
         `switch.${variables.device_suffix}_bank_${variables.bank_number -
         1}_announce_value`; ]]]
+      mute_announcements_entity: '[[[ return `switch.${variables.device_suffix}_mute_announcements`; ]]]'
     show_name: false
     show_state: false
     show_icon: false
@@ -1245,6 +1246,16 @@ button_card_templates:
             action: more-info
           hold_action:
             action: more-info
+          state:
+            - operator: template
+              value: |
+                [[[
+                  return states[variables.mute_announcements_entity]?.state === 'on';
+                ]]]
+              styles:
+                card:
+                  - opacity: '0.35'
+                  - pointer-events: none
           styles:
             grid:
               - grid-template-areas: '"i n btn"'
