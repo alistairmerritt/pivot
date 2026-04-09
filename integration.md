@@ -168,7 +168,19 @@ When an assigned entity is changed externally — by a voice command, another da
 
 ## Events
 
-Pivot fires two events on the HA event bus regardless of setup mode.
+Pivot fires the following events on the HA event bus regardless of setup mode.
+
+### `pivot_bank_changed`
+
+Fired whenever the active bank changes.
+
+| Field | Description |
+| --- | --- |
+| `suffix` | Device suffix |
+| `bank` | New active bank (1–4) |
+| `bank_entity` | Entity assigned to the new active bank (empty string if unassigned) |
+
+---
 
 ### `pivot_knob_turn`
 

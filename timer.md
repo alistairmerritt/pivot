@@ -67,27 +67,26 @@ All three must be enabled for the blueprint to work correctly.
 
 The timer blueprint only activates on a bank whose entity is set to the reserved keyword `timer`. This prevents the timer from triggering on banks that have a real entity assigned.
 
-timer is not a real Home Assistant entity, so it cannot be set through the Configure screen — the entity picker will reject it. Instead, set it directly on the text entity:
+1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
+2. Step through to the **Bank Entity Assignment** screen
+3. Under **Timer banks**, tick the bank you want to use as a timer
+4. Save
 
-1. Go to **Devices & Services → Pivot → Your Pivot Device**
-2. Locate text.{suffix}_bank_N_entity for your chosen bank (e.g. text.ha_voice_lounge_bank_2_entity)
-3. Set the value to timer (lowercase, no quotes)
+Once set, the knob is active for duration setting when the timer is idle, and passive while running or paused. The bank stays reserved for the timer until you untick it.
 
-Once set, timer appears as the bank assignment. The knob is active for duration setting when the timer is idle, and passive while running or paused. The bank stays reserved for the timer until you change it.
+> You can also set this directly by writing `timer` (lowercase) to `text.{suffix}_bank_N_entity` via Developer Tools or any HA service call — the Configure screen and the text entity stay in sync.
 
 ### Step 3 — Set your duration
 
 Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on number.{suffix}_timer_duration in HA — the gauge will update the next time you switch to that bank.
 
-### Step 4 — Install the blueprint
+### Step 4 — Create an automation from the blueprint
 
-The Pivot Timer blueprint is not installed automatically. Click the button below to import it into Home Assistant:
+If you set up Pivot in **Blueprint mode**, the **Pivot — Timer** blueprint was installed automatically when you added your device. Go straight to creating the automation below.
 
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot%2Fpivot_timer.yaml)
+If you set up Pivot in **Manual mode**, you'll need to import the blueprint first. Paste this URL into **Settings → Automations → Blueprints → Import Blueprint**:
 
-Or paste this URL into **Settings → Automations → Blueprints → Import Blueprint**:
-
-`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot/pivot_timer.yaml`
+`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot_timer.yaml`
 
 ### Step 5 — Create an automation from the blueprint
 
@@ -206,15 +205,11 @@ Dashboard control is optional, but the below script is required if you want dash
 
 ### Step 1 — Install the Timer Toggle script
 
-Import the script blueprint into Home Assistant:
-
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml)
-
-Or paste this URL into **Settings → Automations → Blueprints → Import Blueprint**:
+If you set up Pivot in **Blueprint mode**, the **Pivot — Timer Toggle** blueprint was installed automatically. If you're in **Manual mode**, paste this URL into **Settings → Automations → Blueprints → Import Blueprint** first:
 
 `https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/script/pivot_timer_toggle.yaml`
 
-Then go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot — Timer Toggle Script**.
+Then go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot — Timer Toggle**.
 
 > **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly by entity ID. The script only needs to be set up **once** — it works for all your Pivot devices, with the device suffix and bank number passed by each card at call time.
 
@@ -287,7 +282,7 @@ The cards above are intentionally minimal. If you want a fully worked example �
 
 **Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains. While the timer is running, the gauge syncs every 30 seconds — on a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
 
-**Assigning the bank** — Set text.{suffix}_bank_N_entity to timer directly via your device entities screen – Go to **Devices & Services → Pivot → Your Pivot Device** (the Configure screen rejects it as it's not a real entity ID). The timer blueprint only runs on banks explicitly assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
+**Assigning the bank** — Tick the bank under **Timer banks** in the Configure screen, or write `timer` (lowercase) directly to `text.{suffix}_bank_N_entity` via Developer Tools. The timer blueprint only runs on banks assigned this way — if you later change the bank to a real entity, the timer stops responding to that bank automatically.
 
 **Long pressing from another bank** — Long press cancel only fires when the timer bank is the active bank. This is intentional — long press on other banks is left free for custom actions. If you're on a different bank and want to cancel, switch back to the timer bank first, then long press.
 
