@@ -173,7 +173,7 @@ The knob will now control each bank's assigned entity. Button presses won't work
 
 ## Step 7. Set up blueprints
 
-When you added your device in Blueprint mode, Pivot copied four blueprint files into your HA config and showed a persistent notification confirming it. You now create scripts and automations from those blueprints in the HA UI.
+If you added your device in Blueprint mode, Pivot copied four blueprint files into your HA config and showed a persistent notification confirming it. You now create scripts and automations from those blueprints in the HA UI.
 
 > **The Bank Toggle script is required for button presses to work.** Everything else is optional.
 
@@ -191,16 +191,11 @@ This script is called by the firmware every time you press the button. Without i
 1. Go to **Settings → Scripts → Create Script**
 2. Select **Pivot — Bank Toggle** from the blueprint list
 3. Enter your `device_suffix`
-4. **Before saving**, click the script name at the top and set the **Script ID** to `{suffix}_bank_toggle` (e.g. `ha_voice_lounge_bank_toggle`). This exact ID is required — the firmware calls it directly.
-5. Save
-
-Once saved, you can give the script a friendlier name without breaking anything. Open the script, click the name at the top, change the **Name** field to whatever you like (e.g. *"Lounge VPE — Bank Toggle"*), and save. The name is just a label — the Script ID (entity ID) is what the firmware uses and is not affected by renaming.
-
-Repeat this for every Pivot device you have.
+4. Save. **Important:** The firmware calls `{suffix}_bank_toggle` directly, so the script entity ID must match this exact ID. The friendly name of the script can be whatever you want, as long as the entity ID matches `{suffix}_bank_toggle` (e.g. `script.lounge_bank_toggle`). Either can be adjusted after saving the script.
 
 ### Announce automation — optional
 
-Speaks the active bank’s entity name when you switch banks or triple-press, and announces the entity value after the knob settles (e.g. *"Brightness 60 percent"*). Requires a TTS provider such as Home Assistant Cloud.
+Speaks the active bank’s entity name when you switch banks and announces the entity value after the knob settles (e.g. *"Brightness 60 percent"*). Requires a TTS provider such as Home Assistant Cloud.
 
 1. Go to **Settings → Automations → Create Automation**
 2. Select **Pivot — Announce** from the blueprint list
