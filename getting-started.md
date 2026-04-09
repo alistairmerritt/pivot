@@ -4,7 +4,7 @@ title: Getting Started
 permalink: /getting-started/
 ---
 
-This guide walks you through everything needed to get Pivot running on a Home Assistant Voice Preview Edition device. Setup takes around 15–30 minutes depending on your familiarity with Home Assistant and ESPHome.
+This guide walks you through everything needed to get Pivot running on a Home Assistant Voice Preview Edition (VPE) device. Setup takes around 15–30 minutes depending on your familiarity with Home Assistant and ESPHome.
 
 > **Pivot runs alongside your existing voice setup without interfering with it.** The ESPHome integration remains unchanged, and any settings already configured on your VPE — such as the voice assistant, wake word, volume, or listening-mode LED colour — are left exactly as they are. Pivot cannot read or modify those settings; it simply adds a separate layer of control on top.
 
@@ -68,7 +68,7 @@ If you don't already have ESPHome Device Builder installed, install it via <stro
 <blockquote><strong>Save your encryption key.</strong> When you take control, ESPHome shows the device's API encryption key. Copy this and keep it somewhere safe — you'll need it in the next step. Alternatively, generate a fresh one at <a href="https://esphome.io/components/api.html#configuration-variables">esphome.io</a>.</blockquote></li>
 
 <li><p><strong>Create your per-device config.</strong><br>
-Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml"><code>devices/example.yaml</code></a> in the firmware repo and paste it into ESPHome, replacing the stock YAML. Fill in your device-specific values:</p>
+Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml"><code>devices/example.yaml</code></a> in the firmware repo (or the code block below) and paste it into ESPHome, replacing the stock YAML. Fill in your device-specific values:</p>
 
 <pre><code>substitutions:
   # =======================================================================
@@ -120,14 +120,14 @@ packages:
 
 <li><p><strong>Connect your VPE via USB</strong> for the initial flash — use a good quality cable. OTA (wireless) is used for all future updates once the device is running Pivot firmware.</p>
 
-<blockquote><strong>Tip:</strong> There is a small switch inside the VPE case labelled <strong>USB SELECT</strong> with two positions: <strong>ESP32</strong> and <strong>XU316</strong>. It should be in the <strong>ESP32</strong> position by default. If your device is not detected when connected via USB, open the case and check this switch. Follow <a href="https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition">Step 1 of the Nabu Casa disassembly guide</a> to access it — you do not need to go further than Step 1.</blockquote></li>
+<blockquote><strong>Tip:</strong> There is a small switch inside the VPE case labelled <strong>USB SELECT</strong> with two positions: <strong>ESP32</strong> and <strong>XU316</strong>. It should be in the <strong>ESP32</strong> position by default. If your device is not detected when connected via USB, open the case and check this switch. Follow <a href="https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition">Step 1 of the Nabu Casa disassembly guide</a> to access it.</blockquote></li>
 
 <li>Click <strong>Install → Plug into this computer</strong>. ESPHome will fetch the firmware from GitHub, compile it, and flash it. This may take 5–10 minutes the first time.</li>
 
 <li>Once flashed, <strong>fully power cycle your VPE</strong> — disconnect from power, wait a few seconds, then reconnect. The device will reconnect to Home Assistant automatically.</li>
 </ol>
 
-> **Future updates** — once your device is running Pivot firmware and is online, all future updates are wireless. When a new firmware version is released, just open the device in ESPHome Device Builder and click **Install → Wirelessly**. No USB required.
+> **Future updates** — once your device is running Pivot firmware and is online, all future updates are wireless. When a new firmware version is released, just open the device in ESPHome Device Builder and click **Install → Wirelessly**. 
 
 
 ---
@@ -165,7 +165,7 @@ packages:
 
 The knob will now control each bank's assigned entity. Button presses won't work until you complete Step 7.
 
-> **Timer banks** are set up using the **Timer banks** selector on the bank assignment screen, not the entity pickers. See the [Timer page](/pivot/timer/) for full setup instructions.
+> **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default — you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
 
 > **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (setup mode, announcements) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
 
@@ -173,14 +173,14 @@ The knob will now control each bank's assigned entity. Button presses won't work
 
 ## Step 7. Set up blueprints
 
-If you added your device in Blueprint mode, Pivot copied four blueprint files into your HA config and showed a persistent notification confirming it. You now create scripts and automations from those blueprints in the HA UI.
+If you added your device in Blueprint mode, Pivot has copied four blueprint files into your HA config and showed a persistent notification confirming it. You now create scripts and automations from those blueprints in the HA UI.
 
-> **The Bank Toggle script is required for button presses to work.** Everything else is optional.
+> **The Bank Toggle script is required for button presses to work.** Everything else is optional, but recommended.
 
 | Blueprint | Type | Required? | What it does |
 | --- | --- | --- | --- |
 | **Pivot — Bank Toggle** | Script | Yes | Called by the firmware on every button press — toggles or activates the entity assigned to the active bank |
-| **Pivot — Announce** | Automation | Optional | Speaks the active bank's entity name when switching banks or on triple press, and announces the entity value after the knob settles |
+| **Pivot — Announce** | Automation | Optional (Recommended) | Speaks the active bank's entity name when switching banks or on triple press, and announces the entity value after the knob settles |
 | **Pivot — Timer** | Automation | Optional | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
 | **Pivot — Timer Toggle** | Script | Optional | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
 
@@ -193,7 +193,7 @@ This script is called by the firmware every time you press the button. Without i
 3. Enter your `device_suffix`
 4. Save the script as `device_suffix`. **Important:**  the script entity ID must remain  `script.{device_suffix}_bank_toggle` (for example, `script.ha_voice_lounge_bank_toggle`). The friendly name can be changed, but the entity ID must not. Either can be adjusted after saving the script.
 
-### Announce automation — optional
+### Announce automation — optional (but recommended)
 
 Speaks the active bank’s entity name when you switch banks and announces the entity value after the knob settles (e.g. *"Brightness 60 percent"*). Requires a TTS provider such as Home Assistant Cloud.
 
