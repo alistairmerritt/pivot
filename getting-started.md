@@ -157,9 +157,25 @@ packages:
 
 ---
 
-## Step 6. Set up blueprints
+## Step 6. Assign entities to banks
 
-When you add your device in Blueprint mode, Pivot copies four blueprint files into your HA config and shows a persistent notification confirming it. You then create scripts and automations from those blueprints in the HA UI.
+1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
+2. Assign a Home Assistant entity to each bank
+3. Save
+
+The knob will now control each bank's assigned entity. Button presses won't work until you complete Step 7.
+
+> **Timer banks are configured differently** — they cannot be assigned through the entity picker. See the [Timer page](/pivot/timer/) for setup instructions.
+
+> **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (setup mode, announcements) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
+
+---
+
+## Step 7. Set up blueprints
+
+When you added your device in Blueprint mode, Pivot copied four blueprint files into your HA config and showed a persistent notification confirming it. You now create scripts and automations from those blueprints in the HA UI.
+
+> **The Bank Toggle script is required for button presses to work.** Everything else is optional.
 
 | Blueprint | Type | Required? | What it does |
 | --- | --- | --- | --- |
@@ -167,8 +183,6 @@ When you add your device in Blueprint mode, Pivot copies four blueprint files in
 | **Pivot — Announce** | Automation | Optional | Speaks the active bank's entity name when switching banks or on triple press, and announces the entity value after the knob settles |
 | **Pivot — Timer** | Automation | Optional | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
 | **Pivot — Timer Toggle** | Script | Optional | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
-
-> **Do this before assigning entities to banks.** The bank toggle script must exist before the button will work.
 
 ### Bank Toggle script — required
 
@@ -202,20 +216,7 @@ If you want to use a bank as a countdown timer, two additional blueprints are ne
 - **Pivot — Timer** (automation) — manages the timer: start, pause, resume, finish alarm, and LED countdown gauge
 - **Pivot — Timer Toggle** (script) — optional dashboard helper that lets a card control the timer the same way the physical button does
 
----
-
-## Step 7. Assign entities to banks
-
-1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
-2. Assign a Home Assistant entity to each bank
-3. Save
-
-You’re done. Turn the knob to control the active bank’s assigned entity, press the button to toggle or activate it, and hold the knob while turning to switch banks.
-
-> **Timer banks are configured differently** — they cannot be assigned through the entity picker. See the [Timer page](/pivot/timer/) for setup instructions.
-
-> **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (setup mode, announcements) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
-
+You're done. Turn the knob to control the active bank's assigned entity, press the button to toggle or activate it, and hold the knob while turning to switch banks.
 
 ---
 
