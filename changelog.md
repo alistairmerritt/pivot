@@ -44,6 +44,20 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.54
+- **Fix:** Blueprint files are now bundled inside `custom_components/pivot/blueprints/` so HACS ships them correctly. Previously they lived at the repo root (`blueprints/`) which HACS does not install — `_install_blueprints` was silently copying nothing.
+- **Change:** Legacy per-device blueprint files (e.g. `pivot_ha_voice_orange_announcements.yaml`) and backup files (`automations.yaml.pivot_backup`, `scripts.yaml.pivot_backup`) left by a previous Automatic mode installation are now removed automatically on startup.
+
+### v0.0.53
+- **Fix:** Fixed an `IndentationError` introduced in v0.0.52 — a missing `return` inside the `context.parent_id` guard in the timer bank branch left an empty `if` block, preventing the integration from loading.
+
+### v0.0.52
+- **Change:** Automatic (managed) mode removed. The integration no longer writes to `scripts.yaml`, `automations.yaml`, or `/config/pivot/`. Any device previously configured in Automatic mode is migrated to Blueprint mode automatically on next restart, and the files Pivot wrote are cleaned up.
+- **New:** `pivot_bank_changed` event added. Fired whenever the active bank changes, with `suffix`, `bank`, and `bank_entity` fields. The announce blueprint uses this instead of a state trigger, meaning no entity IDs need to be entered as blueprint inputs.
+- **Fix:** Value announcements no longer fire when an entity is changed externally (motion, dashboard, automation). The `pivot_knob_turn` event now only fires when the change originates from a physical knob turn — detected via `context.parent_id`.
+- **Change:** Separate `pivot_announce_bank.yaml` and `pivot_announce_value.yaml` blueprints replaced by a single **Pivot — Announce** blueprint. All three announcement types (bank change, triple press, value) are handled in one automation with three inputs: Device Suffix, Media Player, and TTS Engine.
+- **Change:** `pivot_bank_toggle.yaml` script blueprint simplified to a single **Device Suffix** input — all entity IDs are derived automatically.
+
 ### v0.0.51
 - **Fix:** Bank entity text fields no longer revert to the configured default on every Home Assistant restart. Previously, `async_setup_entry` would overwrite whatever value the entity had restored from state storage with the value stored in the config entry — so any direct edits made outside the configuration flow would be lost on restart. The startup write loop has been removed; entities now restore correctly via Home Assistant's built-in state persistence, and the configure flow continues to write values immediately when the user reconfigures.
 
