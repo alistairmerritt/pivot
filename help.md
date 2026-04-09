@@ -94,11 +94,10 @@ No. The Getting Started guide walks through the process step-by-step.
 ---
 
 **Which setup mode should I use?**
-- **Automatic (recommended)** — easiest, handles everything for you
-- **Blueprints** — more control, still guided
-- **Manual** — full control for advanced users
+- **Blueprints (recommended)** — Pivot installs blueprint files and you create one script and optionally one automation from the HA UI. Guided and straightforward.
+- **Manual** — full control for advanced users who want to build their own automations from scratch.
 
-If you're unsure, start with Automatic.
+If you're unsure, use Blueprints.
 
 ---
 
