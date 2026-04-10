@@ -333,6 +333,7 @@ button_card_templates:
         `switch.${variables.device_suffix}_bank_${variables.bank_number -
         1}_announce_value`; ]]]
       mute_announcements_entity: '[[[ return `switch.${variables.device_suffix}_mute_announcements`; ]]]'
+      control_mode_entity: '[[[ return `switch.${variables.device_suffix}_control_mode`; ]]]'
     show_name: false
     show_state: false
     show_icon: false
@@ -354,6 +355,10 @@ button_card_templates:
               const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
               const isActive = activeBank === variables.bank_number;
               return isActive ? '1px solid rgba(180,180,180,0.4)' : '1px solid transparent';
+            ]]]
+        - opacity: |
+            [[[
+              return states[variables.control_mode_entity]?.state === 'on' ? '1' : '0.4';
             ]]]
       grid:
         - grid-template-areas: '"bank" "name" "slider" "timer-control" "timer-silent" "mirror" "announce-value"'
