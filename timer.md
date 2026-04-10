@@ -96,14 +96,13 @@ If you set up Pivot in **Manual mode**, you'll need to import the blueprint firs
 
 | Input | Description |
 |---|---|
-| **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs and TTS settings are derived from this. |
-| **Bank Number** | Which bank controls the timer (`1–4`). This must match the bank you set to `timer`. |
+| **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs, bank assignment, and TTS settings are all derived from this. |
 | **Pivot Device** | Your Pivot VPE device. The `timer_ringing` switch is derived automatically from this. |
 | **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect long press (cancel). Find it under Settings → Devices & Services → ESPHome → your device. |
 | **Finish Message** | Optional message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 | **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. |
 
-The TTS service and media player are read automatically from the settings you configured during device setup. To change them, go to **Settings → Devices & Services → Pivot → your device → Configure**.
+The bank number, TTS service, and media player are all read automatically from your Pivot integration settings — no manual input needed for any of them. The blueprint detects the timer bank by looking for whichever bank is reserved as `timer` in the configure screen. If no bank is reserved yet when you create the automation, the blueprint will be inert and activate automatically once you reserve one — no changes to the blueprint needed.
 
 4. Save the automation.
    

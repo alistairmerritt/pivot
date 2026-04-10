@@ -44,6 +44,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.58
+- **Change:** **Pivot — Timer** blueprint no longer requires a Bank Number input. The blueprint automatically detects which bank is reserved as a timer by reading the bank entity text entities at runtime. If no timer bank is reserved when the automation is created, the blueprint is inert and activates automatically once one is assigned — no changes to the blueprint needed.
+
 ### v0.0.57
 - **New:** TTS service and media player are now configured once in the integration settings and shared automatically across all blueprints. Two new diagnostic text entities (`text.{device_suffix}_tts_entity`, `text.{device_suffix}_media_player_entity`) are written from the config entry on every setup and reload.
 - **Change:** **Pivot — Announce** blueprint now requires only **Device Suffix** as input. Media Player and TTS Engine inputs removed — read automatically from the integration settings.
