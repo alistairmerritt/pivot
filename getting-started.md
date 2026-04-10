@@ -150,7 +150,7 @@ packages:
 4. Choose a **setup mode**:
    - **Blueprints** — Pivot installs blueprint files into your HA config. You create one script and optionally one automation from those blueprints in the HA UI. Recommended for most users.
    - **Manual** — Pivot does not create any files. Use the fired events to build your own automations.
-5. Optionally configure announcements — select a text-to-speech service (TTS) and speaker. These are shared across all blueprints (Announce and Timer) and only need to be set once here — all blueprints pick them up automatically
+5. Optionally configure announcements — select a text-to-speech service (TTS) and speaker. These are shared across the blueprints you will set up (Announce and Timer).
 
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
@@ -202,7 +202,7 @@ Speaks the active bank’s entity name when you switch banks and announces the e
 3. Enter your `device_suffix`
 4. Save
 
-The TTS service and speaker are read automatically from what you configured in Step 5 — no additional inputs needed. Repeat for each device you want announcements on.
+The TTS service and speaker are read automatically from the entities you configured in setup (Step 5). 
 
 ### Timer blueprints — optional, only if using timer banks
 
