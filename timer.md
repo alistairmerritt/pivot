@@ -23,9 +23,9 @@ Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a
 
 Once set up, a single bank on your Pivot device becomes a timer controller:
 
-- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and, if TTS is configured, a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
+- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and, if a TTS service is configured in the integration settings, a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
 - **Single press** — start the timer if idle, pause if running, resume if paused
-- **Long press** — cancel and reset (only when the timer bank is active — long press on other banks is passed through for custom actions); announces *"Timer cancelled"* if TTS is configured
+- **Long press** — cancel and reset (only when the timer bank is active — long press on other banks is passed through for custom actions); announces *"Timer cancelled"* if a TTS service is configured in the integration settings
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
 - **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press, "stop" wake word, or the dashboard button dismisses the alarm.
 
@@ -78,7 +78,7 @@ Once set, the knob is active for duration setting when the timer is idle, and pa
 
 ### Step 3 — Set your duration
 
-Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and TTS announces the selected time once you stop turning. You can also set the duration directly on number.{device_suffix}_timer_duration in HA — the gauge will update the next time you switch to that bank.
+Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and, if a TTS service is configured in the integration settings, announces the selected time once you stop turning. You can also set the duration directly on number.{device_suffix}_timer_duration in HA — the gauge will update the next time you switch to that bank.
 
 ### Step 4 — Create an automation from the blueprint
 
@@ -96,13 +96,14 @@ If you set up Pivot in **Manual mode**, you'll need to import the blueprint firs
 
 | Input | Description |
 |---|---|
-| **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs are derived from this. |
+| **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs and TTS settings are derived from this. |
 | **Bank Number** | Which bank controls the timer (`1–4`). This must match the bank you set to `timer`. |
-| **Pivot Device** | Your Pivot VPE device. The media player and `timer_ringing` switch are derived automatically from this. |
+| **Pivot Device** | Your Pivot VPE device. The `timer_ringing` switch is derived automatically from this. |
 | **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect long press (cancel). Find it under Settings → Devices & Services → ESPHome → your device. |
-| **TTS Entity** | The text-to-speech engine that *generates* spoken announcements (start, pause, resume, knob, finish). Both a TTS entity and a media player (derived from **Pivot Device**) are required for any spoken timer announcements. Leave blank to disable all speech. |
 | **Finish Message** | Optional message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 | **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. |
+
+The TTS service and media player are read automatically from your Pivot integration settings — no TTS input needed here. To change them, go to **Settings → Devices & Services → Pivot → your device → Configure**.
 
 4. Save the automation.
    
@@ -278,7 +279,7 @@ The cards above are intentionally minimal. If you want a fully worked example �
 
 ## Tips
 
-**Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and if configured, TTS announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
+**Setting the duration with the knob** — Turn the knob on the timer bank while idle. The gauge fills to reflect the selected proportion of the maximum range and, if a TTS service is configured in the integration settings, announces the time once the knob settles. Turn clockwise for more time, anti-clockwise for less.
 
 **Using the gauge as a visual countdown** — The gauge jumps to 100% the moment you press start and drains to 0% as time runs out, giving an at-a-glance sense of how much time remains. While the timer is running, the gauge syncs every 30 seconds — on a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
 

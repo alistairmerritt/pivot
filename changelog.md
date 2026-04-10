@@ -44,6 +44,12 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.57
+- **New:** TTS service and media player are now configured once in the integration settings and shared automatically across all blueprints. Two new diagnostic text entities (`text.{device_suffix}_tts_entity`, `text.{device_suffix}_media_player_entity`) are written from the config entry on every setup and reload.
+- **Change:** **Pivot — Announce** blueprint now requires only **Device Suffix** as input. Media Player and TTS Engine inputs removed — read automatically from the integration settings.
+- **Change:** **Pivot — Timer** blueprint no longer has a TTS Entity input — TTS is also read automatically from the integration settings.
+- **Change:** "Speak bank and mode changes" toggle removed from the configure dialog. The System Announcements switch (`switch.{device_suffix}_announcements`) now uses normal restore behaviour — defaults on at first creation, then user-controlled from the device page.
+
 ### v0.0.54
 - **Fix:** Blueprint files are now bundled inside `custom_components/pivot/blueprints/` so HACS ships them correctly. Previously they lived at the repo root (`blueprints/`) which HACS does not install — `_install_blueprints` was silently copying nothing.
 - **Change:** Legacy per-device blueprint files (e.g. `pivot_ha_voice_orange_announcements.yaml`) and backup files (`automations.yaml.pivot_backup`, `scripts.yaml.pivot_backup`) left by a previous Automatic mode installation are now removed automatically on startup.

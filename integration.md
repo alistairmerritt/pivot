@@ -59,8 +59,12 @@ The setup mode can be changed at any time from the integration's **Configure** m
 | `text.{device_suffix}_bank_1_entity` | Entity assigned to Bank 2 |
 | `text.{device_suffix}_bank_2_entity` | Entity assigned to Bank 3 |
 | `text.{device_suffix}_bank_3_entity` | Entity assigned to Bank 4 |
+| `text.{device_suffix}_tts_entity` | TTS service used by Announce and Timer blueprints (diagnostic, written from integration settings) |
+| `text.{device_suffix}_media_player_entity` | Speaker used by Announce and Timer blueprints (diagnostic, written from integration settings) |
 
 > **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). The knob has no effect on a timer bank — the LED gauge is managed entirely by the blueprint. Any other value is treated as a Home Assistant entity ID.
+
+> **TTS and media player entities** are written automatically from the values you configure in the integration settings (**Settings → Devices & Services → Pivot → your device → Configure**). The Announce and Timer blueprints read from these entities at runtime — you only need to set TTS and speaker once, in the configure dialog, and all blueprints pick them up automatically.
 
 ### Binary sensor entities
 
@@ -125,7 +129,7 @@ The blueprint handles three announcement types in one automation:
 - **Triple press** — re-announces the current bank's entity name. Requires **System Announcements** to be on.
 - **Value announcement** — speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{device_suffix}_bank_N_announce_value`) — only banks with this switch on will announce.
 
-The blueprint takes three inputs: **Device Suffix**, **Media Player**, and **TTS Engine**. All entity IDs are derived automatically.
+The blueprint takes one input: **Device Suffix**. The TTS service and media player are read automatically from the values configured in Pivot's integration settings — no per-blueprint configuration needed. All other entity IDs are derived from the suffix.
 
 Supported domains and what is spoken for value announcements:
 
