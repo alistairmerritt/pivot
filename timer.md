@@ -103,7 +103,7 @@ If you set up Pivot in **Manual mode**, you'll need to import the blueprint firs
 | **Finish Message** | Optional message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 | **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. |
 
-The TTS service and media player are read automatically from your Pivot integration settings — no TTS input needed here. To change them, go to **Settings → Devices & Services → Pivot → your device → Configure**.
+The TTS service and media player are read automatically from the settings you configured during device setup. To change them, go to **Settings → Devices & Services → Pivot → your device → Configure**.
 
 4. Save the automation.
    
