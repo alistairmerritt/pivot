@@ -147,11 +147,11 @@ packages:
 1. Go to **Settings → Devices & Services → Add Integration** and search for **Pivot**
 2. Select your VPE from the dropdown
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
-4. Choose a **setup mode**:
-   - **Blueprints** — Pivot installs blueprint files into your HA config. You can optionally create automations from those blueprints in the HA UI for announcements and timers. Button toggle works automatically with no setup. Recommended for most users.
-   - **Manual** — Pivot does not create any files. Use the fired events to build your own automations.
-5. Optionally configure announcements — select a text-to-speech service (TTS) and speaker. These are shared across the blueprints you will set up (Announce and Timer).
+4. Optionally configure announcements — select a text-to-speech service (TTS) and speaker if you want Pivot to provide spoken feedback. This is recommended, but can be configured later at any time. Announcements use the optional **Pivot — Announce** blueprint, which you can set up in Step 7.
 
+Pivot will now connect to your device and enable control of your assigned banks. Button presses work automatically with no additional setup required.
+
+> Advanced: You can also ignore blueprints entirely and build your own automations using Pivot’s events. See the Integration page for details.
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
@@ -171,9 +171,9 @@ The knob will now control each bank's assigned entity. Button presses in Control
 
 ---
 
-## Step 7. Set up blueprints
+## Step 7. Optionally set up blueprints
 
-If you added your device in Blueprint mode, Pivot has copied blueprint files into your HA config and showed a persistent notification confirming it. All blueprints are optional — button toggle works automatically out of the box.
+Pivot has copied optional blueprint files into your Home Assistant config and shown a persistent notification confirming it. These blueprints are not required for core control, but **Pivot — Announce** is recommended.
 
 | Blueprint | Type | What it does |
 | --- | --- | --- |
