@@ -10,14 +10,9 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 ---
 
-## Setup modes
+Pivot installs blueprint files into `/config/blueprints/` automatically. Button toggle, knob control, and entity sync all work out of the box — blueprints are optional extras for announcements and timers.
 
-| Mode | What Pivot does |
-| --- | --- |
-| **Blueprints** | Copies blueprint files into `/config/blueprints/`. Button toggle works automatically — optionally create automations for announcements and timers from the HA UI. Recommended for most users. |
-| **Manual** | Pivot does not touch any YAML files. Bank control and event firing still work — see [Custom Automations](#custom-automations) below for a guide to building your own. |
-
-The setup mode can be changed at any time from the integration's **Configure** menu.
+> **Advanced:** You can ignore blueprints entirely and build your own automations using Pivot's events. See [Custom Automations](#custom-automations) below.
 
 ---
 

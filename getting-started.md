@@ -147,11 +147,11 @@ packages:
 1. Go to **Settings → Devices & Services → Add Integration** and search for **Pivot**
 2. Select your VPE from the dropdown
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
-4. Optionally configure announcements — select a text-to-speech service (TTS) and speaker if you want Pivot to provide spoken feedback. This is recommended, but can be configured later at any time. Announcements use the optional **Pivot — Announce** blueprint, which you can set up in Step 7.
+4. Optionally configure announcements — select a text-to-speech service (TTS) and speaker. These are shared across all blueprints automatically.
+
+> **Advanced:** You can ignore blueprints entirely and build your own automations using Pivot’s events. See the [Integration page](/pivot/integration/) for details.
 
 Pivot will now connect to your device and enable control of entities assigned to your four banks.
-
-> **Advanced:** You can also ignore blueprints (and Step 6) entirely and build your own automations using Pivot’s events. See the Integration page for details.
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 

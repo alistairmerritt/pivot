@@ -48,6 +48,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.66
+- **Change:** Manual setup mode removed. Blueprints are always installed. The configure dialog now shows only TTS and speaker settings, with a note that advanced users can build custom automations using Pivot's events.
+
 ### v0.0.65
 - **Fix:** Value announcements no longer fire when an entity is changed externally (dashboard, motion, assist, etc.) after a button press or bank sync. `_sync_value_from_entity` was calling `number.set_value` without a context, so the resulting state change had `parent_id=None` and was treated as a physical knob turn, firing `pivot_knob_turn` and triggering the announce blueprint.
 
