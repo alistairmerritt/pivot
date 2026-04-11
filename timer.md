@@ -82,11 +82,7 @@ Turn the knob on the timer bank to select a duration. The gauge shows the propor
 
 ### Step 4 — Create an automation from the blueprint
 
-If you set up Pivot in **Blueprint mode**, the **Pivot — Timer** blueprint was installed automatically when you added your device. Go straight to creating the automation below.
-
-If you set up Pivot in **Manual mode**, you'll need to import the blueprint first. Paste this URL into **Settings → Automations → Blueprints → Import Blueprint**:
-
-`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/automation/pivot_timer.yaml`
+The **Pivot — Timer** blueprint was installed automatically when you added your device. Go straight to creating the automation below.
 
 ### Step 5 — Create an automation from the blueprint
 
@@ -205,11 +201,7 @@ Dashboard control is optional, but the below script is required if you want dash
 
 ### Step 1 — Install the Timer Toggle script
 
-If you set up Pivot in **Blueprint mode**, the **Pivot — Timer Toggle** blueprint was installed automatically. If you're in **Manual mode**, paste this URL into **Settings → Automations → Blueprints → Import Blueprint** first:
-
-`https://raw.githubusercontent.com/alistairmerritt/pivot-integration/main/blueprints/script/pivot_timer_toggle.yaml`
-
-Then go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot — Timer Toggle**.
+The **Pivot — Timer Toggle** blueprint was installed automatically when you added your device. Go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot — Timer Toggle**.
 
 > **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly by entity ID. The script only needs to be set up **once** — it works for all your Pivot devices, with the device suffix and bank number passed by each card at call time.
 

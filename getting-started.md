@@ -151,7 +151,7 @@ packages:
 
 > **Advanced:** You can ignore blueprints entirely and build your own automations using Pivot’s events. See the [Integration page](/pivot/integration/) for details.
 
-Pivot will now connect to your device and enable control of entities assigned to your four banks.
+Pivot will now connect to your device and enable control of your assigned banks. Button presses work automatically with no additional setup required.
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
@@ -206,5 +206,5 @@ You're done. Turn the knob to control the active bank's assigned entity, press t
 ## Next steps
 
 - [Firmware reference](/pivot/firmware/) — full substitutions reference and multi-device setup
-- [Integration reference](/pivot/integration/) — full entity reference, setup modes, and custom automations
+- [Integration reference](/pivot/integration/) — full entity reference and custom automations
 - [Troubleshooting](/pivot/troubleshooting/) — common issues and fixes

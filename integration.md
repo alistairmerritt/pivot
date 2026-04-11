@@ -4,7 +4,7 @@ title: Integration
 permalink: /integration/
 ---
 
-The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle natively, and in Blueprint mode installs blueprint files for optional announcement and timer automations.
+The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle natively, and installs blueprint files for optional announcement and timer automations.
 
 Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
@@ -114,7 +114,7 @@ When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brigh
 
 ## Announcements
 
-Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Both are handled by a single **Pivot — Announce** blueprint, installed automatically in Blueprint mode.
+Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Both are handled by a single **Pivot — Announce** blueprint, installed automatically when you add a device.
 
 ### Pivot — Announce blueprint
 
@@ -167,7 +167,7 @@ When an assigned entity is changed externally — by a voice command, another da
 
 ## Events
 
-Pivot fires the following events on the HA event bus regardless of setup mode.
+Pivot fires the following events on the HA event bus.
 
 ### `pivot_bank_changed`
 
@@ -229,9 +229,7 @@ Custom automations triggered by these events always stack on top of built-in beh
 
 ## Custom Automations
 
-In Manual mode, Pivot creates all the required entities and fires events on the HA event bus, but does not create any scripts or automations itself — you build everything from scratch.
-
-In Blueprint mode, custom automations are an optional layer you can add on top of the installed blueprints. Because Pivot fires events on every interaction regardless of mode, you can trigger your own automations in response to things the built-in behaviour does not handle — like using a button press on a specific bank to trigger a shell command or run a scene.
+Custom automations are an optional layer you can add on top of the installed blueprints. Because Pivot fires events on every interaction, you can trigger your own automations in response to things the built-in behaviour does not handle — like using a button press on a specific bank to trigger a shell command or run a scene.
 
 Pivot events carry enough context to let automations be as specific or as broad as you need:
 
@@ -243,9 +241,9 @@ Pivot events carry enough context to let automations be as specific or as broad 
 
 ---
 
-### Example: Controlling a light in Manual mode
+### Example: Controlling a light with custom automations
 
-In Manual mode you need to handle both the knob and the button yourself. The example below sets a light's brightness from the knob value and toggles it with a single press, for a device with suffix `ha_voice_lounge` and Bank 1 assigned to `light.living_room`.
+The example below sets a light's brightness from the knob value and toggles it with a single press, for a device with suffix `ha_voice_lounge` and Bank 1 assigned to `light.living_room`. In this case the built-in toggle is already handled, but the same pattern applies to any action you want to add on top.
 
 #### Knob — set brightness
 
