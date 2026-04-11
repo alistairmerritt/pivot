@@ -148,7 +148,7 @@ packages:
 2. Select your VPE from the dropdown
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
 4. Choose a **setup mode**:
-   - **Blueprints** — Pivot installs blueprint files into your HA config. You create one script and optionally one automation from those blueprints in the HA UI. Recommended for most users.
+   - **Blueprints** — Pivot installs blueprint files into your HA config. You can optionally create automations from those blueprints in the HA UI for announcements and timers. Button toggle works automatically with no setup. Recommended for most users.
    - **Manual** — Pivot does not create any files. Use the fired events to build your own automations.
 5. Optionally configure announcements — select a text-to-speech service (TTS) and speaker. These are shared across the blueprints you will set up (Announce and Timer).
 
