@@ -147,9 +147,7 @@ packages:
 1. Go to **Settings → Devices & Services → Add Integration** and search for **Pivot**
 2. Select your VPE from the dropdown
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
-4. Optionally configure announcements — tick **Enable spoken announcements**, then select a text-to-speech service (TTS) and speaker. These settings are also used by the Timer blueprint.
-
-> **Advanced:** You can ignore blueprints entirely and build your own automations using Pivot’s events. See the [Integration page](/pivot/integration/) for details.
+4. Optionally configure announcements — enable **spoken announcements**, then select a text-to-speech service (TTS) and speaker. This allows Pivot to speak feedback such as bank changes. These settings are also used by the Timer blueprint.
 
 Pivot will now connect to your device and enable control of your assigned banks. Button presses work automatically with no additional setup required.
 
@@ -169,29 +167,23 @@ The knob will now control each bank's assigned entity. Button presses in Control
 
 > **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (TTS settings) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{device_suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
 
+Pivot is now set up and ready to use. Turn the knob to control the active bank's assigned entity, press the button to toggle or activate it, and press + turn to switch banks.
+
 ---
 
-## Step 7. Optionally set up blueprints
+## Step 7. Optional: Set up a timer
 
-Pivot has copied optional blueprint files into your Home Assistant config and shown a persistent notification confirming it. These blueprints are not required for core control.
+Pivot includes two optional timer blueprints. These are only needed if you want to use a bank as a countdown timer — they are not required for normal Pivot control.
 
-| Blueprint | Type | What it does |
-| --- | --- | --- |
-| **Pivot — Timer** | Automation | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
-| **Pivot — Timer Toggle** | Script | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
+| Blueprint | Type | Required? | What it does |
+| --- | --- | --- | --- |
+| **Pivot — Timer** | Automation | Yes | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
+| **Pivot — Timer Toggle** | Script | No | Optional dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
 
-### Announcements
+If you want to use a bank as a timer, set up **Pivot — Timer**.  
+If you also want to control that timer from a dashboard, set up **Pivot — Timer Toggle** as well.
 
-Spoken announcements are configured in the integration itself, not via a blueprint. To enable them, go to **Settings → Devices & Services → Pivot → your device → Configure**, select a text-to-speech service and speaker, and tick **Enable spoken announcements**. Once enabled, Pivot will speak the active bank’s entity name when switching banks or on triple press, and announce the entity value after the knob settles (e.g. *"Brightness 60 percent"*). Requires a TTS provider such as Home Assistant Cloud.
-
-### Timer blueprints — optional, only if using timer banks
-
-If you want to use a bank as a countdown timer, one additional blueprint is required and another is optional. See the [Timer page](/pivot/timer/) for full setup instructions.
-
-- **Pivot — Timer** (automation) — manages the timer: start, pause, resume, finish alarm, and LED countdown gauge
-- **Pivot — Timer Toggle** (script) — optional dashboard helper that lets a card control the timer the same way the physical button does
-
-You're done. Turn the knob to control the active bank's assigned entity, press the button to toggle or activate it, and hold the knob while turning to switch banks.
+See the [Timer page](/pivot/timer/) for full setup instructions.
 
 ---
 
