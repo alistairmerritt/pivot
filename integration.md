@@ -10,12 +10,6 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 ---
 
-Pivot installs blueprint files into `/config/blueprints/` automatically. Button toggle, knob control, and entity sync all work out of the box — blueprints are optional extras for timers.
-
-> **Advanced:** You can ignore blueprints entirely and build your own automations using Pivot's events. See [Custom Automations](#custom-automations) below.
-
----
-
 ## Entities
 
 ### Number entities
