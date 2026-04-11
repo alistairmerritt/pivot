@@ -106,16 +106,16 @@ Available values:
 
 The `dim_when_idle` row automatically dims and disables itself if `show_control_value` is off, since dimming only applies when the value is shown.
 
-You can also add a device volume slider using `custom:my-slider-v2` — useful as a central place to adjust the VPE speaker volume without going into device settings, but not absolutely necessary to include:
+You can also add a device volume label and slider using `pivot_volume` — useful as a central place to adjust the VPE speaker volume without going into device settings, but not absolutely necessary to include:
 
 ```yaml
-- type: custom:my-slider-v2
-  entity: media_player.your_vpe_media_player
-  attribute: volume_level
-  min: 0
-  max: 100
-  step: 1
+- type: custom:button-card
+  template:
+    - pivot_config_kitchen
+    - pivot_volume
 ```
+
+The media player entity is derived automatically from `text.{device_suffix}_media_player_entity`, which is written from your integration settings — no manual entity ID required.
 
 ---
 
@@ -176,11 +176,10 @@ button_card_templates:
     variables:
       device_name: Kitchen Pivot          # display name
       device_suffix: ha_voice_yellow      # must match your firmware device_suffix
-      media_player: media_player.home_assistant_voice_0954c7_media_player
       timer_silent_toggle: switch.kitchen_voice_pe_timer_silent_mode
 ```
 
-To find entity IDs, go to **Settings → Devices & Services → ESPHome → your device**.
+To find the `timer_silent_toggle` entity ID, go to **Settings → Devices & Services → ESPHome → your device**.
 
 ### 3 — Add cards to your dashboard
 
@@ -215,17 +214,16 @@ Reference your config template and a component template together. For example, t
 
 Mix in whichever other components you want alongside them.
 
-> **Volume slider note:** The volume slider uses `custom:my-slider-v2`, which is a standalone card and cannot inherit from your `pivot_config_*` template. Set the `entity:` field directly in that card for each device.
-
 ---
 
 ## Template reference
 
 | Template | Purpose | Key variable |
 | --- | --- | --- |
-| `pivot_config_*` | Per-device config. Sets `device_suffix`, `media_player`, and `timer_silent_toggle`. Pair with any other template. | `device_suffix`, `media_player`, `timer_silent_toggle` |
+| `pivot_config_*` | Per-device config. Sets `device_suffix` and `timer_silent_toggle`. Pair with any other template. | `device_suffix`, `timer_silent_toggle` |
 | `pivot_banks` | Full bank card — value display, slider, timer controls, mirror toggle. | `bank_number` (1–4) |
 | `pivot_active_bank` | Active bank name, entity, and colour dot. | — |
+| `pivot_volume` | Device volume label and slider. Derives media player from `text.{device_suffix}_media_player_entity` automatically. | — |
 | `pivot_section_heading` | Section label with optional subheading. | `heading`, `subheading` |
 | `pivot_toggle_row` | Toggle row for a Pivot switch. | `toggle_entity` |
 
@@ -235,7 +233,7 @@ Mix in whichever other components you want alongside them.
 
 **[dashboard-example.yaml](https://github.com/alistairmerritt/pivot/blob/main/assets/dashboard-example.yaml)**
 
-A complete, ready-to-paste dashboard YAML that includes all the template definitions and a full five-device layout. The config variables for each device are at the top of the file — update those and the volume slider entities, paste the whole thing into your raw dashboard YAML editor, and it should produce something like this:
+A complete, ready-to-paste dashboard YAML that includes all the template definitions and a full five-device layout. The config variables for each device are at the top of the file — update those, paste the whole thing into your raw dashboard YAML editor, and it should produce something like this:
 
 ![full-dashboard](https://github.com/user-attachments/assets/c93e51c5-af05-421a-855d-8950fe3aad83)
 

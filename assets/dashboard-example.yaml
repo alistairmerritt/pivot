@@ -5,9 +5,7 @@
 # HOW TO USE
 # 1. Update the pivot_config_* variables below to match your device.
 #    Duplicate the config block and the views section for each additional device.
-# 2. Update the volume slider entity in the views section to match your
-#    device's media player (search for "Update entity to match your device").
-# 3. Paste the entire file into your Home Assistant raw dashboard YAML editor.
+# 2. Paste the entire file into your Home Assistant raw dashboard YAML editor.
 #
 # REQUIRED HACS CARDS
 #   - Button Card (RomRider)       → all Pivot templates
@@ -22,13 +20,11 @@ button_card_templates:
   # One entry per Pivot device. Duplicate this block for each additional device.
   # device_name         — display name shown at the top of the dashboard page
   # device_suffix       — must match the device_suffix in your firmware YAML
-  # media_player        — the media_player entity ID for this VPE
   # timer_silent_toggle — the timer_silent_mode switch entity ID for this VPE
   pivot_config_living_room:
     variables:
       device_name: Living Room Pivot
       device_suffix: ha_voice_xxxxxx
-      media_player: media_player.your_vpe_media_player
       timer_silent_toggle: switch.your_vpe_timer_silent_mode
 
   # ─── Shared component templates ──────────────────────────────────────────────
@@ -1497,53 +1493,9 @@ views:
                 variables:
                   toggle_entity: control_mode
               - type: custom:button-card
-                template: pivot_config_living_room
-                entity: '[[[ return variables.media_player; ]]]'
-                name: Pivot Device Volume
-                show_state: false
-                show_icon: false
-                show_name: true
-                show_label: false
-                styles:
-                  card:
-                    - background: transparent
-                    - padding: 0px
-                    - border-radius: 0px
-                  name:
-                    - justify-self: start
-                    - font-size: 14px
-                    - font-weight: 400
-                    - color: var(--primary-text-color)
-              # Update entity to match your device's media player
-              - type: custom:my-slider-v2
-                entity: media_player.your_vpe_media_player
-                attribute: volume_level
-                min: 0
-                max: 100
-                step: 1
-                styles:
-                  card:
-                    - height: 5px
-                    - background: none
-                    - margin: 0px 0px 40px 0px
-                  container:
-                    - border-radius: 150px
-                    - background: none
-                    - height: 5px
-                  track:
-                    - background: rgba(255,255,255,0.3)
-                    - border-radius: 99px
-                    - height: 5px
-                  progress:
-                    - background: rgba(255,255,255,1)
-                    - border-radius: 25px 0px 0px 25px
-                    - height: 5px
-                  thumb:
-                    - background: rgba(255,255,255,1)
-                    - width: 15px
-                    - height: 5px
-                    - margin-right: '-10px'
-                    - border-radius: 0px 150px 150px 0px
+                template:
+                  - pivot_config_living_room
+                  - pivot_volume
               - type: custom:button-card
                 template: pivot_section_heading
                 variables:
