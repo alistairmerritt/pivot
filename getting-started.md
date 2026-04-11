@@ -149,9 +149,9 @@ packages:
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
 4. Optionally configure announcements — select a text-to-speech service (TTS) and speaker if you want Pivot to provide spoken feedback. This is recommended, but can be configured later at any time. Announcements use the optional **Pivot — Announce** blueprint, which you can set up in Step 7.
 
-Pivot will now connect to your device and enable control of your assigned banks. Button presses work automatically with no additional setup required.
+Pivot will now connect to your device and enable control of your assigned banks. 
 
-> Advanced: You can also ignore blueprints entirely and build your own automations using Pivot’s events. See the Integration page for details.
+> **Advanced:** You can also ignore blueprints (and Step 6) entirely and build your own automations using Pivot’s events. See the Integration page for details.
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
@@ -163,7 +163,7 @@ Pivot will now connect to your device and enable control of your assigned banks.
 2. Assign a Home Assistant entity to each bank
 3. Save
 
-The knob will now control each bank's assigned entity. Button presses in Control Mode will toggle or activate the assigned entity automatically — no scripts required.
+The knob will now control each bank's assigned entity. Button presses in Control Mode will toggle or activate the assigned entity automatically.
 
 > **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default — you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
 
@@ -194,7 +194,7 @@ The TTS service and speaker are read automatically from the entities you configu
 
 ### Timer blueprints — optional, only if using timer banks
 
-If you want to use a bank as a countdown timer, two additional blueprints are needed. See the [Timer page](/pivot/timer/) for full setup instructions.
+If you want to use a bank as a countdown timer, one additional blueprint is required and another is optional. See the [Timer page](/pivot/timer/) for full setup instructions.
 
 - **Pivot — Timer** (automation) — manages the timer: start, pause, resume, finish alarm, and LED countdown gauge
 - **Pivot — Timer Toggle** (script) — optional dashboard helper that lets a card control the timer the same way the physical button does
