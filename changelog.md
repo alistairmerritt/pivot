@@ -47,6 +47,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.60
+- **Fix:** Button toggle no longer fires spuriously when the ESPHome device reconnects to Home Assistant. Previously, the `button_press_event` entity restoring its last state on reconnect could cause an unintended entity toggle.
+
 ### v0.0.59
 - **Change:** Button toggle is now handled natively by the integration — the **Pivot — Bank Toggle** script blueprint is no longer needed. Requires a firmware reflash (v0.0.15+). Existing users: delete the `{suffix}_bank_toggle` script from Home Assistant after reflashing.
 
