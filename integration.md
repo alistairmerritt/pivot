@@ -249,7 +249,7 @@ The example below sets a light's brightness from the knob value and toggles it w
 
 {% raw %}
 ```yaml
-alias: Pivot Manual - Living Room Brightness
+alias: Pivot - Living Room Brightness
 
 triggers:
   - trigger: event
@@ -273,7 +273,7 @@ mode: single
 
 {% raw %}
 ```yaml
-alias: Pivot Manual - Living Room Toggle
+alias: Pivot - Living Room Toggle
 
 triggers:
   - trigger: event

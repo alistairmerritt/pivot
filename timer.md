@@ -82,9 +82,7 @@ Turn the knob on the timer bank to select a duration. The gauge shows the propor
 
 ### Step 4 — Create an automation from the blueprint
 
-The **Pivot — Timer** blueprint was installed automatically when you added your device. Go straight to creating the automation below.
-
-### Step 5 — Create an automation from the blueprint
+The **Pivot — Timer** blueprint was installed automatically when you added your device.
 
 1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot — Timer**.
 2. Click **Create Automation**.

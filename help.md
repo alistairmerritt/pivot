@@ -93,8 +93,6 @@ No. The Getting Started guide walks through the process step-by-step.
 
 ---
 
----
-
 ### Behaviour & Controls
 
 **How do I use the dial?**
