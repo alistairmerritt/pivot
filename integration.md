@@ -4,7 +4,7 @@ title: Integration
 permalink: /integration/
 ---
 
-The Pivot HA integration provisions all required entities for a Pivot device and, in Blueprint mode, installs the blueprint files you use to create the required scripts and automations.
+The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle natively, and in Blueprint mode installs blueprint files for optional announcement and timer automations.
 
 Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
@@ -14,7 +14,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 | Mode | What Pivot does |
 | --- | --- |
-| **Blueprints** | Copies blueprint files into `/config/blueprints/`. You create the script and automation yourself from the HA UI — a one-time setup. Recommended for most users. |
+| **Blueprints** | Copies blueprint files into `/config/blueprints/`. Button toggle works automatically — optionally create automations for announcements and timers from the HA UI. Recommended for most users. |
 | **Manual** | Pivot does not touch any YAML files. Bank control and event firing still work — see [Custom Automations](#custom-automations) below for a guide to building your own. |
 
 The setup mode can be changed at any time from the integration's **Configure** menu.
