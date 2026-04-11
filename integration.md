@@ -326,12 +326,12 @@ triggers:
 
 conditions:
   - condition: state
-    entity_id: event.example_pivot_button_press
+    entity_id: event.example_vpe_button_press
     attribute: event_type
     state: single_press
 
   - condition: numeric_state
-    entity_id: number.example_pivot_active_bank
+    entity_id: number.ha_voice_lounge_active_bank
     above: 0
     below: 2
 

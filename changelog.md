@@ -8,6 +8,7 @@ permalink: /changelog/
 
 ### v0.0.15
 - **Change:** Single press in control mode no longer calls `script.{suffix}_bank_toggle` directly. Toggle is now handled by the integration natively on the `button_press_event` trigger. Requires integration v0.0.59+.
+- **Fix:** `button_press_event` now only fires after media checks — if the press was used to stop an announcement or pause media, HA is no longer notified (preventing a spurious entity toggle).
 
 ### v0.0.14
 - **New:** Adds a `Timer Silent Mode` switch, exposed to Home Assistant. When on, the alarm sound is suppressed at the end of a Pivot timer — the LED ring still pulses and the "stop" wake word still activates, only the sound is silenced. Controlled automatically by the blueprint (v0.0.42+) based on the **Silent Mode** input. Off by default (`restore_mode: ALWAYS_OFF`), so existing behaviour is unchanged without a blueprint update. Requires a reflash.
@@ -46,6 +47,22 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+### v0.0.65
+- **Fix:** Value announcements no longer fire when an entity is changed externally (dashboard, motion, assist, etc.) after a button press or bank sync. `_sync_value_from_entity` was calling `number.set_value` without a context, so the resulting state change had `parent_id=None` and was treated as a physical knob turn, firing `pivot_knob_turn` and triggering the announce blueprint.
+
+### v0.0.64
+- **Fix:** **Pivot — Timer** blueprint no longer triggers start/pause on button presses from non-timer banks. The single press condition now checks that the pressed bank matches the timer bank number.
+
+### v0.0.63
+- **Debug:** Added detailed debug logging to the button press listener — logs which entity is being watched, skipped reconnect transitions, and the resolved press type, control mode, and bank entity on every press.
+
+### v0.0.62
+- **Fix:** Corrected the fallback device_id lookup for older config entries. The previous fallback incorrectly matched the ESPHome device name against device registry identifiers (which are MAC addresses). Now mirrors the same `host`/`name` lookup the config flow uses.
+
+### v0.0.61
+- **Fix:** Button event entity lookup now uses `device_class: button` instead of a string match on the entity ID, making it reliable regardless of how the ESPHome device is named. Falls back to any `event`-domain entity on the device if device class is absent.
+- **Fix:** Added fallback device_id lookup for config entries set up before `device_id` was stored — resolves via the ESPHome device name. Failures are now logged at WARNING level instead of being silently dropped.
 
 ### v0.0.60
 - **Fix:** Button toggle no longer fires spuriously when the ESPHome device reconnects to Home Assistant. Previously, the `button_press_event` entity restoring its last state on reconnect could cause an unintended entity toggle.

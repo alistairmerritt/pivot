@@ -163,7 +163,7 @@ packages:
 2. Assign a Home Assistant entity to each bank
 3. Save
 
-The knob will now control each bank's assigned entity. Button presses won't work until you complete Step 7.
+The knob will now control each bank's assigned entity. Button presses in Control Mode will toggle or activate the assigned entity automatically — no scripts required.
 
 > **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default — you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
 

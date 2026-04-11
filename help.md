@@ -94,7 +94,7 @@ No. The Getting Started guide walks through the process step-by-step.
 ---
 
 **Which setup mode should I use?**
-- **Blueprints (recommended)** — Pivot installs blueprint files and you create one script and optionally one automation from the HA UI. Guided and straightforward.
+- **Blueprints (recommended)** — Pivot installs blueprint files and you optionally create automations from the HA UI for announcements and timers. Button toggle works automatically with no setup. Guided and straightforward.
 - **Manual** — full control for advanced users who want to build their own automations from scratch.
 
 If you're unsure, use Blueprints.
