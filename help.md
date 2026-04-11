@@ -300,19 +300,15 @@ Work through these in order:
 1. **Check bank assignment** — go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
 2. **Check the entity domain** — the entity must be a supported type: light, fan, media player, climate, or cover. Scenes and scripts are passive (knob does nothing, button only).
 3. **Check Control Mode is on** — go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
-4. **Check the bank toggle script exists** — go to **Developer Tools → Template** and enter `{% raw %}{{ states('script.{device_suffix}_bank_toggle') }}{% endraw %}`. If it returns `unknown`, the script is missing. Go to **Settings → Scripts → Create Script**, select the **Pivot — Bank Toggle** blueprint, and follow the setup instructions in the [getting started guide](/pivot/getting-started/#bank-toggle-script--required).
 
 ---
 
 ### The button press does nothing
 
 1. **Check bank assignment** — go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check the bank toggle script exists** — go to **Settings → Scripts** and search for your device suffix. If it's not there, create it from the **Pivot — Bank Toggle** blueprint. See the [getting started guide](/pivot/getting-started/#bank-toggle-script--required) for instructions.
-3. **Check the script ID is correct** — this is the most common cause of button presses doing nothing after setting up the script. The firmware calls `script.{device_suffix}_bank_toggle` directly by entity ID. If the Script ID doesn't match exactly, the call silently fails.
-
-   To check: go to **Settings → Scripts**, find your bank toggle script, and click the ⚙️ icon → **Edit**. The Script ID field (not the name) must be `{device_suffix}_bank_toggle` — for example, if your suffix is `ha_voice_lounge`, the ID must be `ha_voice_lounge_bank_toggle`.
-
-    If the Script ID is wrong, update it so it matches `{device_suffix}_bank_toggle`. If Home Assistant does not allow the ID to be changed directly, delete the script and recreate it from the **Pivot — Bank Toggle** blueprint, making sure the Script ID is set correctly before saving. The friendly name can be anything you like.
+2. **Check Control Mode is on** — the button only toggles entities in Control Mode. Double press to toggle it on.
+3. **Check the integration is up to date** — button toggle is handled natively by the integration (v0.0.59+). If you are on an older version, update via HACS and restart Home Assistant.
+4. **Check firmware is up to date** — the integration handles the toggle from the `button_press_event` entity. If your firmware predates v0.0.15, reflash via ESPHome → Install → Wirelessly.
 
 ---
 
@@ -345,11 +341,3 @@ To fix: go to **Settings → Devices & Services → Pivot → your device → Co
 ---
 
 ### File & config issues
-
-### The bank toggle script has stopped working
-
-The bank toggle script is a standard HA script created from the **Pivot — Bank Toggle** blueprint. If it stops working, check:
-
-1. Go to **Settings → Scripts** and confirm the script exists and is enabled.
-2. Check its entity ID is `script.{device_suffix}_bank_toggle` — if it was renamed or recreated with the wrong ID, the firmware won't find it.
-3. If the script is missing, recreate it from the blueprint. See the [getting started guide](/pivot/getting-started/#bank-toggle-script--required) for instructions.

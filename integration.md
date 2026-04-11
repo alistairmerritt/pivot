@@ -218,7 +218,7 @@ Fired on every button press regardless of mode.
 
 | Press type | Built-in behaviour |
 | --- | --- |
-| `single_press` | Toggles or activates the active bank's assigned entity (requires entity assigned and bank toggle script set up) |
+| `single_press` | Toggles or activates the active bank's assigned entity (requires entity assigned; handled natively by the integration) |
 | `double_press` | Toggles Control Mode on/off |
 | `triple_press` | Announces the active bank's assigned entity name via TTS (if announcements configured) |
 | `long_press` | No built-in behaviour |
@@ -307,7 +307,7 @@ Create one pair of automations like this per bank. You can use any entity domain
 
 ### Example: Play/Pause computer media while Bank 1 is assigned to computer volume
 
-This example adds extra behaviour on top of the bank toggle script. Bank 1 is already controlling computer volume via an `input_number` helper — this automation adds a play/pause shell command to the same button press, but only fires it when that specific helper is assigned to Bank 1. Any other bank behaves normally.
+This example adds extra behaviour on top of the integration's built-in toggle. Bank 1 is already controlling computer volume via an `input_number` helper — this automation adds a play/pause shell command to the same button press, but only fires it when that specific helper is assigned to Bank 1. Any other bank behaves normally.
 
 The helper entity is `input_number.example_computer_volume` and the shell command is `shell_command.music_playpause`.
 

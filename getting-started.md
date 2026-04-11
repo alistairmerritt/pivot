@@ -173,25 +173,13 @@ The knob will now control each bank's assigned entity. Button presses won't work
 
 ## Step 7. Set up blueprints
 
-If you added your device in Blueprint mode, Pivot has copied four blueprint files into your HA config and showed a persistent notification confirming it. You now create scripts and automations from those blueprints in the HA UI.
+If you added your device in Blueprint mode, Pivot has copied blueprint files into your HA config and showed a persistent notification confirming it. All blueprints are optional — button toggle works automatically out of the box.
 
-> **The Bank Toggle script is required for button presses to work.** Everything else is optional, but recommended.
-
-| Blueprint | Type | Required? | What it does |
-| --- | --- | --- | --- |
-| **Pivot — Bank Toggle** | Script | Yes | Called by the firmware on every button press — toggles or activates the entity assigned to the active bank |
-| **Pivot — Announce** | Automation | Optional (Recommended) | Speaks the active bank's entity name when switching banks or on triple press, and announces the entity value after the knob settles |
-| **Pivot — Timer** | Automation | Optional | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
-| **Pivot — Timer Toggle** | Script | Optional | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
-
-### Bank Toggle script — required
-
-This script is called by the firmware every time you press the button. Without it, button presses do nothing.
-
-1. Go to **Settings → Scripts → Create Script**
-2. Select **Pivot — Bank Toggle** from the blueprint list
-3. Enter your `device_suffix`
-4. Save the script as `device_suffix`. **Important:**  the script entity ID must remain  `script.{device_suffix}_bank_toggle` (for example, `script.ha_voice_lounge_bank_toggle`). The friendly name can be changed, but the entity ID must not. Either can be adjusted after saving the script.
+| Blueprint | Type | What it does |
+| --- | --- | --- |
+| **Pivot — Announce** | Automation | Speaks the active bank's entity name when switching banks or on triple press, and announces the entity value after the knob settles |
+| **Pivot — Timer** | Automation | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
+| **Pivot — Timer Toggle** | Script | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
 
 ### Announce automation — optional (but recommended)
 

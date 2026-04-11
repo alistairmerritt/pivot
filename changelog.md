@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.15
+- **Change:** Single press in control mode no longer calls `script.{suffix}_bank_toggle` directly. Toggle is now handled by the integration natively on the `button_press_event` trigger. Requires integration v0.0.59+.
+
 ### v0.0.14
 - **New:** Adds a `Timer Silent Mode` switch, exposed to Home Assistant. When on, the alarm sound is suppressed at the end of a Pivot timer — the LED ring still pulses and the "stop" wake word still activates, only the sound is silenced. Controlled automatically by the blueprint (v0.0.42+) based on the **Silent Mode** input. Off by default (`restore_mode: ALWAYS_OFF`), so existing behaviour is unchanged without a blueprint update. Requires a reflash.
 
@@ -43,6 +46,9 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+### v0.0.59
+- **Change:** Button toggle is now handled natively by the integration — the **Pivot — Bank Toggle** script blueprint is no longer needed. Requires a firmware reflash (v0.0.15+). Existing users: delete the `{suffix}_bank_toggle` script from Home Assistant after reflashing.
 
 ### v0.0.58
 - **Change:** **Pivot — Timer** blueprint no longer requires a Bank Number input. The blueprint automatically detects which bank is reserved as a timer by reading the bank entity text entities at runtime. If no timer bank is reserved when the automation is created, the blueprint is inert and activates automatically once one is assigned — no changes to the blueprint needed.
