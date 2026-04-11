@@ -309,9 +309,8 @@ Work through these in order:
 ### Announcements are not working
 
 1. Go to **Settings → Devices & Services → Pivot → your device** and check that the **Announcements** switch is on.
-2. Go to **Configure** on the integration and confirm a text-to-speech service and speaker are selected.
+2. Go to **Configure** on the integration and confirm a text-to-speech service and speaker are selected, and that **Enable spoken announcements** is ticked.
 3. Test your TTS service independently — go to **Developer Tools → Actions**, find `tts.speak`, select your TTS entity and media player, and send a test message. If this doesn't work, the issue is with your TTS setup rather than Pivot.
-4. Check the announce automation exists — go to **Settings → Automations** and search for your device suffix. If it's missing, create it from the **Pivot — Announce** blueprint — the only input required is your **Device Suffix**. See the [getting started guide](/pivot/getting-started/#announce-automation--optional) for instructions.
 
 ---
 

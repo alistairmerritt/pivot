@@ -4,13 +4,13 @@ title: Integration
 permalink: /integration/
 ---
 
-The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle natively, and installs blueprint files for optional announcement and timer automations.
+The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle natively, and installs blueprint files for optional timer automations.
 
 Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
 ---
 
-Pivot installs blueprint files into `/config/blueprints/` automatically. Button toggle, knob control, and entity sync all work out of the box — blueprints are optional extras for announcements and timers.
+Pivot installs blueprint files into `/config/blueprints/` automatically. Button toggle, knob control, and entity sync all work out of the box — blueprints are optional extras for timers.
 
 > **Advanced:** You can ignore blueprints entirely and build your own automations using Pivot's events. See [Custom Automations](#custom-automations) below.
 
@@ -54,12 +54,12 @@ Pivot installs blueprint files into `/config/blueprints/` automatically. Button 
 | `text.{device_suffix}_bank_1_entity` | Entity assigned to Bank 2 |
 | `text.{device_suffix}_bank_2_entity` | Entity assigned to Bank 3 |
 | `text.{device_suffix}_bank_3_entity` | Entity assigned to Bank 4 |
-| `text.{device_suffix}_tts_entity` | TTS service used by Announce and Timer blueprints (diagnostic, written from integration settings) |
-| `text.{device_suffix}_media_player_entity` | Speaker used by Announce and Timer blueprints (diagnostic, written from integration settings) |
+| `text.{device_suffix}_tts_entity` | TTS service used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
+| `text.{device_suffix}_media_player_entity` | Speaker used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
 
 > **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). The knob has no effect on a timer bank — the LED gauge is managed entirely by the blueprint. Any other value is treated as a Home Assistant entity ID.
 
-> **TTS and media player entities** are written automatically from the values you configure in the integration settings (**Settings → Devices & Services → Pivot → your device → Configure**). The Announce and Timer blueprints read from these entities at runtime — you only need to set TTS and speaker once, in the configure dialog, and all blueprints pick them up automatically.
+> **TTS and media player entities** are written automatically from the values you configure in the integration settings (**Settings → Devices & Services → Pivot → your device → Configure**). The announcement logic and Timer blueprint read from these entities at runtime — you only need to set TTS and speaker once, in the configure dialog.
 
 ### Binary sensor entities
 
@@ -114,17 +114,13 @@ When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brigh
 
 ## Announcements
 
-Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Both are handled by a single **Pivot — Announce** blueprint, installed automatically when you add a device.
+Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Announcements are configured directly in the integration — go to **Settings → Devices & Services → Pivot → your device → Configure**, select a text-to-speech service and speaker, and tick **Enable spoken announcements**.
 
-### Pivot — Announce blueprint
-
-The blueprint handles three announcement types in one automation:
+Three announcement types are supported:
 
 - **Bank change** — speaks the assigned entity's name whenever you switch banks (Control Mode only). Requires the **System Announcements** switch to be on.
 - **Triple press** — re-announces the current bank's entity name. Requires **System Announcements** to be on.
 - **Value announcement** — speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{device_suffix}_bank_N_announce_value`) — only banks with this switch on will announce.
-
-The blueprint takes one input: **Device Suffix**. The TTS service and media player are read automatically from the values configured in Pivot's integration settings — no per-blueprint configuration needed. All other entity IDs are derived from the suffix.
 
 Supported domains and what is spoken for value announcements:
 
@@ -141,7 +137,7 @@ Value announcements only fire when the knob is physically turned — changes mad
 
 ### Muting announcements
 
-**Mute Announcements** (`switch.{device_suffix}_mute_announcements`) silences all TTS from the announce and timer blueprints without changing any other setting. Useful for quiet hours or when the device is in a shared space.
+**Mute Announcements** (`switch.{device_suffix}_mute_announcements`) silences all TTS from announcements and the timer blueprint without changing any other setting. Useful for quiet hours or when the device is in a shared space.
 
 ---
 

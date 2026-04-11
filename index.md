@@ -59,7 +59,7 @@ Pivot consists of two parts that work together, both of which are required for a
 
 **[Pivot firmware](/pivot/firmware/)** — custom ESPHome firmware you flash to your VPE. It adds four control banks, knob turn handling, LED colour feedback, and sends events to Home Assistant.
 
-**[Pivot integration](/pivot/integration/)** — a HACS integration for Home Assistant that provisions all the required entities, handles button toggle natively, and installs blueprint files for optional announcement and timer automations.
+**[Pivot integration](/pivot/integration/)** — a HACS integration for Home Assistant that provisions all the required entities, handles button toggle natively, and installs blueprint files for optional timer automations.
 
 ---
 

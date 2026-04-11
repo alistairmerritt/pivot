@@ -147,7 +147,7 @@ packages:
 1. Go to **Settings → Devices & Services → Add Integration** and search for **Pivot**
 2. Select your VPE from the dropdown
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
-4. Optionally configure announcements — select a text-to-speech service (TTS) and speaker. These are shared across all blueprints automatically.
+4. Optionally configure announcements — tick **Enable spoken announcements**, then select a text-to-speech service (TTS) and speaker. These settings are also used by the Timer blueprint.
 
 > **Advanced:** You can ignore blueprints entirely and build your own automations using Pivot’s events. See the [Integration page](/pivot/integration/) for details.
 
@@ -173,24 +173,16 @@ The knob will now control each bank's assigned entity. Button presses in Control
 
 ## Step 7. Optionally set up blueprints
 
-Pivot has copied optional blueprint files into your Home Assistant config and shown a persistent notification confirming it. These blueprints are not required for core control, but **Pivot — Announce** is recommended.
+Pivot has copied optional blueprint files into your Home Assistant config and shown a persistent notification confirming it. These blueprints are not required for core control.
 
 | Blueprint | Type | What it does |
 | --- | --- | --- |
-| **Pivot — Announce** | Automation | Speaks the active bank's entity name when switching banks or on triple press, and announces the entity value after the knob settles |
 | **Pivot — Timer** | Automation | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
 | **Pivot — Timer Toggle** | Script | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
 
-### Announce automation — optional (but recommended)
+### Announcements
 
-Speaks the active bank’s entity name when you switch banks and announces the entity value after the knob settles (e.g. *"Brightness 60 percent"*). Requires a TTS provider such as Home Assistant Cloud configured in Step 5 above.
-
-1. Go to **Settings → Automations → Create Automation**
-2. Select **Pivot — Announce** from the blueprint list
-3. Enter your `device_suffix`
-4. Save
-
-The TTS service and speaker are read automatically from the entities you configured in setup (Step 5). 
+Spoken announcements are configured in the integration itself, not via a blueprint. To enable them, go to **Settings → Devices & Services → Pivot → your device → Configure**, select a text-to-speech service and speaker, and tick **Enable spoken announcements**. Once enabled, Pivot will speak the active bank’s entity name when switching banks or on triple press, and announce the entity value after the knob settles (e.g. *"Brightness 60 percent"*). Requires a TTS provider such as Home Assistant Cloud.
 
 ### Timer blueprints — optional, only if using timer banks
 
