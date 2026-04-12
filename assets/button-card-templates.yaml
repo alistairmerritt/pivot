@@ -304,8 +304,6 @@ button_card_templates:
     show_state: false
     show_label: false
     name: Pivot Device Volume
-    entity: >-
-      [[[ return states["text." + variables.device_suffix + "_media_player_entity"]?.state ?? ""; ]]]
     tap_action:
       action: none
     styles:
