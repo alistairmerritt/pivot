@@ -185,7 +185,6 @@ Timers are not enabled by default. Before setting up these blueprints, go to you
 If you want to use a bank as a timer, set up **Pivot — Timer**.  
 If you also want to control that timer from a dashboard, set up **Pivot — Timer Toggle** as well.
 
-See the [Timer page](/pivot/timer/) for full setup instructions.
 ---
 
 ## Next steps
