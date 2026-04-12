@@ -61,7 +61,7 @@ Yes. In the stock VPE firmware, a single press starts the voice input. In Pivot,
 
 Voice functionality is still preserved, including wake word activation, but the stock press-to-talk shortcut is no longer the default behaviour while Pivot's control mode is enabled.
 
-If you would prefer a manual trigger as well, a good option is to use long press to run a Home Assistant automation that starts a conversation on the device. This is not built in by default, but can be configured manually.
+If you would prefer a manual trigger as well, long press is left open for this purpose. See [Can I use long press to start a voice conversation?](#can-i-use-long-press-to-start-a-voice-conversation) in the Advanced section.
 
 ---
 
@@ -151,6 +151,49 @@ In Home Assistant:
 ---
 
 ### Advanced
+
+**Can I use long press to start a voice conversation?**
+Yes. Long press is intentionally left open — it is the one press type Pivot does not consume natively, so you can wire it up however you like.
+
+A common use is starting a voice conversation on the device without speaking a wake word. To do this, create a Home Assistant automation using the example below, substituting your own device entity IDs.
+
+> **Note:** There is a short pause between the long press and the microphone opening. This is because `assist_satellite.start_conversation` requires a `start_message` — the device speaks it before it starts listening. Even a very short message adds a small TTS round-trip delay. If you leave `start_message` blank, HA will reject the service call. The delay is typically less than a second but is noticeable.
+
+```yaml
+alias: Pivot — Long Press Start Conversation
+description: Long press on any Pivot device starts a voice conversation on that device.
+mode: parallel
+max: 10
+
+trigger:
+  - platform: state
+    entity_id:
+      - event.your_device_button_press
+      # add one line per device
+
+condition:
+  - condition: template
+    value_template: "{{ trigger.to_state.attributes.event_type == 'long_press' }}"
+
+variables:
+  satellite_map:
+    event.your_device_button_press: assist_satellite.your_device_assist_satellite
+    # keep this in sync with the trigger list above
+  satellite: "{{ satellite_map[trigger.entity_id] }}"
+
+action:
+  - service: assist_satellite.start_conversation
+    target:
+      entity_id: "{{ satellite }}"
+    data:
+      start_message: "Yes?"
+```
+
+The trigger uses a plain state change (not filtered by `attribute`/`to`) because ESPHome event entities update their timestamp on every press — if you filter by `to: long_press`, the trigger only fires the first time and ignores all subsequent long presses.
+
+> **Tip:** If you use the Timer feature, long press already cancels a running or paused timer via the Timer blueprint. Both automations will fire simultaneously on a long press while a timer is active. To avoid this, add a condition to the conversation automation checking that the timer is not running or paused.
+
+---
 
 **Can I use multiple Pivot VPE devices?**
 Yes. Each device uses a unique identifier, allowing multiple VPE devices to run independently.
