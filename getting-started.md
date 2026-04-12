@@ -149,7 +149,7 @@ packages:
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
 4. Optionally configure announcements — enable **spoken announcements**, then select a text-to-speech service (TTS) and speaker. This allows Pivot to speak feedback such as bank changes. These settings are also used by the Timer blueprint.
 
-Pivot will now connect to your device and enable control of your assigned banks. Button presses work automatically with no additional setup required.
+Pivot will now connect to your device and enable control of the entities you assign in Step 6.
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
@@ -161,7 +161,7 @@ Pivot will now connect to your device and enable control of your assigned banks.
 2. Assign Home Assistant entities to the banks you want to use
 3. Save
 
-The knob will now control each bank's assigned entity. Button presses in Control Mode will toggle or activate the assigned entity.
+The knob will now control each bank's assigned entity value. Button presses will toggle or activate the assigned entity.
 
 > **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default — you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
 
