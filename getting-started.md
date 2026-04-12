@@ -175,6 +175,8 @@ Pivot is now set up and ready to use. Turn the knob to control the active bank's
 
 Pivot includes two optional timer blueprints. These are only needed if you want to use a bank as a countdown timer — they are not required for normal Pivot control.
 
+Timers are not enabled by default. Before setting up these blueprints, go to your Pivot device in Home Assistant and enable the required timer entities. See the [Timer page](/pivot/timer/) for full setup instructions.
+
 | Blueprint | Type | Required? | What it does |
 | --- | --- | --- | --- |
 | **Pivot — Timer** | Automation | Yes | Manages a timer bank — start, pause, resume, finish alarm, and LED countdown gauge |
@@ -184,7 +186,6 @@ If you want to use a bank as a timer, set up **Pivot — Timer**.
 If you also want to control that timer from a dashboard, set up **Pivot — Timer Toggle** as well.
 
 See the [Timer page](/pivot/timer/) for full setup instructions.
-
 ---
 
 ## Next steps
