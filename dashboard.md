@@ -115,7 +115,7 @@ You can also add a device volume label and slider using `pivot_volume` — usefu
     - pivot_volume
 ```
 
-The media player entity is derived automatically from `text.{device_suffix}_media_player_entity`, which is written from your integration settings — no manual entity ID required.
+If you selected a media player during setup, the integration writes it to `text.{device_suffix}_media_player_entity`, and the media player entity is then derived automatically from that value.
 
 ---
 
