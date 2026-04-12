@@ -152,8 +152,8 @@ In Home Assistant:
 
 ### Advanced
 
-**Can I use long press to start a voice conversation?**
-Yes. Long press is intentionally left open — it is the one press type Pivot does not consume natively, so you can wire it up however you like.
+**How can I trigger voice from a button press in Control Mode?**
+Long press is intentionally left open — it is the one press type Pivot does not consume natively, so you can wire it up however you like.
 
 A common use is starting a voice conversation on the device without speaking a wake word. To do this, create a Home Assistant automation using the example below, substituting your own device entity IDs.
 
@@ -186,7 +186,7 @@ action:
     target:
       entity_id: "{{ satellite }}"
     data:
-      start_message: "Yes?"
+      start_message: " "
 ```
 
 The trigger uses a plain state change (not filtered by `attribute`/`to`) because ESPHome event entities update their timestamp on every press — if you filter by `to: long_press`, the trigger only fires the first time and ignores all subsequent long presses.
