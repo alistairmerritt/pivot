@@ -165,7 +165,7 @@ The knob will now control each bank's assigned entity value. Button presses will
 
 > **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default — you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
 
-> **Bank entity chooser not appearing?** Occasionally the entity assignment screen is skipped during initial setup. If this happens, you can assign entities at any time by going to **Settings → Devices & Services → Pivot**, clicking the **⚙️ Configure** icon on your device, and stepping through the setup screens. The bank entity chooser appears at the end — just click through the earlier screens (TTS settings) to reach it. If the chooser is still not accessible, you can write values directly to the `text.{device_suffix}_bank_N_entity` entities from the device page or **Developer Tools → States** as a fallback.
+> **Skipped the entity assignment screen?** You can still assign entities at any time by setting the `text.{device_suffix}_bank_N_entity` entities directly from your Pivot device page or **Developer Tools → States**.
 
 Pivot is now set up and ready to use. Turn the knob to control the active bank's assigned entity, press the button to toggle or activate it, and press + turn to switch banks.
 
