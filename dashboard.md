@@ -235,7 +235,7 @@ Mix in whichever other components you want alongside them.
 
 A complete, ready-to-paste dashboard YAML that includes all the template definitions and a full five-device layout. The config variables for each device are at the top of the file — update those, paste the whole thing into your raw dashboard YAML editor, and it should produce something like this:
 
-![575217018-c93e51c5-af05-421a-855d-8950fe3aad83](https://github.com/user-attachments/assets/7de6888c-ba6e-4b6d-9865-6bf7fdc26bc0)
+![study_pivot_half_frames](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
 
 
-The example uses `custom:layout-card` to achieve the column layout shown, but you can rearrange the bank cards however you like using any standard Home Assistant layout card.
+The example uses `custom:layout-card` to achieve the layout shown, but you can rearrange the bank cards however you like using any standard Home Assistant layout card.
