@@ -4,8 +4,6 @@ title: Architecture
 permalink: /architecture/
 ---
 
-# Architecture
-
 This page is for people who want to understand exactly what the Pivot integration does before installing it.
 
 It explains:
