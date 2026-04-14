@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.74
+- **Fix:** All Pivot devices failed to load on startup with `AttributeError: 'EntityRegistry' object has no attribute 'async_entries_for_device'`. The button event entity lookup was using an instance method form of the API that was added in a later HA version. Reverted to the stable module-level `er.async_entries_for_device(registry, device_id)` call, which works across all supported versions. The crash occurred after bank control listeners were registered but before they were stored, so knob control continued to work while button toggle and announcements were completely non-functional.
+
 ### v0.0.73
 - **Fix:** Non-dimmable lights (lights with no `brightness` attribute) now sync to 100% when on instead of 0%. Switching to a bank assigned to a non-dimmable light no longer shows an empty gauge.
 - **Fix:** `number` and `input_number` entity values are now snapped to the entity's declared step size before being applied. Previously, the exact knob value was written regardless of the entity's step, which could produce out-of-step values on strict entities.
