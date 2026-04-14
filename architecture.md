@@ -4,9 +4,9 @@ title: Architecture
 permalink: /architecture/
 ---
 
-This page is for people who want to understand exactly what the Pivot integration does before installing it.
+This page is for people who want to understand exactly what the Pivot integration does before installing it. It has been developed with transparency in mind, shaped by Home Assistant’s local, open-source and community-led ethos.
 
-It explains:
+This page explains:
 
 - what the integration creates
 - what it reads
