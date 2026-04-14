@@ -16,10 +16,10 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 | Entity | Purpose |
 | --- | --- |
-| `number.{device_suffix}_bank_0_value` | Bank 1 value (0–100%) |
-| `number.{device_suffix}_bank_1_value` | Bank 2 value (0–100%) |
-| `number.{device_suffix}_bank_2_value` | Bank 3 value (0–100%) |
-| `number.{device_suffix}_bank_3_value` | Bank 4 value (0–100%) |
+| `number.{device_suffix}_bank_1_value` | Bank 1 value (0–100%) |
+| `number.{device_suffix}_bank_2_value` | Bank 2 value (0–100%) |
+| `number.{device_suffix}_bank_3_value` | Bank 3 value (0–100%) |
+| `number.{device_suffix}_bank_4_value` | Bank 4 value (0–100%) |
 | `number.{device_suffix}_active_bank` | Active bank (1–4) |
 
 ### Switch entities
@@ -31,23 +31,23 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | `switch.{device_suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
 | `switch.{device_suffix}_announcements` | System Announcements — enable/disable bank-change and triple-press TTS announcements |
 | `switch.{device_suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, and timer) without changing other settings |
-| `switch.{device_suffix}_bank_0_mirror_light` | Bank 1 — mirror assigned RGB light colour |
-| `switch.{device_suffix}_bank_1_mirror_light` | Bank 2 — mirror assigned RGB light colour |
-| `switch.{device_suffix}_bank_2_mirror_light` | Bank 3 — mirror assigned RGB light colour |
-| `switch.{device_suffix}_bank_3_mirror_light` | Bank 4 — mirror assigned RGB light colour |
-| `switch.{device_suffix}_bank_0_announce_value` | Bank 1 — announce the entity value via TTS after the knob settles |
-| `switch.{device_suffix}_bank_1_announce_value` | Bank 2 — announce the entity value via TTS after the knob settles |
-| `switch.{device_suffix}_bank_2_announce_value` | Bank 3 — announce the entity value via TTS after the knob settles |
-| `switch.{device_suffix}_bank_3_announce_value` | Bank 4 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_bank_1_mirror_light` | Bank 1 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_2_mirror_light` | Bank 2 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_3_mirror_light` | Bank 3 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_4_mirror_light` | Bank 4 — mirror assigned RGB light colour |
+| `switch.{device_suffix}_bank_1_announce_value` | Bank 1 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_bank_2_announce_value` | Bank 2 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_bank_3_announce_value` | Bank 3 — announce the entity value via TTS after the knob settles |
+| `switch.{device_suffix}_bank_4_announce_value` | Bank 4 — announce the entity value via TTS after the knob settles |
 
 ### Text entities
 
 | Entity | Purpose |
 | --- | --- |
-| `text.{device_suffix}_bank_0_entity` | Entity assigned to Bank 1 |
-| `text.{device_suffix}_bank_1_entity` | Entity assigned to Bank 2 |
-| `text.{device_suffix}_bank_2_entity` | Entity assigned to Bank 3 |
-| `text.{device_suffix}_bank_3_entity` | Entity assigned to Bank 4 |
+| `text.{device_suffix}_bank_1_entity` | Entity assigned to Bank 1 |
+| `text.{device_suffix}_bank_2_entity` | Entity assigned to Bank 2 |
+| `text.{device_suffix}_bank_3_entity` | Entity assigned to Bank 3 |
+| `text.{device_suffix}_bank_4_entity` | Entity assigned to Bank 4 |
 | `text.{device_suffix}_tts_entity` | TTS service used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
 | `text.{device_suffix}_media_player_entity` | Speaker used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
 
@@ -59,10 +59,10 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 | Entity | Purpose |
 | --- | --- |
-| `binary_sensor.{device_suffix}_bank_0_passive` | On when Bank 1 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{device_suffix}_bank_1_passive` | On when Bank 2 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{device_suffix}_bank_2_passive` | On when Bank 3 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{device_suffix}_bank_3_passive` | On when Bank 4 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_1_passive` | On when Bank 1 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_2_passive` | On when Bank 2 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_3_passive` | On when Bank 3 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_4_passive` | On when Bank 4 entity is a scene, script, switch, or input_boolean (knob disabled) |
 
 ### Timer entities
 
@@ -320,7 +320,7 @@ conditions:
 
   - condition: template
     value_template: >
-      {{ states('text.example_pivot_bank_0_entity') == 'input_number.example_computer_volume' }}
+      {{ states('text.example_pivot_bank_1_entity') == 'input_number.example_computer_volume' }}
 
 actions:
   - action: shell_command.music_playpause

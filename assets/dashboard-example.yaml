@@ -86,7 +86,7 @@ button_card_templates:
               if (controlMode !== 'on') return 'Control mode off';
               const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
               const bankNum = activeBank + 0;
-              const nameEntityId = states[`text.${variables.device_suffix}_bank_${activeBank - 1}_entity`]?.state;
+              const nameEntityId = states[`text.${variables.device_suffix}_bank_${activeBank}_entity`]?.state;
               const entityName = nameEntityId && states[nameEntityId]
                 ? (states[nameEntityId].attributes.friendly_name || nameEntityId)
                 : (nameEntityId || 'Unknown');
@@ -125,7 +125,7 @@ button_card_templates:
                 entity: |
                   [[[
                     const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
-                    return `light.${variables.device_suffix}_bank_${activeBank - 1}_color_light`;
+                    return `light.${variables.device_suffix}_bank_${activeBank}_color_light`;
                   ]]]
                 show_name: false
                 show_state: false
@@ -146,7 +146,7 @@ button_card_templates:
                           const controlMode = states[`switch.${variables.device_suffix}_control_mode`]?.state;
                           if (controlMode !== 'on') return '#545454';
                           const activeBank = Math.round(parseFloat(states[variables.active_bank_entity]?.state));
-                          return states[`text.${variables.device_suffix}_bank_${activeBank - 1}_color`]?.state ?? '#ff5252';
+                          return states[`text.${variables.device_suffix}_bank_${activeBank}_color`]?.state ?? '#ff5252';
                         ]]]
                     - width: 15px
                     - height: 15px
@@ -320,33 +320,26 @@ button_card_templates:
       bank_number: null
       active_bank_entity: '[[[ return `number.${variables.device_suffix}_active_bank`; ]]]'
       color_entity: >-
-        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number
-        - 1}_color`; ]]]
+        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number}_color`; ]]]
       name_entity: >-
-        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number
-        - 1}_entity`; ]]]
+        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number}_entity`; ]]]
       value_entity: >-
         [[[ return
-        `number.${variables.device_suffix}_bank_${variables.bank_number -
-        1}_value`; ]]]
+        `number.${variables.device_suffix}_bank_${variables.bank_number}_value`; ]]]
       passive_entity: >-
         [[[ return
-        `binary_sensor.${variables.device_suffix}_bank_${variables.bank_number -
-        1}_passive`; ]]]
+        `binary_sensor.${variables.device_suffix}_bank_${variables.bank_number}_passive`; ]]]
       mirror_entity: >-
         [[[ return
-        `switch.${variables.device_suffix}_bank_${variables.bank_number -
-        1}_mirror_light`; ]]]
+        `switch.${variables.device_suffix}_bank_${variables.bank_number}_mirror_light`; ]]]
       color_light_entity: >-
         [[[ return
-        `light.${variables.device_suffix}_bank_${variables.bank_number -
-        1}_color_light`; ]]]
+        `light.${variables.device_suffix}_bank_${variables.bank_number}_color_light`; ]]]
       timer_state_entity: '[[[ return `select.${variables.device_suffix}_timer_state`; ]]]'
       timer_end_entity: '[[[ return `text.${variables.device_suffix}_timer_end`; ]]]'
       announce_value_entity: >-
         [[[ return
-        `switch.${variables.device_suffix}_bank_${variables.bank_number -
-        1}_announce_value`; ]]]
+        `switch.${variables.device_suffix}_bank_${variables.bank_number}_announce_value`; ]]]
       mute_announcements_entity: '[[[ return `switch.${variables.device_suffix}_mute_announcements`; ]]]'
       control_mode_entity: '[[[ return `switch.${variables.device_suffix}_control_mode`; ]]]'
     show_name: false

@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.75
+- **Breaking change:** Bank entity IDs are now 1-based to match user-facing bank numbers. `bank_0_*` entities are now `bank_1_*`, `bank_1_*` are now `bank_2_*`, and so on through `bank_4_*`. Existing entity registry entries for renamed entities will be orphaned and must be removed. Any custom automations or dashboards referencing the old entity IDs will need to be updated. The firmware, integration, dashboard YAML, and blueprints are all updated together in this release.
+
 ### v0.0.74
 - **Fix:** All Pivot devices failed to load on startup with `AttributeError: 'EntityRegistry' object has no attribute 'async_entries_for_device'`. The button event entity lookup was using an instance method form of the API that was added in a later HA version. Reverted to the stable module-level `er.async_entries_for_device(registry, device_id)` call, which works across all supported versions. The crash occurred after bank control listeners were registered but before they were stored, so knob control continued to work while button toggle and announcements were completely non-functional.
 
@@ -273,6 +276,9 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+### v0.0.19
+- **Breaking change:** Bank entity ID subscriptions updated from 0-based (`bank_0_*`) to 1-based (`bank_1_*` through `bank_4_*`) to match integration v0.0.75. Must be updated together with the integration — the two are not compatible across this change.
 
 ### v0.0.15
 - **Change:** Single press in control mode no longer calls `script.{suffix}_bank_toggle` directly. Toggle is now handled by the integration natively on the `button_press_event` trigger. Requires integration v0.0.59+.
