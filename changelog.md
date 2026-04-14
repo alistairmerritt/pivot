@@ -6,6 +6,19 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.73
+- **Fix:** Non-dimmable lights (lights with no `brightness` attribute) now sync to 100% when on instead of 0%. Switching to a bank assigned to a non-dimmable light no longer shows an empty gauge.
+- **Fix:** `number` and `input_number` entity values are now snapped to the entity's declared step size before being applied. Previously, the exact knob value was written regardless of the entity's step, which could produce out-of-step values on strict entities.
+- **Fix:** Climate temperature sync no longer falls back silently on conversion error. If `min_temp`, `max_temp`, or the current temperature cannot be read, the sync is skipped cleanly rather than writing an incorrect value.
+- **Fix:** Switch entities reliably publish their restored state immediately on startup. Previously, if the last state was unavailable, the entity could briefly appear unavailable before the next state write.
+- **Fix:** The startup push timer on bank colour light entities is now correctly cancelled if the entity is removed before it fires. Previously the cancel handle was not registered with `async_on_remove`, so it could attempt to fire on an entity that no longer existed.
+- **Fix:** ESPHome device hostname is now URL-encoded when building the device configuration link. Devices with hyphens, dots, or other special characters in their name no longer produce a malformed link in the device page.
+- **Fix:** Config flow now fails clearly if the ESPHome device name cannot be read from the config entry, instead of silently falling back to a wrong suffix and misconfiguring the device.
+- **Change:** Config flow suffix field now pre-fills with the suffix detected from the selected ESPHome device, so it does not need to be re-typed.
+- **Internal:** Translations file (`translations/en.json`) added — config flow steps, field labels, error messages, and abort reasons now appear correctly in the HA UI.
+- **Internal:** `__init__.py` split into focused modules (`bank_control`, `button`, `mirror`, `blueprints`, `announcements`, `entity_mappings`). No change in behaviour.
+- **Internal:** `PASSIVE_DOMAINS` consolidated into a single definition in `const.py` — previously duplicated in four places.
+
 ### v0.0.72
 - **Fix:** Climate temperature mapping now reads `min_temp`, `max_temp`, and `target_temp_step` directly from the thermostat entity's attributes instead of assuming a hardcoded 16–30 °C range. Works correctly with Fahrenheit thermostats, non-standard ranges, and any step size — no configuration required.
 - **Change:** All legacy migration code that read and wrote `scripts.yaml` and `automations.yaml` has been removed. This eliminates a category of fragile file-mutation behaviour that was a holdover from the removed Automatic (managed) mode.
