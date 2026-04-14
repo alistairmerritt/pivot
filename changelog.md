@@ -6,6 +6,12 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.71
+- **Fix:** Turning off **System Announcements** no longer silences value announcements (knob turn). System Announcements and Value Announcements are independent — System Announcements controls bank change and control mode spoken announcements only; per-bank Announce Value switches control value announcements. These were incorrectly coupled.
+- **Fix:** `input_number` entities now correctly trigger value announcements and speak their value with unit after the knob settles. They were inadvertently excluded from the announcement domain list despite being a fully supported active domain.
+- **Fix:** Switching to a timer bank while the timer is idle no longer causes a spurious write back to the timer duration. A missing sync context meant the bank value update was treated as a physical knob turn, producing a rounding-affected duration write and a false `pivot_timer_duration_set` event.
+- **Fix:** Minimum required Home Assistant version corrected to 2024.4.0 in HACS metadata (was incorrectly listed as 2024.1.0, which could lead to a confusing install failure on older versions).
+
 ### v0.0.70
 - **Fix:** Switching to a timer bank now announces "Timer" correctly. The bank change announcement was skipped for timer banks because the bank entity value `timer` contains no dot — which was the guard used to detect a real entity. Timer banks are now handled separately and announce "Timer" explicitly.
 
