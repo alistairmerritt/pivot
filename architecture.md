@@ -4,126 +4,302 @@ title: Architecture
 permalink: /architecture/
 ---
 
-This page is for people who want to understand exactly what the Pivot integration does before installing it — what it creates, what it reads, what it writes, and why it needs to exist as a custom integration rather than a set of blueprints.
+# Architecture
 
-The full source is at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
+This page is for people who want to understand exactly what the Pivot integration does before installing it.
 
----
+It explains:
+
+- what the integration creates
+- what it reads
+- what it writes
+- what it does **not** do
+- why it exists as a custom integration rather than just a set of blueprints
+
+The full source is available at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
+
+* * *
 
 ## What the integration is
 
-The Pivot integration is a Home Assistant custom component written in Python. It has two jobs:
+The Pivot integration is a Home Assistant custom component written in Python.
 
-1. **Provision entities** — create and manage the HA entities the firmware reads and writes (bank values, active bank, bank assignments, control switches, etc.)
-2. **React to state changes** — listen for knob turns, bank switches, button presses, and external entity changes, and call the appropriate HA services in response
+Its job is simple:
 
-It does not run a server, make external network requests, or access anything outside your local HA instance.
+1. **Provision entities**  
+   It creates and manages the Home Assistant entities that Pivot firmware relies on, such as bank values, active bank, bank assignments, colour settings, and control switches.
 
----
+2. **Respond to changes**  
+   It listens for knob turns, bank changes, button presses, and relevant external entity updates, then calls the appropriate Home Assistant services in response.
 
-## Module breakdown
+Pivot does **not** run a web server, make outbound HTTP requests, connect to a cloud service, or access anything outside your local Home Assistant instance.
 
-The integration is split into focused modules. Each file has a single, clear responsibility.
+* * *
 
-| File | Lines | Responsibility |
-| --- | --- | --- |
-| `__init__.py` | ~145 | Setup and teardown — wires everything together |
-| `bank_control.py` | ~430 | Knob turn → apply value; bank switch → sync gauge; external change → sync gauge |
-| `button.py` | ~170 | Button press events → toggle entity; fires `pivot_button_press` |
-| `entity_mappings.py` | ~150 | Translates a 0–100 knob value into the right HA service call per domain |
-| `announcements.py` | ~70 | Formats TTS messages and calls `tts.speak` |
-| `mirror.py` | ~165 | Watches assigned lights and writes hex colour to the bank colour text entity |
-| `blueprints.py` | ~90 | Copies bundled blueprint YAML files into `config/blueprints/` on first run |
-| `config_flow.py` | ~430 | Setup and options UI (config flow steps) |
-| `const.py` | ~365 | All entity definitions and constants |
-| Platform files | ~300 total | `number.py`, `switch.py`, `text.py`, `binary_sensor.py`, `light.py`, `select.py` |
+## Trust and security model
 
----
+Pivot is designed to be local-only and intentionally narrow in scope.
+
+In practical terms:
+
+- no cloud dependency
+- no telemetry
+- no external API calls
+- no external HTTP requests
+- no credential handling
+- no custom database layer
+- no direct writes to your main YAML config files
+
+Everything it does happens inside Home Assistant using standard entity platforms, standard service calls, and normal event listeners.
+
+If you want to inspect exactly what it does, the source is public.
+
+* * *
+
+## Module overview
+
+The integration is split into a small set of modules with defined roles.
+
+| File | Responsibility |
+|---|---|
+| `__init__.py` | Setup, teardown, and wiring listeners together |
+| `bank_control.py` | Knob changes, bank switching, gauge sync, and external state sync |
+| `button.py` | Button press handling and `pivot_button_press` event firing |
+| `entity_mappings.py` | Maps a 0–100 Pivot value to the correct HA service call for each supported domain |
+| `announcements.py` | Formats and triggers spoken announcements |
+| `mirror.py` | Watches assigned lights and mirrors their colour into the bank colour entity |
+| `blueprints.py` | Installs bundled blueprints into Home Assistant on first run when needed |
+| `config_flow.py` | Setup flow and options flow |
+| `const.py` | Entity definitions, constants, and shared configuration |
+| platform files | Entity platform implementations such as `number`, `text`, `switch`, `binary_sensor`, `light`, and `select` |
+
+This separation is mainly there to keep the integration easier to inspect and reason about. It is still one system, but each module has a narrower role.
+
+* * *
 
 ## What it creates
 
-On setup, the integration registers a device and provisions the following entities in Home Assistant. All of these use standard HA entity platforms — they behave exactly like any other HA entity of that type.
+On setup, the integration registers a device and creates a set of standard Home Assistant entities.
 
-**Per device (4 banks):**
-- 4 × `number` — bank values (0–100%)
-- 4 × `text` — bank entity assignments (stores the HA entity ID each bank controls)
-- 4 × `text` — bank LED colours (hex, read by firmware)
-- 4 × `text` — bank configured colours (hex, read by firmware)
-- 4 × `binary_sensor` — passive flags (on when a bank's entity is a scene/script/switch — tells the firmware to disable the knob)
-- 4 × `switch` — mirror light (whether to mirror the assigned light's colour)
-- 4 × `switch` — announce value (whether to speak the value after the knob settles)
-- 4 × `light` — bank colour pickers (virtual RGB lights used as colour selectors in the UI)
+These are normal HA entities using standard platforms. They are not hidden objects or special internal state.
 
-**Per device (shared):**
-- 1 × `number` — active bank (1–4)
-- 5 × `switch` — control mode, show control value, dim when idle, system announcements, mute announcements
-- 2 × `text` — TTS entity and media player (written from integration settings; read by blueprints)
+### Per device, per bank (4 banks)
 
-**Timer entities (disabled by default):**
-- 1 × `number` — timer duration
-- 1 × `select` — timer state
-- 1 × `text` — timer end time
+For each of the four banks, Pivot creates:
 
-All entity IDs follow the pattern `{platform}.{device_suffix}_{key}` and are pinned explicitly so they are stable across HA restarts and device renames.
+- `number` — bank value (0–100)
+- `text` — assigned entity ID
+- `text` — live bank LED colour
+- `text` — configured bank colour
+- `binary_sensor` — passive flag
+- `switch` — mirror light enabled
+- `switch` — announce value enabled
+- `light` — virtual bank colour picker
 
----
+### Per device, shared
+
+Pivot also creates shared device-level entities:
+
+- `number` — active bank
+- `switch` — control mode
+- `switch` — show control value
+- `switch` — dim when idle
+- `switch` — system announcements
+- `switch` — mute announcements
+- `text` — TTS entity
+- `text` — media player entity
+
+### Timer entities
+
+Timer entities are created as part of the integration and are disabled by default:
+
+- `number` — timer duration
+- `select` — timer state
+- `text` — timer end time
+
+All entity IDs follow a stable pattern:
+
+`{platform}.{device_suffix}_{key}`
+
+They are pinned explicitly so they stay stable across Home Assistant restarts and device renames.
+
+* * *
 
 ## What it reads
 
-- **Entity states of assigned entities** — when a bank is active, the integration reads the state of the assigned entity (e.g. `light.living_room`) to sync the LED gauge to the current value.
-- **Its own entity states** — to know the active bank, control mode, bank assignments, and announce settings.
-- **ESPHome device registry** — once, at setup, to locate the button press event entity for the device. This is a read-only registry lookup; no device data is modified.
+Pivot reads only the state it needs in order to function.
 
----
+### Assigned entity states
+
+When a bank is active, Pivot may read the current state of the assigned entity so the gauge and firmware state can stay in sync.
+
+Examples include:
+
+- brightness from a light
+- volume from a media player
+- percentage from a fan
+- target temperature from a climate entity
+- position from a cover
+- value from a number or input number
+
+### Its own entities
+
+Pivot also reads its own entities to determine things like:
+
+- which bank is active
+- which entity each bank is assigned to
+- whether control mode is enabled
+- whether announcements are enabled
+- whether light mirroring is enabled
+
+### Device registry lookup
+
+During setup, Pivot performs a read-only lookup in Home Assistant’s registry so it can locate the relevant event entity for the ESPHome device.
+
+It does not modify device registry data.
+
+* * *
 
 ## What it writes
 
-Everything the integration writes goes through standard HA service calls — the same calls any automation or script would make.
+Everything Pivot writes goes through normal Home Assistant service calls.
 
-**To assigned entities (your lights, fans, etc.):**
+It does not bypass Home Assistant, write arbitrary state directly, or perform hidden mutations elsewhere.
+
+### Writes to assigned entities
+
+Depending on the bank assignment, Pivot may call services such as:
+
 - `light.turn_on` with `brightness_pct`
 - `media_player.volume_set`
 - `fan.set_percentage`
 - `climate.set_temperature`
 - `cover.set_cover_position`
-- `number.set_value` / `input_number.set_value`
-- `homeassistant.toggle` (for switches, input_booleans)
-- `scene.turn_on`, `script.turn_on` (on button press)
-- `media_player.media_play_pause`, `cover.toggle` (on button press)
+- `number.set_value`
+- `input_number.set_value`
+- `homeassistant.toggle`
+- `scene.turn_on`
+- `script.turn_on`
+- `media_player.media_play_pause`
+- `cover.toggle`
 
-**To its own entities:**
-- `number.set_value` on bank value entities — to sync the LED gauge when an external change is detected
-- `text.set_value` on config text entities — to write TTS and media player settings on setup
+These calls are only made in response to Pivot input or explicit sync behaviour.
 
-**To the filesystem (first run only):**
-- Copies bundled blueprint YAML files into `config/blueprints/automation/pivot/` and `config/blueprints/script/pivot/`. This only happens when blueprint files are absent or outdated.
+### Writes to Pivot’s own entities
 
----
+Pivot also writes to its own entities when needed, for example:
+
+- updating bank value entities so the gauge reflects an external change
+- writing TTS and media player selections from the integration settings
+- writing colour values used by the firmware
+
+### Blueprint installation
+
+On first run, Pivot may copy bundled blueprint YAML files into:
+
+- `config/blueprints/automation/pivot/`
+- `config/blueprints/script/pivot/`
+
+This only happens when those bundled blueprints are missing or outdated.
+
+* * *
 
 ## What it does not do
 
-- No HTTP requests to external services or APIs
-- No access to your HA long-lived access token or credentials
-- No writes to `configuration.yaml`, `automations.yaml`, or `scripts.yaml`
-- No database writes beyond what HA's standard entity state storage provides
-- No polling — all listeners are event-driven
+Pivot does **not** do any of the following:
 
----
+- make external HTTP requests
+- call external APIs
+- send telemetry
+- access Home Assistant credentials or tokens
+- write to `configuration.yaml`
+- write to `automations.yaml`
+- write to `scripts.yaml`
+- maintain its own database
+- poll constantly in the background
 
-## Why it needs to be a custom integration
+The integration is event-driven. It reacts when relevant state changes happen.
 
-The same question, answered directly: why can't this just be blueprints?
+* * *
 
-**Entity provisioning.** Blueprints cannot create entities. The bank value number entities, text entities, switches, and colour lights all need to exist as real HA entities with unique IDs, device registration, and state persistence across restarts. Only a custom component can do this.
+## Scope of control
 
-**State persistence.** The integration uses HA's `RestoreEntity` and `RestoreNumber` base classes so entity values survive a restart without writing anything extra. Blueprints have no equivalent.
+Pivot does not scan your Home Assistant instance and start controlling things on its own.
 
-**Feedback loop prevention.** When the integration writes a value back to the gauge (e.g. syncing brightness after a bank switch), it tags the state change with a HA `Context(parent_id="pivot_sync")`. The listener for knob turns checks for this tag and ignores those writes, preventing the sync from being treated as a physical knob turn. This level of context tracking is not available in automations or blueprints.
+It writes to one of two places only:
 
-**Efficiency.** Knob turns generate rapid state changes. The integration uses native Python `async_track_state_change_event` callbacks — lightweight, immediate, and free of the overhead of template evaluation or automation trigger matching. At 1% brightness steps this matters.
+1. **the entity assigned to a bank**
+2. **its own helper/config entities**
 
----
+That scope is intentional. Pivot only acts on the entities you explicitly assign to it.
+
+* * *
+
+## Why this needs to be a custom integration
+
+A fair question is: why not just do this with blueprints?
+
+### 1. Entity provisioning
+
+Blueprints cannot create entities.
+
+Pivot needs real Home Assistant entities for things like:
+
+- bank values
+- active bank
+- bank assignments
+- colour settings
+- control switches
+- timer state
+
+These entities need stable IDs, device registration, and normal HA behaviour.
+
+### 2. State restoration
+
+Pivot uses Home Assistant restore-capable entity classes so values survive restart in the normal HA way.
+
+Blueprints do not provide an equivalent entity model for this.
+
+### 3. Loop prevention
+
+Some Pivot behaviour requires writing a synced value back into Home Assistant without that write being mistaken for a new physical control input.
+
+That kind of state feedback control is much easier and more reliable inside a custom integration than in blueprints or automations.
+
+### 4. Efficiency
+
+Knob changes can happen rapidly.
+
+Pivot uses native Home Assistant Python callbacks to respond quickly and keep gauge sync responsive, rather than relying on a heavier chain of automations, templates, and triggers.
+
+### 5. Device model
+
+Pivot behaves like a real Home Assistant device with grouped entities and a consistent contract between firmware and integration.
+
+A custom integration is the right layer for that.
+
+* * *
+
+## Limitations and design boundaries
+
+Pivot is intentionally narrow in scope.
+
+A few things to keep in mind:
+
+- supported behaviour depends on the assigned entity domain
+- some domains are simple on/off or trigger-style interactions rather than continuous control
+- some behaviour is entity-dependent, because different Home Assistant integrations expose different attributes and capabilities
+- bundled blueprints are optional helpers, not the core of Pivot
+- firmware and integration versions should be kept in sync where recommended
+
+The goal is not to abstract every possible Home Assistant entity perfectly. The goal is to provide a stable, predictable control layer for the supported use cases.
+
+* * *
 
 ## Source
 
-The integration source is public and MIT licensed at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration). The repository readme describes the module structure; the code itself is commented where behaviour is non-obvious.
+The integration source is public and MIT licensed at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
+
+If you want to inspect the code before installing it, this page is intended to help you understand what to look for and where.
+
+* * *
