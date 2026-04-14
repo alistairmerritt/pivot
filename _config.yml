@@ -1,5 +1,5 @@
 title: Pivot
-description: "This integration was developed by Alistair Merritt using Claude 4.6 as a development tool for code generation and implementation support. Architectural direction, adaptation, and integration were handled by Alistair Merritt. Portions of the firmware are derived from the original Home Assistant Voice Preview Edition firmware and upstream work by Nabu Casa / Home Assistant."
+description: "Developed by Alistair Merritt. Portions of the firmware are derived from the Home Assistant Voice Preview Edition firmware by Nabu Casa. Built with AI assistance."
 theme: minima
 baseurl: "/pivot"
 url: "https://alistairmerritt.github.io"
@@ -10,6 +10,7 @@ header_pages:
   - integration.md
   - timer.md
   - dashboard.md
+  - architecture.md
   - help.md
   - changelog.md
 
