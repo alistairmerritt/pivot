@@ -16,6 +16,8 @@ This page explains:
 
 The full source is available at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
+> **Firmware** This page describes the Home Assistant integration only. Pivot also includes custom firmware for the Home Assistant Voice Preview Edition, which is a separate component with its own installation, update and rollback considerations. If you plan to flash Pivot firmware, review the [Firmware](https://github.com/alistairmerritt/pivot-integration) page as well before proceeding.
+
 * * *
 
 ## What the integration is
@@ -33,9 +35,6 @@ Its job is simple:
 Pivot does **not** run a web server, make outbound HTTP requests, connect to a cloud service, or access anything outside your local Home Assistant instance.
 
 * * *
-
-
-> **Firmware** This page describes the Home Assistant integration only. Pivot also includes custom firmware for the Home Assistant Voice Preview Edition, which is a separate component with its own installation, update and rollback considerations. If you plan to flash Pivot firmware, review the [Firmware](https://github.com/alistairmerritt/pivot-integration) page as well before proceeding.
 
 
 ## Trust and security model
