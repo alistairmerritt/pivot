@@ -34,6 +34,10 @@ Pivot does **not** run a web server, make outbound HTTP requests, connect to a c
 
 * * *
 
+
+> **Firmware** This page describes the Home Assistant integration only. Pivot also includes custom firmware for the Home Assistant Voice Preview Edition, which is a separate component with its own installation, update and rollback considerations. If you plan to flash Pivot firmware, review the [Firmware](https://github.com/alistairmerritt/pivot-integration) page as well before proceeding.
+
+
 ## Trust and security model
 
 Pivot is designed to be local-only and intentionally narrow in scope.
