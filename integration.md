@@ -6,7 +6,7 @@ permalink: /integration/
 
 The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle natively, and installs blueprint files for optional timer automations.
 
-Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
+Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration). For a full breakdown of what the integration does, what it reads, and what it writes, see the [Architecture](/pivot/architecture/) page.
 
 ---
 
