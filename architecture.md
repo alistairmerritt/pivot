@@ -16,7 +16,7 @@ This page explains:
 
 The full source is available at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
-> **Firmware:** Pivot also includes custom firmware for the Home Assistant Voice Preview Edition, which is a separate component with its own installation, update and rollback considerations. Review the [Firmware](https://github.com/alistairmerritt/pivot-integration) page as well before proceeding.
+> **Firmware:** Pivot also includes custom firmware for the Home Assistant Voice Preview Edition, which is a separate component with its own installation, update and rollback considerations. Review the [Firmware](https://alistairmerritt.github.io/pivot/firmware/) page as well before proceeding.
 
 * * *
 
