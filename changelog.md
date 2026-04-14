@@ -6,6 +6,10 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.72
+- **Fix:** Climate temperature mapping now reads `min_temp`, `max_temp`, and `target_temp_step` directly from the thermostat entity's attributes instead of assuming a hardcoded 16–30 °C range. Works correctly with Fahrenheit thermostats, non-standard ranges, and any step size — no configuration required.
+- **Change:** All legacy migration code that read and wrote `scripts.yaml` and `automations.yaml` has been removed. This eliminates a category of fragile file-mutation behaviour that was a holdover from the removed Automatic (managed) mode.
+
 ### v0.0.71
 - **Fix:** Turning off **System Announcements** no longer silences value announcements (knob turn). System Announcements and Value Announcements are independent — System Announcements controls bank change and control mode spoken announcements only; per-bank Announce Value switches control value announcements. These were incorrectly coupled.
 - **Fix:** `input_number` entities now correctly trigger value announcements and speak their value with unit after the knob settles. They were inadvertently excluded from the announcement domain list despite being a fully supported active domain.
