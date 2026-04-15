@@ -4,7 +4,7 @@ title: Custom Automations
 permalink: /automations/
 ---
 
-Because Pivot fires events on every interaction, you can trigger your own automations in response to any dial turn or button press — like adjusting colour temperature, running a shell command, or firing a scene. Each example below includes an importable blueprint and a raw YAML version.
+Because Pivot fires events on every interaction, you can trigger your own automations in response to any dial turn or button press. Each example below includes an importable blueprint and a raw YAML version.
 
 Pivot events carry enough context to let automations be as specific or as broad as you need:
 
@@ -20,120 +20,17 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 | Automation | What it does |
 |---|---|
+| [Colour temperature control](#colour-temperature-control) | Dial adjusts light warmth via an input_number helper, press toggles |
 | [Button press with configurable action](#button-press-with-configurable-action) | Run any action on button press, optionally filtered by assigned entity |
-| [Colour temperature control](#colour-temperature-control-via-input_number) | Dial adjusts light warmth via an input_number helper, press toggles |
 | [Light brightness and toggle](#light-brightness-and-toggle) | Dial sets brightness, press toggles on/off |
 
 ---
 
-## Button press with configurable action
+## Colour temperature control
 
-Fires a configurable action when a specific bank's button is pressed, but only when a particular entity is assigned to that bank. Useful for stacking extra behaviour on top of the built-in toggle — for example, triggering a play/pause shell command when a media volume helper is assigned.
+Lights with adjustable colour temperature (warm to cool white) can't be directly assigned as a bank entity because Pivot expects a 0–100 value range. The workaround is to assign an `input_number` helper to the bank instead — the dial adjusts the helper, and this automation translates that 0–100 value into the correct colour temperature for your specific light.
 
-#### Blueprint
-
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-button-press-action.yaml)
-
-{% raw %}
-```yaml
-blueprint:
-  name: Pivot - Button Press Action
-  description: >
-    Run a configurable action on button press for a specific Pivot device and bank,
-    with an optional check that a particular entity is assigned to that bank.
-  domain: automation
-  input:
-    suffix:
-      name: Device suffix
-      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
-      selector:
-        text: {}
-    bank:
-      name: Bank number
-      description: The bank number to listen on (1–4)
-      selector:
-        number:
-          min: 1
-          max: 4
-          mode: box
-    press_type:
-      name: Press type
-      description: Which press type triggers the action
-      default: single_press
-      selector:
-        select:
-          options:
-            - single_press
-            - double_press
-            - triple_press
-            - long_press
-    assigned_entity:
-      name: Assigned entity (optional)
-      description: >
-        Only fire the action if this entity is currently assigned to the bank.
-        Leave blank to fire regardless of what is assigned.
-      default: ""
-      selector:
-        text: {}
-    action:
-      name: Action
-      description: Action to run when the button is pressed
-      selector:
-        action: {}
-
-triggers:
-  - trigger: event
-    event_type: pivot_button_press
-    event_data:
-      suffix: !input suffix
-      bank: !input bank
-      press_type: !input press_type
-
-conditions:
-  - condition: template
-    value_template: >
-      {% set entity = 'text.' ~ suffix ~ '_bank_' ~ bank ~ '_entity' %}
-      {% set assigned = assigned_entity %}
-      {{ assigned == '' or states(entity) == assigned }}
-
-actions:
-  - sequence: !input action
-
-mode: single
-```
-{% endraw %}
-
-#### Raw automation example
-
-{% raw %}
-```yaml
-alias: Pivot - Computer Play/Pause
-
-triggers:
-  - trigger: event
-    event_type: pivot_button_press
-    event_data:
-      suffix: ha_voice_lounge
-      bank: 1
-      press_type: single_press
-
-conditions:
-  - condition: template
-    value_template: >
-      {{ states('text.ha_voice_lounge_bank_1_entity') == 'input_number.computer_volume' }}
-
-actions:
-  - action: shell_command.music_playpause
-
-mode: single
-```
-{% endraw %}
-
----
-
-## Colour temperature control via input_number
-
-Uses an `input_number` helper as the bank entity so the dial adjusts the colour temperature of a light. A single press toggles the light. The dial position stays in sync if the light is changed from elsewhere.
+The automation also keeps the helper in sync if the light's temperature is changed from elsewhere (e.g. via the HA UI or another automation), so the dial position always reflects the current state.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to the bank on your device.
 
@@ -302,9 +199,118 @@ mode: single
 
 ---
 
+## Button press with configurable action
+
+The built-in bank toggle handles turning entities on and off, but sometimes a button press should do something extra — like triggering play/pause on your computer when the bank is controlling system volume, or running a scene when a specific entity is active.
+
+This automation fires any action you choose on button press, with an optional check that a particular entity is currently assigned to the bank. That check is what makes it context-aware: reassign the bank to something else and the automation automatically stops firing.
+
+#### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-button-press-action.yaml)
+
+{% raw %}
+```yaml
+blueprint:
+  name: Pivot - Button Press Action
+  description: >
+    Run a configurable action on button press for a specific Pivot device and bank,
+    with an optional check that a particular entity is assigned to that bank.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    press_type:
+      name: Press type
+      description: Which press type triggers the action
+      default: single_press
+      selector:
+        select:
+          options:
+            - single_press
+            - double_press
+            - triple_press
+            - long_press
+    assigned_entity:
+      name: Assigned entity (optional)
+      description: >
+        Only fire the action if this entity is currently assigned to the bank.
+        Leave blank to fire regardless of what is assigned.
+      default: ""
+      selector:
+        text: {}
+    action:
+      name: Action
+      description: Action to run when the button is pressed
+      selector:
+        action: {}
+
+triggers:
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: !input press_type
+
+conditions:
+  - condition: template
+    value_template: >
+      {% set entity = 'text.' ~ suffix ~ '_bank_' ~ bank ~ '_entity' %}
+      {% set assigned = assigned_entity %}
+      {{ assigned == '' or states(entity) == assigned }}
+
+actions:
+  - sequence: !input action
+
+mode: single
+```
+{% endraw %}
+
+#### Raw automation example
+
+{% raw %}
+```yaml
+alias: Pivot - Computer Play/Pause
+
+triggers:
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: ha_voice_lounge
+      bank: 1
+      press_type: single_press
+
+conditions:
+  - condition: template
+    value_template: >
+      {{ states('text.ha_voice_lounge_bank_1_entity') == 'input_number.computer_volume' }}
+
+actions:
+  - action: shell_command.music_playpause
+
+mode: single
+```
+{% endraw %}
+
+---
+
 ## Light brightness and toggle
 
-Controls a light's brightness with the dial and toggles it with a single press.
+The simplest custom automation pattern — the dial controls a light's brightness directly and a single press toggles it. Useful if you want more precise brightness control than Pivot's built-in toggle provides, or if you're using a bank for a light that isn't directly assignable (e.g. a light group).
+
+Unlike the colour temperature example, this one uses the raw `pivot_knob_turn` event directly rather than going via an `input_number` helper — the dial value is passed straight through as a brightness percentage.
 
 #### Blueprint
 
