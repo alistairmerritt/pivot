@@ -12,7 +12,7 @@ This guide walks you through everything needed to get Pivot running on a Home As
 
 - A Home Assistant Voice Preview Edition (VPE)
 - Home Assistant with the ESPHome integration installed
-- The ESPHome application installed in Home Assistant
+- The **ESPHome Device Builder add-on version 2026.4.0 or later** installed in Home Assistant
 - HACS installed in Home Assistant
 - Your WiFi credentials
 

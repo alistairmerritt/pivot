@@ -171,6 +171,8 @@ Pivot firmware communicates with Home Assistant over the standard ESPHome API on
 
 ## Flashing
 
+> **Requires ESPHome Device Builder 2026.4.0 or later.** Pivot firmware depends on components that were merged into ESPHome core in the 2026.4.0 release. Older versions will fail to compile with a confusing error. Update the ESPHome Device Builder add-on before flashing.
+
 The easiest way to flash is using the **ESPHome Device Builder application** (formerly called the ESPHome add-on). Install it via **Settings → Applications → Add Application** and search for ESPHome Device Builder.
 
 **Taking control of your VPE in ESPHome Device Builder**
