@@ -20,7 +20,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 | Automation | What it does |
 |---|---|
-| [Colour temperature control](#colour-temperature) | Dial adjusts light warmth, press toggles on/off |
+| [Colour control](#colour-temperature) | Dial adjusts colour temperature or hue, press toggles on/off |
 | [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer |
 | [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial scrolls through lighting scenes |
@@ -28,13 +28,12 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 ---
 
-## Colour temperature control — dial adjusts warmth, press toggles light
+## Colour control — dial adjusts colour temperature or hue, press toggles light
 {: #colour-temperature}
 
-Assigning a light directly to a bank gives you brightness control — the 0–100 dial value maps to brightness percentage. To control colour temperature instead, assign an `input_number` helper to the bank and use this automation to translate that 0–100 value into the correct kelvin for your specific light.
+Assigning a light directly to a bank gives you brightness control. This automation lets you use the dial for colour instead — either colour temperature (cool to warm) or hue (sweeping through the colour wheel at full saturation). Choose the mode when setting up the blueprint.
 
-
-The automation also keeps the helper in sync if the light's temperature is changed from elsewhere (e.g. via the HA UI or another automation), so the dial position always reflects the current state.
+Assign an `input_number` helper (range 0–100) to the bank. The automation translates the dial position into the appropriate colour value for your light, and keeps the helper in sync if the light is changed from elsewhere.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to the bank on your device.
 
@@ -45,9 +44,9 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 {% raw %}
 ```yaml
 blueprint:
-  name: Pivot - Colour Temperature Control
+  name: Pivot - Colour Control
   description: >
-    Control a light's colour temperature with the Pivot dial via an input_number helper.
+    Control a light's colour temperature or hue with the Pivot dial via an input_number helper.
     Single press toggles the light. Dial position stays in sync with the light.
   domain: automation
   input:
@@ -76,6 +75,19 @@ blueprint:
       selector:
         entity:
           domain: light
+    control_mode:
+      name: Control mode
+      description: >
+        Colour temperature adjusts warmth (cool to warm).
+        Hue sweeps through the colour wheel at full saturation.
+      default: colour_temperature
+      selector:
+        select:
+          options:
+            - label: Colour temperature
+              value: colour_temperature
+            - label: Hue
+              value: hue
 
 triggers:
   - trigger: state
@@ -96,6 +108,7 @@ actions:
   - variables:
       light_entity: !input light_entity
       input_number_entity: !input input_number_entity
+      control_mode: !input control_mode
       percent: "{{ states(input_number_entity) | float(0) }}"
       min_mired: "{{ state_attr(light_entity, 'min_mireds') | float(153) }}"
       max_mired: "{{ state_attr(light_entity, 'max_mireds') | float(500) }}"
@@ -103,18 +116,36 @@ actions:
         {{ (1000000 / ((min_mired | int) + ((percent / 100) * ((max_mired | int)
         - (min_mired | int))))) | round(0) | int }}
       current_mired: "{{ state_attr(light_entity, 'color_temp') | float(0) }}"
-      sync_percent: >-
+      sync_percent_ct: >-
         {{ (((current_mired - min_mired) / (max_mired - min_mired)) * 100) | round(0) }}
+      target_hue: "{{ (percent / 100 * 360) | int }}"
+      current_hue: "{{ (state_attr(light_entity, 'hs_color') | default([0, 0]))[0] | float(0) }}"
+      sync_percent_hue: "{{ (current_hue / 360 * 100) | round(0) }}"
   - choose:
       - conditions:
           - condition: trigger
             id: dial
+          - condition: template
+            value_template: "{{ control_mode == 'colour_temperature' }}"
         sequence:
           - action: light.turn_on
             target:
               entity_id: !input light_entity
             data:
               color_temp_kelvin: "{{ target_kelvin | int }}"
+      - conditions:
+          - condition: trigger
+            id: dial
+          - condition: template
+            value_template: "{{ control_mode == 'hue' }}"
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: !input light_entity
+            data:
+              hs_color:
+                - "{{ target_hue }}"
+                - 100
       - conditions:
           - condition: trigger
             id: press
@@ -126,19 +157,32 @@ actions:
           - condition: trigger
             id: sync
           - condition: template
-            value_template: "{{ current_mired > 0 and max_mired > min_mired }}"
+            value_template: "{{ control_mode == 'colour_temperature' and current_mired > 0 and max_mired > min_mired }}"
         sequence:
           - action: input_number.set_value
             target:
               entity_id: !input input_number_entity
             data:
-              value: "{{ [[sync_percent, 0] | max, 100] | min }}"
+              value: "{{ [[sync_percent_ct, 0] | max, 100] | min }}"
+      - conditions:
+          - condition: trigger
+            id: sync
+          - condition: template
+            value_template: "{{ control_mode == 'hue' and state_attr(light_entity, 'hs_color') is not none }}"
+        sequence:
+          - action: input_number.set_value
+            target:
+              entity_id: !input input_number_entity
+            data:
+              value: "{{ [[sync_percent_hue, 0] | max, 100] | min }}"
 
 mode: single
 ```
 {% endraw %}
 
-#### Raw automation example
+#### Raw automation examples
+
+**Colour temperature:**
 
 {% raw %}
 ```yaml
@@ -168,7 +212,7 @@ actions:
         {{ (1000000 / ((min_mired | int) + ((percent / 100) * ((max_mired | int)
         - (min_mired | int))))) | round(0) | int }}
       current_mired: "{{ state_attr('light.study_lamp', 'color_temp') | float(0) }}"
-      sync_percent: >-
+      sync_percent_ct: >-
         {{ (((current_mired - min_mired) / (max_mired - min_mired)) * 100) | round(0) }}
   - choose:
       - conditions:
@@ -197,7 +241,69 @@ actions:
             target:
               entity_id: input_number.study_lamp_warmth
             data:
-              value: "{{ [[sync_percent, 0] | max, 100] | min }}"
+              value: "{{ [[sync_percent_ct, 0] | max, 100] | min }}"
+
+mode: single
+```
+{% endraw %}
+
+**Hue:**
+
+{% raw %}
+```yaml
+alias: Pivot - Desk Light Hue
+
+triggers:
+  - trigger: state
+    entity_id: input_number.desk_light_hue
+    id: dial
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: ha_voice_lounge
+      bank: 3
+      press_type: single_press
+    id: press
+  - trigger: state
+    entity_id: light.desk_light
+    id: sync
+
+actions:
+  - variables:
+      percent: "{{ states('input_number.desk_light_hue') | float(0) }}"
+      target_hue: "{{ (percent / 100 * 360) | int }}"
+      current_hue: "{{ (state_attr('light.desk_light', 'hs_color') | default([0, 0]))[0] | float(0) }}"
+      sync_percent_hue: "{{ (current_hue / 360 * 100) | round(0) }}"
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: dial
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.desk_light
+            data:
+              hs_color:
+                - "{{ target_hue }}"
+                - 100
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: light.toggle
+            target:
+              entity_id: light.desk_light
+      - conditions:
+          - condition: trigger
+            id: sync
+          - condition: template
+            value_template: "{{ state_attr('light.desk_light', 'hs_color') is not none }}"
+        sequence:
+          - action: input_number.set_value
+            target:
+              entity_id: input_number.desk_light_hue
+            data:
+              value: "{{ [[sync_percent_hue, 0] | max, 100] | min }}"
 
 mode: single
 ```
