@@ -24,6 +24,8 @@ Fires a configurable action when a specific bank's button is pressed, but only w
 
 #### Blueprint
 
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-button-press-action.yaml)
+
 ```yaml
 blueprint:
   name: Pivot - Button Press Action
@@ -126,6 +128,8 @@ Uses an `input_number` helper as the bank entity so the dial adjusts the colour 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to the bank on your device.
 
 #### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-colour-temperature.yaml)
 
 ```yaml
 blueprint:
@@ -291,6 +295,8 @@ mode: single
 Controls a light's brightness with the dial and toggles it with a single press.
 
 #### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-light-brightness.yaml)
 
 ```yaml
 blueprint:

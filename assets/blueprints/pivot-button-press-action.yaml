@@ -1,0 +1,66 @@
+blueprint:
+  name: Pivot - Button Press Action
+  description: >
+    Run a configurable action on button press for a specific Pivot device and bank,
+    with an optional check that a particular entity is assigned to that bank.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    press_type:
+      name: Press type
+      description: Which press type triggers the action
+      default: single_press
+      selector:
+        select:
+          options:
+            - single_press
+            - double_press
+            - triple_press
+            - long_press
+    assigned_entity:
+      name: Assigned entity (optional)
+      description: >
+        Only fire the action if this entity is currently assigned to the bank.
+        Leave blank to fire regardless of what is assigned.
+      default: ""
+      selector:
+        text: {}
+    action:
+      name: Action
+      description: Action to run when the button is pressed
+      selector:
+        action: {}
+
+triggers:
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: !input press_type
+
+conditions:
+  - condition: template
+    value_template: >
+      {% set suffix = suffix %}
+      {% set bank = bank %}
+      {% set entity = 'text.' ~ suffix ~ '_bank_' ~ bank ~ '_entity' %}
+      {% set assigned = assigned_entity %}
+      {{ assigned == '' or states(entity) == assigned }}
+
+actions:
+  - sequence: !input action
+
+mode: single
