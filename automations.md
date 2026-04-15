@@ -22,9 +22,9 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 |---|---|
 | [Colour temperature control](#colour-temperature) | Dial adjusts light warmth via an input_number helper, press toggles |
 | [Button press with configurable action](#button-press-action) | Run any action on button press, optionally filtered by assigned entity |
-| [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off |
 | [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial scrolls through up to four scenes |
+| [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off |
 
 ---
 
@@ -313,130 +313,6 @@ mode: single
 
 ---
 
-## Light brightness and toggle — dial sets brightness, press toggles on/off
-{: #light-brightness}
-
-The simplest custom automation pattern — the dial controls a light's brightness directly and a single press toggles it. Useful if you want more precise brightness control than Pivot's built-in toggle provides, or if you're using a bank for a light that isn't directly assignable (e.g. a light group).
-
-Unlike the colour temperature example, this one uses the raw `pivot_knob_turn` event directly rather than going via an `input_number` helper — the dial value is passed straight through as a brightness percentage.
-
-#### Blueprint
-
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-light-brightness.yaml)
-
-{% raw %}
-```yaml
-blueprint:
-  name: Pivot - Light Brightness & Toggle
-  description: >
-    Control a light's brightness with the Pivot dial. Single press toggles the light on/off.
-  domain: automation
-  input:
-    suffix:
-      name: Device suffix
-      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
-      selector:
-        text: {}
-    bank:
-      name: Bank number
-      description: The bank number to listen on (1–4)
-      selector:
-        number:
-          min: 1
-          max: 4
-          mode: box
-    light_entity:
-      name: Light
-      description: The light to control
-      selector:
-        entity:
-          domain: light
-
-triggers:
-  - trigger: event
-    event_type: pivot_knob_turn
-    event_data:
-      suffix: !input suffix
-      bank: !input bank
-    id: knob
-  - trigger: event
-    event_type: pivot_button_press
-    event_data:
-      suffix: !input suffix
-      bank: !input bank
-      press_type: single_press
-    id: press
-
-actions:
-  - choose:
-      - conditions:
-          - condition: trigger
-            id: knob
-        sequence:
-          - action: light.turn_on
-            target:
-              entity_id: !input light_entity
-            data:
-              brightness_pct: "{{ trigger.event.data.value }}"
-      - conditions:
-          - condition: trigger
-            id: press
-        sequence:
-          - action: light.toggle
-            target:
-              entity_id: !input light_entity
-
-mode: single
-```
-{% endraw %}
-
-#### Raw automation example
-
-{% raw %}
-```yaml
-alias: Pivot - Living Room Brightness
-
-triggers:
-  - trigger: event
-    event_type: pivot_knob_turn
-    event_data:
-      suffix: ha_voice_lounge
-      bank: 1
-
-actions:
-  - action: light.turn_on
-    target:
-      entity_id: light.living_room
-    data:
-      brightness_pct: "{{ trigger.event.data.value }}"
-
-mode: single
-```
-{% endraw %}
-
-{% raw %}
-```yaml
-alias: Pivot - Living Room Toggle
-
-triggers:
-  - trigger: event
-    event_type: pivot_button_press
-    event_data:
-      suffix: ha_voice_lounge
-      bank: 1
-      press_type: single_press
-
-actions:
-  - action: light.toggle
-    target:
-      entity_id: light.living_room
-
-mode: single
-```
-{% endraw %}
-
----
-
 ## Media player volume and power toggle — dial controls volume, press toggles TV on/off
 {: #media-player-tv}
 
@@ -695,6 +571,132 @@ actions:
       - action: scene.turn_on
         target:
           entity_id: scene.focus
+
+mode: single
+```
+{% endraw %}
+
+> **How it works:** The `input_number` helper is what you assign to the bank. The dial updates its value, which triggers this automation. Scenes fire on every dial tick as you scrub, so sweeping quickly across all four bands will briefly hit each scene — only the position where you stop matters in practice. The `default:` block handles the 75–100 band without needing a fourth explicit condition.
+
+---
+
+## Light brightness and toggle — dial sets brightness, press toggles on/off
+{: #light-brightness}
+
+The simplest custom automation pattern — the dial controls a light's brightness directly and a single press toggles it. Useful if you want more precise brightness control than Pivot's built-in toggle provides, or if you're using a bank for a light that isn't directly assignable (e.g. a light group).
+
+Unlike the colour temperature example, this one uses the raw `pivot_knob_turn` event directly rather than going via an `input_number` helper — the dial value is passed straight through as a brightness percentage.
+
+#### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-light-brightness.yaml)
+
+{% raw %}
+```yaml
+blueprint:
+  name: Pivot - Light Brightness & Toggle
+  description: >
+    Control a light's brightness with the Pivot dial. Single press toggles the light on/off.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    light_entity:
+      name: Light
+      description: The light to control
+      selector:
+        entity:
+          domain: light
+
+triggers:
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+    id: knob
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: single_press
+    id: press
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: knob
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: !input light_entity
+            data:
+              brightness_pct: "{{ trigger.event.data.value }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: light.toggle
+            target:
+              entity_id: !input light_entity
+
+mode: single
+```
+{% endraw %}
+
+#### Raw automation example
+
+{% raw %}
+```yaml
+alias: Pivot - Living Room Brightness
+
+triggers:
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: ha_voice_lounge
+      bank: 1
+
+actions:
+  - action: light.turn_on
+    target:
+      entity_id: light.living_room
+    data:
+      brightness_pct: "{{ trigger.event.data.value }}"
+
+mode: single
+```
+{% endraw %}
+
+{% raw %}
+```yaml
+alias: Pivot - Living Room Toggle
+
+triggers:
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: ha_voice_lounge
+      bank: 1
+      press_type: single_press
+
+actions:
+  - action: light.toggle
+    target:
+      entity_id: light.living_room
 
 mode: single
 ```
