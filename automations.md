@@ -18,6 +18,14 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 ---
 
+| Automation | What it does |
+|---|---|
+| [Button press with configurable action](#button-press-with-configurable-action) | Run any action on button press, optionally filtered by assigned entity |
+| [Colour temperature control](#colour-temperature-control-via-input_number) | Dial adjusts light warmth via an input_number helper, press toggles |
+| [Light brightness and toggle](#light-brightness-and-toggle) | Dial sets brightness, press toggles on/off |
+
+---
+
 ## Button press with configurable action
 
 Fires a configurable action when a specific bank's button is pressed, but only when a particular entity is assigned to that bank. Useful for stacking extra behaviour on top of the built-in toggle — for example, triggering a play/pause shell command when a media volume helper is assigned.
