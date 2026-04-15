@@ -280,6 +280,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.20
+- **Fix:** Updated component pins for ESPHome 2026.4.0 compatibility. `audio`, `media_player`, `mdns`, `file`, and `speaker_source` components are now merged into ESPHome core and no longer pinned externally. `sendspin`, `media_source`, and `const` are now sourced from the updated PR #14933. `http_request` pin updated to the current PR #12429 commit. Audio pipeline migrated to the new `audio_file` platform and updated `speaker_source` pipeline API. No functional changes.
+
 ### v0.0.19
 - **Breaking change:** Bank entity ID subscriptions updated from 0-based (`bank_0_*`) to 1-based (`bank_1_*` through `bank_4_*`) to match integration v0.0.75. Must be updated together with the integration — the two are not compatible across this change.
 
