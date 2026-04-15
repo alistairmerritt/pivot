@@ -26,9 +26,9 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 ---
 
-## Colour temperature control — dial adjusts warmth, press toggles
+## Colour temperature control — dial adjusts warmth, press toggles light
 
-Lights with adjustable colour temperature (warm to cool white) can't be directly assigned as a bank entity because Pivot expects a 0–100 value range. The workaround is to assign an `input_number` helper to the bank instead — the dial adjusts the helper, and this automation translates that 0–100 value into the correct colour temperature for your specific light.
+Lights with adjustable colour temperature (warm to cool white) can't be directly assigned as a bank entity because Pivot expects a 0–100 value range, which is mapped to brightness by default. The workaround is to assign an `input_number` helper to the bank instead — the dial adjusts the helper, and this automation translates that 0–100 value into the correct colour temperature for your specific light.
 
 The automation also keeps the helper in sync if the light's temperature is changed from elsewhere (e.g. via the HA UI or another automation), so the dial position always reflects the current state.
 
@@ -199,7 +199,7 @@ mode: single
 
 ---
 
-## Button press with configurable action — e.g. control volume, press to play/pause
+## Button press with configurable action — e.g. dial controls volume, press to play/pause media
 
 The built-in bank toggle handles turning entities on and off, but sometimes a button press should do something extra — like triggering play/pause on your computer when the bank is controlling system volume, or running a scene when a specific entity is active.
 
