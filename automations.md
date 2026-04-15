@@ -34,6 +34,7 @@ Fires a configurable action when a specific bank's button is pressed, but only w
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-button-press-action.yaml)
 
+{% raw %}
 ```yaml
 blueprint:
   name: Pivot - Button Press Action
@@ -100,6 +101,7 @@ actions:
 
 mode: single
 ```
+{% endraw %}
 
 #### Raw automation example
 
@@ -139,6 +141,7 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-colour-temperature.yaml)
 
+{% raw %}
 ```yaml
 blueprint:
   name: Pivot - Colour Temperature Control
@@ -230,6 +233,7 @@ actions:
 
 mode: single
 ```
+{% endraw %}
 
 #### Raw automation example
 
@@ -306,6 +310,7 @@ Controls a light's brightness with the dial and toggles it with a single press.
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-light-brightness.yaml)
 
+{% raw %}
 ```yaml
 blueprint:
   name: Pivot - Light Brightness & Toggle
@@ -369,6 +374,7 @@ actions:
 
 mode: single
 ```
+{% endraw %}
 
 #### Raw automation example
 
