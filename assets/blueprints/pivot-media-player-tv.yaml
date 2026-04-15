@@ -1,9 +1,9 @@
 blueprint:
   name: Pivot - Media Player Volume & Power Toggle
   description: >
-    Control a media player's volume with the Pivot dial and toggle power on single press.
-    Designed for TVs where you want the dial to set volume and a press to turn the TV on or off.
-    Leave the bank entity unassigned so the button press has no built-in behaviour to conflict with.
+    Control a TV's volume with the Pivot dial and toggle power on single press.
+    Assign your TV entity to the bank as normal. Single press will toggle power alongside
+    the native play/pause — in practice the play/pause is harmless for a TV entity.
   domain: automation
   input:
     suffix:

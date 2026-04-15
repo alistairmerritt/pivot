@@ -439,9 +439,9 @@ mode: single
 ## Media player volume and power toggle — dial controls volume, press toggles TV on/off
 {: #media-player-tv}
 
-When a media player is assigned to a bank, Pivot controls volume with the dial and fires play/pause on a single press. For a TV this isn't ideal — you usually want the button to turn the TV on or off, not pause playback.
+When a media player is assigned to a bank, Pivot controls volume with the dial and fires play/pause on a single press. For a TV, play/pause on the TV's own media player entity is rarely what you want — if you're assigning a TV to a bank, you're almost certainly after power control. This automation adds that: assign your TV to the bank as normal, and single press will toggle power in addition to the native play/pause. In practice the play/pause is harmless — if the TV is turning off it doesn't matter, and if it's turning on it's typically ignored.
 
-This automation handles both in one place: the dial sets volume and the button toggles power. Because the automation listens on `pivot_knob_turn` and `pivot_button_press` directly, leave the bank entity **unassigned** — this ensures the button press has no built-in behaviour to conflict with.
+If you do use the TV's built-in streaming apps and want play/pause separately, assign that streaming device to a different bank instead.
 
 #### Blueprint
 
