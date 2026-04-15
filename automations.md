@@ -23,7 +23,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | [Colour control](#colour-temperature) | Dial adjusts colour temperature or hue, press toggles on/off |
 | [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer |
 | [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
-| [Scene scrubbing](#scene-scrubbing) | Dial scrolls through lighting scenes |
+| [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
 | [Sensor gauge](#sensor-gauge) | Display any sensor value on the dial — e.g. fuel level, battery, tank |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
 
@@ -51,6 +51,7 @@ blueprint:
   description: >
     Control a light's colour temperature or hue with the Pivot dial via an input_number helper.
     Single press toggles the light. Dial position stays in sync with the light.
+    In hue mode, optionally syncs the LED ring colour to match the light.
   domain: automation
   input:
     suffix:
@@ -120,6 +121,9 @@ actions:
       light_entity: !input light_entity
       input_number_entity: !input input_number_entity
       control_mode: !input control_mode
+      sync_ring_colour: !input sync_ring_colour
+      suffix_var: !input suffix
+      bank_var: !input bank
       percent: "{{ states(input_number_entity) | float(0) }}"
       min_mired: "{{ state_attr(light_entity, 'min_mireds') | float(153) }}"
       max_mired: "{{ state_attr(light_entity, 'max_mireds') | float(500) }}"
@@ -132,12 +136,36 @@ actions:
       target_hue: "{{ (percent / 100 * 360) | int }}"
       current_hue: "{{ (state_attr(light_entity, 'hs_color') | default([0, 0]))[0] | float(0) }}"
       sync_percent_hue: "{{ (current_hue / 360 * 100) | round(0) }}"
+      target_hex: >-
+        {% set h = (percent / 100 * 360) | float %}
+        {% set ns = namespace(r=0.0, g=0.0, b=0.0) %}
+        {% set x = 1.0 - ((h / 60.0) % 2.0 - 1.0) | abs %}
+        {% if h < 60 %}{% set ns.r = 1.0 %}{% set ns.g = x %}
+        {% elif h < 120 %}{% set ns.r = x %}{% set ns.g = 1.0 %}
+        {% elif h < 180 %}{% set ns.g = 1.0 %}{% set ns.b = x %}
+        {% elif h < 240 %}{% set ns.g = x %}{% set ns.b = 1.0 %}
+        {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
+        {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
+        {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
+      current_hex: >-
+        {% set h = (state_attr(light_entity, 'hs_color') | default([0, 0]))[0] | float %}
+        {% set ns = namespace(r=0.0, g=0.0, b=0.0) %}
+        {% set x = 1.0 - ((h / 60.0) % 2.0 - 1.0) | abs %}
+        {% if h < 60 %}{% set ns.r = 1.0 %}{% set ns.g = x %}
+        {% elif h < 120 %}{% set ns.r = x %}{% set ns.g = 1.0 %}
+        {% elif h < 180 %}{% set ns.g = 1.0 %}{% set ns.b = x %}
+        {% elif h < 240 %}{% set ns.g = x %}{% set ns.b = 1.0 %}
+        {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
+        {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
+        {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
   - choose:
       - conditions:
           - condition: trigger
             id: dial
           - condition: template
             value_template: "{{ control_mode == 'colour_temperature' }}"
+          - condition: template
+            value_template: "{{ (trigger.to_state.state | float | round(0) | int) != (sync_percent_ct | round(0) | int) }}"
         sequence:
           - action: light.turn_on
             target:
@@ -149,6 +177,8 @@ actions:
             id: dial
           - condition: template
             value_template: "{{ control_mode == 'hue' }}"
+          - condition: template
+            value_template: "{{ (trigger.to_state.state | float | round(0) | int) != (sync_percent_hue | round(0) | int) }}"
         sequence:
           - action: light.turn_on
             target:
@@ -157,6 +187,20 @@ actions:
               hs_color:
                 - "{{ target_hue }}"
                 - 100
+          - if:
+              - condition: template
+                value_template: "{{ sync_ring_colour }}"
+            then:
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+                data:
+                  value: "{{ target_hex }}"
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+                data:
+                  value: "{{ target_hex }}"
       - conditions:
           - condition: trigger
             id: press
@@ -186,6 +230,20 @@ actions:
               entity_id: !input input_number_entity
             data:
               value: "{{ [[sync_percent_hue, 0] | max, 100] | min }}"
+          - if:
+              - condition: template
+                value_template: "{{ sync_ring_colour }}"
+            then:
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+                data:
+                  value: "{{ current_hex }}"
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+                data:
+                  value: "{{ current_hex }}"
 
 mode: single
 ```
@@ -229,6 +287,8 @@ actions:
       - conditions:
           - condition: trigger
             id: dial
+          - condition: template
+            value_template: "{{ (trigger.to_state.state | float | round(0) | int) != (sync_percent_ct | round(0) | int) }}"
         sequence:
           - action: light.turn_on
             target:
@@ -285,10 +345,34 @@ actions:
       target_hue: "{{ (percent / 100 * 360) | int }}"
       current_hue: "{{ (state_attr('light.desk_light', 'hs_color') | default([0, 0]))[0] | float(0) }}"
       sync_percent_hue: "{{ (current_hue / 360 * 100) | round(0) }}"
+      target_hex: >-
+        {% set h = (percent / 100 * 360) | float %}
+        {% set ns = namespace(r=0.0, g=0.0, b=0.0) %}
+        {% set x = 1.0 - ((h / 60.0) % 2.0 - 1.0) | abs %}
+        {% if h < 60 %}{% set ns.r = 1.0 %}{% set ns.g = x %}
+        {% elif h < 120 %}{% set ns.r = x %}{% set ns.g = 1.0 %}
+        {% elif h < 180 %}{% set ns.g = 1.0 %}{% set ns.b = x %}
+        {% elif h < 240 %}{% set ns.g = x %}{% set ns.b = 1.0 %}
+        {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
+        {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
+        {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
+      current_hex: >-
+        {% set h = current_hue %}
+        {% set ns = namespace(r=0.0, g=0.0, b=0.0) %}
+        {% set x = 1.0 - ((h / 60.0) % 2.0 - 1.0) | abs %}
+        {% if h < 60 %}{% set ns.r = 1.0 %}{% set ns.g = x %}
+        {% elif h < 120 %}{% set ns.r = x %}{% set ns.g = 1.0 %}
+        {% elif h < 180 %}{% set ns.g = 1.0 %}{% set ns.b = x %}
+        {% elif h < 240 %}{% set ns.g = x %}{% set ns.b = 1.0 %}
+        {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
+        {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
+        {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
   - choose:
       - conditions:
           - condition: trigger
             id: dial
+          - condition: template
+            value_template: "{{ (trigger.to_state.state | float | round(0) | int) != (sync_percent_hue | round(0) | int) }}"
         sequence:
           - action: light.turn_on
             target:
@@ -297,6 +381,16 @@ actions:
               hs_color:
                 - "{{ target_hue }}"
                 - 100
+          - action: text.set_value
+            target:
+              entity_id: text.ha_voice_lounge_bank_3_color
+            data:
+              value: "{{ target_hex }}"
+          - action: text.set_value
+            target:
+              entity_id: text.ha_voice_lounge_bank_3_configured_color
+            data:
+              value: "{{ target_hex }}"
       - conditions:
           - condition: trigger
             id: press
@@ -315,6 +409,16 @@ actions:
               entity_id: input_number.desk_light_hue
             data:
               value: "{{ [[sync_percent_hue, 0] | max, 100] | min }}"
+          - action: text.set_value
+            target:
+              entity_id: text.ha_voice_lounge_bank_3_color
+            data:
+              value: "{{ current_hex }}"
+          - action: text.set_value
+            target:
+              entity_id: text.ha_voice_lounge_bank_3_configured_color
+            data:
+              value: "{{ current_hex }}"
 
 mode: single
 ```
@@ -448,9 +552,9 @@ If you want separate play/pause control for streaming apps, it is best to assign
 blueprint:
   name: Pivot - Media Player Volume & Power Toggle
   description: >
-    Control a media player's volume with the Pivot dial and toggle power on single press.
-    Designed for TVs where you want the dial to set volume and a press to turn the TV on or off.
-    Leave the bank entity unassigned so the button press has no built-in behaviour to conflict with.
+    Control a TV's volume with the Pivot dial and toggle power on single press.
+    Assign your TV entity to the bank as normal. Single press will toggle power alongside
+    the native play/pause — in practice the play/pause is harmless for a TV entity.
   domain: automation
   input:
     suffix:
@@ -557,12 +661,12 @@ mode: single
 
 ---
 
-## Scene scrubbing — dial scrolls through scenes
+## Scene scrubbing — dial previews scenes, press activates
 {: #scene-scrubbing}
 
-A useful pattern for rooms where you have a handful of lighting presets. Divides the dial's 0–100 range into four equal bands and activates a different scene in each. The dial behaves like a scene selector rather than a continuous control.
+A useful pattern for rooms where you have a handful of lighting presets. Divide the dial's 0–100 range into four equal bands, each mapped to a different scene. As you turn the dial the LED ring changes colour to preview which scene you're about to select — turn to the one you want, then press to activate it.
 
-For example: 0–25% → Relax, 25–50% → Evening, 50–75% → Bright, 75–100% → Focus.
+For example: 0–25% → Relax (warm amber), 25–50% → Evening (blue), 50–75% → Bright (green), 75–100% → Focus (purple).
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
 
@@ -575,11 +679,24 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 blueprint:
   name: Pivot - Scene Scrubbing
   description: >
-    Map the Pivot dial to scenes. Divides the 0–100 range into four equal bands,
-    each activating a different scene. Assign an input_number helper (range 0–100)
-    to the bank and select a scene for each quarter of the dial.
+    Scrub through up to four scenes with the Pivot dial. The LED ring colour
+    updates as you turn to preview which scene is selected. Press to activate it.
+    Assign an input_number helper (range 0–100) to the bank.
   domain: automation
   input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
     input_number_entity:
       name: Input number helper
       description: The input_number entity assigned to this bank (range 0–100)
@@ -588,62 +705,104 @@ blueprint:
           domain: input_number
     scene_1:
       name: Scene 1 (0–25%)
-      description: Activated when the dial is in the lowest quarter
       selector:
         entity:
           domain: scene
     scene_2:
       name: Scene 2 (25–50%)
-      description: Activated when the dial is in the second quarter
       selector:
         entity:
           domain: scene
     scene_3:
       name: Scene 3 (50–75%)
-      description: Activated when the dial is in the third quarter
       selector:
         entity:
           domain: scene
     scene_4:
       name: Scene 4 (75–100%)
-      description: Activated when the dial is in the highest quarter
       selector:
         entity:
           domain: scene
+    color_1:
+      name: Colour — Scene 1
+      default: [255, 147, 41]
+      selector:
+        color_rgb: {}
+    color_2:
+      name: Colour — Scene 2
+      default: [10, 132, 255]
+      selector:
+        color_rgb: {}
+    color_3:
+      name: Colour — Scene 3
+      default: [48, 209, 88]
+      selector:
+        color_rgb: {}
+    color_4:
+      name: Colour — Scene 4
+      default: [191, 90, 242]
+      selector:
+        color_rgb: {}
 
 triggers:
   - trigger: state
     entity_id: !input input_number_entity
+    id: dial
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: single_press
+    id: press
 
 actions:
   - variables:
-      val: "{{ trigger.to_state.state | float(0) }}"
+      input_number_entity: !input input_number_entity
+      suffix_var: !input suffix
+      bank_var: !input bank
+      scene_1: !input scene_1
+      scene_2: !input scene_2
+      scene_3: !input scene_3
+      scene_4: !input scene_4
+      color_1: !input color_1
+      color_2: !input color_2
+      color_3: !input color_3
+      color_4: !input color_4
+      val: "{{ states(input_number_entity) | float(0) }}"
+      selected_scene: >-
+        {% if val < 25 %}{{ scene_1 }}
+        {% elif val < 50 %}{{ scene_2 }}
+        {% elif val < 75 %}{{ scene_3 }}
+        {% else %}{{ scene_4 }}{% endif %}
+      ring_color: >-
+        {% if val < 25 %}{% set c = color_1 %}
+        {% elif val < 50 %}{% set c = color_2 %}
+        {% elif val < 75 %}{% set c = color_3 %}
+        {% else %}{% set c = color_4 %}{% endif %}
+        {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
   - choose:
       - conditions:
-          - condition: template
-            value_template: "{{ val < 25 }}"
+          - condition: trigger
+            id: dial
         sequence:
-          - action: scene.turn_on
+          - action: text.set_value
             target:
-              entity_id: !input scene_1
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+            data:
+              value: "{{ ring_color }}"
+          - action: text.set_value
+            target:
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+            data:
+              value: "{{ ring_color }}"
       - conditions:
-          - condition: template
-            value_template: "{{ val < 50 }}"
+          - condition: trigger
+            id: press
         sequence:
           - action: scene.turn_on
             target:
-              entity_id: !input scene_2
-      - conditions:
-          - condition: template
-            value_template: "{{ val < 75 }}"
-        sequence:
-          - action: scene.turn_on
-            target:
-              entity_id: !input scene_3
-    default:
-      - action: scene.turn_on
-        target:
-          entity_id: !input scene_4
+              entity_id: "{{ selected_scene }}"
 
 mode: single
 ```
@@ -658,42 +817,56 @@ alias: Pivot - Living Room Scenes
 triggers:
   - trigger: state
     entity_id: input_number.living_room_scene
+    id: dial
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: ha_voice_lounge
+      bank: 1
+      press_type: single_press
+    id: press
 
 actions:
   - variables:
-      val: "{{ trigger.to_state.state | float(0) }}"
+      val: "{{ states('input_number.living_room_scene') | float(0) }}"
+      selected_scene: >-
+        {% if val < 25 %}scene.relax
+        {% elif val < 50 %}scene.evening
+        {% elif val < 75 %}scene.bright
+        {% else %}scene.focus{% endif %}
+      ring_color: >-
+        {% if val < 25 %}#ff9329
+        {% elif val < 50 %}#0a84ff
+        {% elif val < 75 %}#30d158
+        {% else %}#bf5af2{% endif %}
   - choose:
       - conditions:
-          - condition: template
-            value_template: "{{ val < 25 }}"
+          - condition: trigger
+            id: dial
         sequence:
-          - action: scene.turn_on
+          - action: text.set_value
             target:
-              entity_id: scene.relax
+              entity_id: text.ha_voice_lounge_bank_1_color
+            data:
+              value: "{{ ring_color }}"
+          - action: text.set_value
+            target:
+              entity_id: text.ha_voice_lounge_bank_1_configured_color
+            data:
+              value: "{{ ring_color }}"
       - conditions:
-          - condition: template
-            value_template: "{{ val < 50 }}"
+          - condition: trigger
+            id: press
         sequence:
           - action: scene.turn_on
             target:
-              entity_id: scene.evening
-      - conditions:
-          - condition: template
-            value_template: "{{ val < 75 }}"
-        sequence:
-          - action: scene.turn_on
-            target:
-              entity_id: scene.bright
-    default:
-      - action: scene.turn_on
-        target:
-          entity_id: scene.focus
+              entity_id: "{{ selected_scene }}"
 
 mode: single
 ```
 {% endraw %}
 
-> **How it works:** The `input_number` helper is what you assign to the bank. The dial updates its value, which triggers this automation. Scenes fire on every dial tick as you scrub, so sweeping quickly across all four bands will briefly hit each scene — only the position where you stop matters in practice. The `default:` block handles the 75–100 band without needing a fourth explicit condition.
+> **How it works:** The dial updates the `input_number` helper, which triggers this automation. Instead of activating the scene immediately, it writes the preview colour to the LED ring so you can see which scene you're hovering over. When you press, the button event fires and the selected scene activates. The scene is computed at press time from the current dial position, so whatever band you stopped in is what gets activated.
 
 ---
 
