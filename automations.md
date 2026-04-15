@@ -108,7 +108,7 @@ actions:
         sequence:
           - action: light.turn_on
             target:
-              entity_id: "{{ light_entity }}"
+              entity_id: !input light_entity
             data:
               color_temp_kelvin: "{{ target_kelvin | int }}"
       - conditions:
@@ -117,7 +117,7 @@ actions:
         sequence:
           - action: light.toggle
             target:
-              entity_id: "{{ light_entity }}"
+              entity_id: !input light_entity
       - conditions:
           - condition: trigger
             id: sync
@@ -126,7 +126,7 @@ actions:
         sequence:
           - action: input_number.set_value
             target:
-              entity_id: "{{ input_number_entity }}"
+              entity_id: !input input_number_entity
             data:
               value: "{{ [[sync_percent, 0] | max, 100] | min }}"
 
