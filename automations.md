@@ -35,6 +35,8 @@ Assigning a light directly to a bank gives you brightness control. This automati
 
 Assign an `input_number` helper (range 0–100) to the bank. The automation translates the dial position into the appropriate colour value for your light, and keeps the helper in sync if the light is changed from elsewhere.
 
+In hue mode, an optional **Sync LED ring colour** setting will update the LED ring to match the light's current hue — both when the dial is turned and when the light changes externally.
+
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to the bank on your device.
 
 #### Blueprint
@@ -88,6 +90,14 @@ blueprint:
               value: colour_temperature
             - label: Hue
               value: hue
+    sync_ring_colour:
+      name: Sync LED ring colour (hue mode only)
+      description: >
+        When enabled, the LED ring colour updates to match the light's current hue.
+        Has no effect in colour temperature mode.
+      default: false
+      selector:
+        boolean:
 
 triggers:
   - trigger: state

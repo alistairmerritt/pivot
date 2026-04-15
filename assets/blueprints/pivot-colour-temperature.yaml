@@ -3,6 +3,7 @@ blueprint:
   description: >
     Control a light's colour temperature or hue with the Pivot dial via an input_number helper.
     Single press toggles the light. Dial position stays in sync with the light.
+    In hue mode, optionally syncs the LED ring colour to match the light.
   domain: automation
   input:
     suffix:
@@ -43,6 +44,14 @@ blueprint:
               value: colour_temperature
             - label: Hue
               value: hue
+    sync_ring_colour:
+      name: Sync LED ring colour (hue mode only)
+      description: >
+        When enabled, the LED ring colour updates to match the light's current hue.
+        Has no effect in colour temperature mode.
+      default: false
+      selector:
+        boolean:
 
 triggers:
   - trigger: state
@@ -64,6 +73,9 @@ actions:
       light_entity: !input light_entity
       input_number_entity: !input input_number_entity
       control_mode: !input control_mode
+      sync_ring_colour: !input sync_ring_colour
+      suffix_var: !input suffix
+      bank_var: !input bank
       percent: "{{ states(input_number_entity) | float(0) }}"
       min_mired: "{{ state_attr(light_entity, 'min_mireds') | float(153) }}"
       max_mired: "{{ state_attr(light_entity, 'max_mireds') | float(500) }}"
@@ -76,6 +88,28 @@ actions:
       target_hue: "{{ (percent / 100 * 360) | int }}"
       current_hue: "{{ (state_attr(light_entity, 'hs_color') | default([0, 0]))[0] | float(0) }}"
       sync_percent_hue: "{{ (current_hue / 360 * 100) | round(0) }}"
+      target_hex: >-
+        {% set h = (percent / 100 * 360) | float %}
+        {% set ns = namespace(r=0.0, g=0.0, b=0.0) %}
+        {% set x = 1.0 - ((h / 60.0) % 2.0 - 1.0) | abs %}
+        {% if h < 60 %}{% set ns.r = 1.0 %}{% set ns.g = x %}
+        {% elif h < 120 %}{% set ns.r = x %}{% set ns.g = 1.0 %}
+        {% elif h < 180 %}{% set ns.g = 1.0 %}{% set ns.b = x %}
+        {% elif h < 240 %}{% set ns.g = x %}{% set ns.b = 1.0 %}
+        {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
+        {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
+        {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
+      current_hex: >-
+        {% set h = (state_attr(light_entity, 'hs_color') | default([0, 0]))[0] | float %}
+        {% set ns = namespace(r=0.0, g=0.0, b=0.0) %}
+        {% set x = 1.0 - ((h / 60.0) % 2.0 - 1.0) | abs %}
+        {% if h < 60 %}{% set ns.r = 1.0 %}{% set ns.g = x %}
+        {% elif h < 120 %}{% set ns.r = x %}{% set ns.g = 1.0 %}
+        {% elif h < 180 %}{% set ns.g = 1.0 %}{% set ns.b = x %}
+        {% elif h < 240 %}{% set ns.g = x %}{% set ns.b = 1.0 %}
+        {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
+        {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
+        {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
   - choose:
       - conditions:
           - condition: trigger
@@ -101,6 +135,20 @@ actions:
               hs_color:
                 - "{{ target_hue }}"
                 - 100
+          - if:
+              - condition: template
+                value_template: "{{ sync_ring_colour }}"
+            then:
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+                data:
+                  value: "{{ target_hex }}"
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+                data:
+                  value: "{{ target_hex }}"
       - conditions:
           - condition: trigger
             id: press
@@ -130,5 +178,19 @@ actions:
               entity_id: !input input_number_entity
             data:
               value: "{{ [[sync_percent_hue, 0] | max, 100] | min }}"
+          - if:
+              - condition: template
+                value_template: "{{ sync_ring_colour }}"
+            then:
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+                data:
+                  value: "{{ current_hex }}"
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+                data:
+                  value: "{{ current_hex }}"
 
 mode: single
