@@ -320,26 +320,35 @@ button_card_templates:
       bank_number: null
       active_bank_entity: '[[[ return `number.${variables.device_suffix}_active_bank`; ]]]'
       color_entity: >-
-        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number}_color`; ]]]
+        [[[ return
+        `text.${variables.device_suffix}_bank_${variables.bank_number}_color`;
+        ]]]
       name_entity: >-
-        [[[ return `text.${variables.device_suffix}_bank_${variables.bank_number}_entity`; ]]]
+        [[[ return
+        `text.${variables.device_suffix}_bank_${variables.bank_number}_entity`;
+        ]]]
       value_entity: >-
         [[[ return
-        `number.${variables.device_suffix}_bank_${variables.bank_number}_value`; ]]]
+        `number.${variables.device_suffix}_bank_${variables.bank_number}_value`;
+        ]]]
       passive_entity: >-
         [[[ return
-        `binary_sensor.${variables.device_suffix}_bank_${variables.bank_number}_passive`; ]]]
+        `binary_sensor.${variables.device_suffix}_bank_${variables.bank_number}_passive`;
+        ]]]
       mirror_entity: >-
         [[[ return
-        `switch.${variables.device_suffix}_bank_${variables.bank_number}_mirror_light`; ]]]
+        `switch.${variables.device_suffix}_bank_${variables.bank_number}_mirror_light`;
+        ]]]
       color_light_entity: >-
         [[[ return
-        `light.${variables.device_suffix}_bank_${variables.bank_number}_color_light`; ]]]
+        `light.${variables.device_suffix}_bank_${variables.bank_number}_color_light`;
+        ]]]
       timer_state_entity: '[[[ return `select.${variables.device_suffix}_timer_state`; ]]]'
       timer_end_entity: '[[[ return `text.${variables.device_suffix}_timer_end`; ]]]'
       announce_value_entity: >-
         [[[ return
-        `switch.${variables.device_suffix}_bank_${variables.bank_number}_announce_value`; ]]]
+        `switch.${variables.device_suffix}_bank_${variables.bank_number}_announce_value`;
+        ]]]
       mute_announcements_entity: '[[[ return `switch.${variables.device_suffix}_mute_announcements`; ]]]'
       control_mode_entity: '[[[ return `switch.${variables.device_suffix}_control_mode`; ]]]'
     show_name: false
@@ -364,12 +373,40 @@ button_card_templates:
               const isActive = activeBank === variables.bank_number;
               return isActive ? '1px solid rgba(180,180,180,0.4)' : '1px solid transparent';
             ]]]
-        - opacity: |
+        - opacity: >-
             [[[
-              return states[variables.control_mode_entity]?.state === 'on' ? '1' : '0.4';
+              const controlModeOn = states[variables.control_mode_entity]?.state === 'on';
+              const nameEntityId = states[variables.name_entity]?.state;
+              const entityState = nameEntityId ? states[nameEntityId]?.state : undefined;
+
+              const unassigned =
+                !nameEntityId ||
+                nameEntityId === 'unknown' ||
+                nameEntityId === 'unavailable' ||
+                entityState === 'unknown' ||
+                entityState === 'unavailable';
+
+              if (unassigned) return '0.45';
+              return controlModeOn ? '1' : '0.4';
+            ]]]
+        - filter: >-
+            [[[
+              const nameEntityId = states[variables.name_entity]?.state;
+              const entityState = nameEntityId ? states[nameEntityId]?.state : undefined;
+
+              const unassigned =
+                !nameEntityId ||
+                nameEntityId === 'unknown' ||
+                nameEntityId === 'unavailable' ||
+                entityState === 'unknown' ||
+                entityState === 'unavailable';
+
+              return unassigned ? 'grayscale(1)' : 'none';
             ]]]
       grid:
-        - grid-template-areas: '"bank" "name" "slider" "timer-control" "timer-silent" "mirror" "announce-value"'
+        - grid-template-areas: >-
+            "bank" "name" "slider" "timer-control" "timer-silent" "mirror"
+            "announce-value"
         - grid-template-columns: 1fr
         - grid-template-rows: auto auto auto auto auto
         - width: 100%
@@ -498,9 +535,20 @@ button_card_templates:
           name: |
             [[[
               const entityId = states[variables.name_entity]?.state;
-              const name = entityId && states[entityId]
+              const entityState = entityId ? states[entityId]?.state : undefined;
+
+              const unassigned =
+                !entityId ||
+                entityId === 'unknown' ||
+                entityId === 'unavailable' ||
+                entityState === 'unknown' ||
+                entityState === 'unavailable';
+
+              if (unassigned) return 'No Entity Assigned';
+
+              const name = states[entityId]
                 ? (states[entityId].attributes.friendly_name || entityId)
-                : (entityId || 'Unknown');
+                : entityId;
 
               return name?.toLowerCase() === 'timer'
                 ? 'Timer'
@@ -520,6 +568,15 @@ button_card_templates:
                     const nameEntityId = states[variables.name_entity]?.state;
                     const entityState = nameEntityId ? states[nameEntityId]?.state : undefined;
                     const entityId = nameEntityId?.toLowerCase() ?? '';
+
+                    const unassigned =
+                      !nameEntityId ||
+                      nameEntityId === 'unknown' ||
+                      nameEntityId === 'unavailable' ||
+                      entityState === 'unknown' ||
+                      entityState === 'unavailable';
+
+                    if (unassigned) return '';
 
                     if (passive === 'on') {
                       if (entityState === 'on') return 'On';
@@ -557,7 +614,10 @@ button_card_templates:
 
                     if (entityState === 'off') return 'Off';
 
-                    return `${Math.round(value)}%`;
+                    const rounded = Math.round(value);
+                    if (rounded === 0) return '';
+
+                    return `${rounded}%`;
                   ]]]
                 styles:
                   card:
@@ -748,7 +808,9 @@ button_card_templates:
                                   - border-radius: 25px
                                   - width: 20px
                                   - margin: 0px -10px 0px 0px
-                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - filter: >-
+                                      drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem
+                                      2px)
                                   - border: none
                             - type: custom:button-card
                               entity: '[[[ return variables.mirror_entity; ]]]'
@@ -768,7 +830,9 @@ button_card_templates:
                                   - height: 20px
                                   - border-radius: 25px
                                   - width: 20px
-                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - filter: >-
+                                      drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem
+                                      2px)
                                   - border: none
       timer-control:
         card:
@@ -1239,7 +1303,9 @@ button_card_templates:
                                   - border-radius: 25px
                                   - width: 20px
                                   - margin: 0px -10px 0px 0px
-                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - filter: >-
+                                      drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem
+                                      2px)
                                   - border: none
                             - type: custom:button-card
                               entity: '[[[ return variables.timer_silent_toggle; ]]]'
@@ -1259,7 +1325,9 @@ button_card_templates:
                                   - height: 20px
                                   - border-radius: 25px
                                   - width: 20px
-                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - filter: >-
+                                      drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem
+                                      2px)
                                   - border: none
       announce-value:
         card:
@@ -1367,7 +1435,9 @@ button_card_templates:
                                   - border-radius: 25px
                                   - width: 20px
                                   - margin: 0px -10px 0px 0px
-                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - filter: >-
+                                      drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem
+                                      2px)
                                   - border: none
                             - type: custom:button-card
                               entity: '[[[ return variables.announce_value_entity; ]]]'
@@ -1387,8 +1457,11 @@ button_card_templates:
                                   - height: 20px
                                   - border-radius: 25px
                                   - width: 20px
-                                  - filter: drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem 2px)
+                                  - filter: >-
+                                      drop-shadow(rgba(0,0,0,0.3) 0.0rem 0.0rem
+                                      2px)
                                   - border: none
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
