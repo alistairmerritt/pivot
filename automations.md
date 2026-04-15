@@ -18,9 +18,80 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 ---
 
-### Example: Play/Pause computer media when Bank 1 has computer volume assigned
+## Button press with configurable action
 
-This example adds extra behaviour on top of the integration's built-in toggle. Bank 1 is already controlling computer volume via an `input_number` helper — this automation fires a play/pause shell command on the same button press, but only when that specific helper is assigned to Bank 1. Reassign the bank and the automation automatically stops firing.
+Fires a configurable action when a specific bank's button is pressed, but only when a particular entity is assigned to that bank. Useful for stacking extra behaviour on top of the built-in toggle — for example, triggering a play/pause shell command when a media volume helper is assigned.
+
+#### Blueprint
+
+```yaml
+blueprint:
+  name: Pivot - Button Press Action
+  description: >
+    Run a configurable action on button press for a specific Pivot device and bank,
+    with an optional check that a particular entity is assigned to that bank.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    press_type:
+      name: Press type
+      description: Which press type triggers the action
+      default: single_press
+      selector:
+        select:
+          options:
+            - single_press
+            - double_press
+            - triple_press
+            - long_press
+    assigned_entity:
+      name: Assigned entity (optional)
+      description: >
+        Only fire the action if this entity is currently assigned to the bank.
+        Leave blank to fire regardless of what is assigned.
+      default: ""
+      selector:
+        text: {}
+    action:
+      name: Action
+      description: Action to run when the button is pressed
+      selector:
+        action: {}
+
+triggers:
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: !input press_type
+
+conditions:
+  - condition: template
+    value_template: >
+      {% set entity = 'text.' ~ suffix ~ '_bank_' ~ bank ~ '_entity' %}
+      {% set assigned = assigned_entity %}
+      {{ assigned == '' or states(entity) == assigned }}
+
+actions:
+  - sequence: !input action
+
+mode: single
+```
+
+#### Raw automation example
 
 {% raw %}
 ```yaml
@@ -48,11 +119,107 @@ mode: single
 
 ---
 
-### Example: Controlling colour temperature via an input_number helper
+## Colour temperature control via input_number
 
-This example uses an `input_number` helper as the bank entity so the dial adjusts the warmth of a lamp. A single press toggles the light. The dial position stays in sync if the light is changed from elsewhere.
+Uses an `input_number` helper as the bank entity so the dial adjusts the colour temperature of a light. A single press toggles the light. The dial position stays in sync if the light is changed from elsewhere.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to the bank on your device.
+
+#### Blueprint
+
+```yaml
+blueprint:
+  name: Pivot - Colour Temperature Control
+  description: >
+    Control a light's colour temperature with the Pivot dial via an input_number helper.
+    Single press toggles the light. Dial position stays in sync with the light.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    input_number_entity:
+      name: Input number helper
+      description: The input_number entity assigned to this bank (range 0–100)
+      selector:
+        entity:
+          domain: input_number
+    light_entity:
+      name: Light
+      description: The light to control
+      selector:
+        entity:
+          domain: light
+
+triggers:
+  - trigger: state
+    entity_id: !input input_number_entity
+    id: dial
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: single_press
+    id: press
+  - trigger: state
+    entity_id: !input light_entity
+    id: sync
+
+actions:
+  - variables:
+      percent: "{{ states(input_number_entity) | float(0) }}"
+      min_mired: "{{ state_attr(light_entity, 'min_mireds') | float(153) }}"
+      max_mired: "{{ state_attr(light_entity, 'max_mireds') | float(500) }}"
+      target_kelvin: >-
+        {{ (1000000 / ((min_mired | int) + ((percent / 100) * ((max_mired | int)
+        - (min_mired | int))))) | round(0) | int }}
+      current_mired: "{{ state_attr(light_entity, 'color_temp') | float(0) }}"
+      sync_percent: >-
+        {{ (((current_mired - min_mired) / (max_mired - min_mired)) * 100) | round(0) }}
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: dial
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: "{{ light_entity }}"
+            data:
+              color_temp_kelvin: "{{ target_kelvin | int }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: light.toggle
+            target:
+              entity_id: "{{ light_entity }}"
+      - conditions:
+          - condition: trigger
+            id: sync
+          - condition: template
+            value_template: "{{ current_mired > 0 and max_mired > min_mired }}"
+        sequence:
+          - action: input_number.set_value
+            target:
+              entity_id: "{{ input_number_entity }}"
+            data:
+              value: "{{ [[sync_percent, 0] | max, 100] | min }}"
+
+mode: single
+```
+
+#### Raw automation example
 
 {% raw %}
 ```yaml
@@ -119,11 +286,77 @@ mode: single
 
 ---
 
-### Example: Controlling a light's brightness and toggle
+## Light brightness and toggle
 
-This example sets a light's brightness from the dial and toggles it with a single press. The knob and button automations are separate — create one pair per bank.
+Controls a light's brightness with the dial and toggles it with a single press.
 
-#### Knob — set brightness
+#### Blueprint
+
+```yaml
+blueprint:
+  name: Pivot - Light Brightness & Toggle
+  description: >
+    Control a light's brightness with the Pivot dial. Single press toggles the light on/off.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    light_entity:
+      name: Light
+      description: The light to control
+      selector:
+        entity:
+          domain: light
+
+triggers:
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+    id: knob
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: single_press
+    id: press
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: knob
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: !input light_entity
+            data:
+              brightness_pct: "{{ trigger.event.data.value }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: light.toggle
+            target:
+              entity_id: !input light_entity
+
+mode: single
+```
+
+#### Raw automation example
 
 {% raw %}
 ```yaml
@@ -146,8 +379,6 @@ actions:
 mode: single
 ```
 {% endraw %}
-
-#### Button — toggle on/off
 
 {% raw %}
 ```yaml
