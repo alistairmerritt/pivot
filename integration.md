@@ -293,6 +293,7 @@ triggers:
     event_data:
       suffix: ha_voice_orange
       bank: 2
+      press_type: single_press
     id: press
   - trigger: state
     entity_id: light.home_desk_light
