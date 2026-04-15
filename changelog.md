@@ -6,6 +6,9 @@ permalink: /changelog/
 
 ## Integration
 
+### v0.0.76
+- **Fix:** Configure screen bank entity assignments were shifted by one and Bank 4 was unreachable. The options flow was using the 0-based form field key directly as the entity ID key, producing `bank_0_entity` through `bank_3_entity` entity lookups that no longer exist after the v0.0.75 rename. Form key and entity ID key are now decoupled with the correct `+1` offset applied only to the entity ID lookup.
+
 ### v0.0.75
 - **Breaking change:** Bank entity IDs are now 1-based to match user-facing bank numbers. `bank_0_*` entities are now `bank_1_*`, `bank_1_*` are now `bank_2_*`, and so on through `bank_4_*`. Existing entity registry entries for renamed entities will be orphaned and must be removed. Any custom automations or dashboards referencing the old entity IDs will need to be updated. The firmware, integration, dashboard YAML, and blueprints are all updated together in this release.
 
