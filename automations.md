@@ -23,6 +23,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | [Colour temperature control](#colour-temperature-control----dial-adjusts-warmth-press-toggles) | Dial adjusts light warmth via an input_number helper, press toggles |
 | [Button press with configurable action](#button-press-with-configurable-action----eg-control-volume-press-to-playpause) | Run any action on button press, optionally filtered by assigned entity |
 | [Light brightness and toggle](#light-brightness-and-toggle----dial-sets-brightness-press-toggles-onoff) | Dial sets brightness, press toggles on/off |
+| [Media player volume and power toggle](#media-player-volume-and-power-toggle----dial-controls-volume-press-toggles-tv-onoff) | Dial sets volume, press toggles TV on/off |
 
 ---
 
@@ -423,6 +424,141 @@ actions:
   - action: light.toggle
     target:
       entity_id: light.living_room
+
+mode: single
+```
+{% endraw %}
+
+---
+
+## Media player volume and power toggle — dial controls volume, press toggles TV on/off
+
+When a media player is assigned to a bank, Pivot controls volume with the dial and fires play/pause on a single press. For a TV this isn't ideal — you usually want the button to turn the TV on or off, not pause playback.
+
+This automation handles both in one place: the dial sets volume and the button toggles power. Because the automation listens on `pivot_knob_turn` and `pivot_button_press` directly, leave the bank entity **unassigned** — this ensures the button press has no built-in behaviour to conflict with.
+
+#### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-media-player-tv.yaml)
+
+{% raw %}
+```yaml
+blueprint:
+  name: Pivot - Media Player Volume & Power Toggle
+  description: >
+    Control a media player's volume with the Pivot dial and toggle power on button press.
+    Designed for TVs where you want the dial to set volume and a press to turn the TV on or off.
+    Leave the bank entity unassigned so the button press has no built-in behaviour to conflict with.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    press_type:
+      name: Press type
+      description: Which press type toggles power
+      default: single_press
+      selector:
+        select:
+          options:
+            - single_press
+            - double_press
+            - triple_press
+            - long_press
+    media_player_entity:
+      name: Media player
+      description: The TV or media player to control
+      selector:
+        entity:
+          domain: media_player
+
+triggers:
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+    id: knob
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: !input press_type
+    id: press
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: knob
+        sequence:
+          - action: media_player.volume_set
+            target:
+              entity_id: !input media_player_entity
+            data:
+              volume_level: "{{ trigger.event.data.value / 100 }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: media_player.toggle
+            target:
+              entity_id: !input media_player_entity
+
+mode: single
+```
+{% endraw %}
+
+#### Raw automation example
+
+{% raw %}
+```yaml
+alias: Pivot - Living Room TV
+
+triggers:
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: ha_voice_lounge
+      bank: 3
+    id: knob
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: ha_voice_lounge
+      bank: 3
+      press_type: single_press
+    id: press
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: knob
+        sequence:
+          - action: media_player.volume_set
+            target:
+              entity_id: media_player.living_room_tv
+            data:
+              volume_level: "{{ trigger.event.data.value / 100 }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: media_player.toggle
+            target:
+              entity_id: media_player.living_room_tv
 
 mode: single
 ```

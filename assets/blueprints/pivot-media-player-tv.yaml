@@ -1,0 +1,74 @@
+blueprint:
+  name: Pivot - Media Player Volume & Power Toggle
+  description: >
+    Control a media player's volume with the Pivot dial and toggle power on button press.
+    Designed for TVs where you want the dial to set volume and a press to turn the TV on or off.
+    Leave the bank entity unassigned so the button press has no built-in behaviour to conflict with.
+  domain: automation
+  input:
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number to listen on (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    press_type:
+      name: Press type
+      description: Which press type toggles power
+      default: single_press
+      selector:
+        select:
+          options:
+            - single_press
+            - double_press
+            - triple_press
+            - long_press
+    media_player_entity:
+      name: Media player
+      description: The TV or media player to control
+      selector:
+        entity:
+          domain: media_player
+
+triggers:
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+    id: knob
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+      press_type: !input press_type
+    id: press
+
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: knob
+        sequence:
+          - action: media_player.volume_set
+            target:
+              entity_id: !input media_player_entity
+            data:
+              volume_level: "{{ trigger.event.data.value / 100 }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: media_player.toggle
+            target:
+              entity_id: !input media_player_entity
+
+mode: single
