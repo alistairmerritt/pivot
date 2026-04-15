@@ -1370,7 +1370,7 @@ button_card_templates:
                   [[[
                     const entityId = states[variables.name_entity]?.state;
                     const domain = entityId?.split('.')?.[0];
-                    const supported = ['light', 'media_player', 'fan', 'climate', 'cover', 'number'];
+                    const supported = ['light', 'media_player', 'fan', 'climate', 'cover', 'number', 'input_number'];
                     return supported.includes(domain) ? 'block' : 'none';
                   ]]]
             custom_fields:
