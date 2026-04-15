@@ -4,9 +4,11 @@ title: Custom Automations
 permalink: /automations/
 ---
 
-Because Pivot fires events on every interaction, you can trigger your own automations in response to any dial turn or button press. Each example below includes an importable blueprint and a raw YAML version.
+Pivot already handles common controls like brightness, volume, and toggles out of the box. But because it fires events on every interaction, it can also be used for much more custom behaviour — from colour control and scene scrubbing to sensor gauges, media shortcuts, and context-aware button actions.
 
-Pivot events carry enough context to let automations be as specific or as broad as you need:
+The examples below show how to use Pivot as a flexible input device for Home Assistant. Each one includes an importable blueprint and a raw YAML version, so you can either use them as-is or adapt them to your own setup.
+
+Pivot events carry enough context to make automations as specific or as broad as you need, including:
 
 - which Pivot device was used
 - which bank was active
