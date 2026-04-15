@@ -446,7 +446,7 @@ This automation handles both in one place: the dial sets volume and the button t
 blueprint:
   name: Pivot - Media Player Volume & Power Toggle
   description: >
-    Control a media player's volume with the Pivot dial and toggle power on button press.
+    Control a media player's volume with the Pivot dial and toggle power on single press.
     Designed for TVs where you want the dial to set volume and a press to turn the TV on or off.
     Leave the bank entity unassigned so the button press has no built-in behaviour to conflict with.
   domain: automation
@@ -464,17 +464,6 @@ blueprint:
           min: 1
           max: 4
           mode: box
-    press_type:
-      name: Press type
-      description: Which press type toggles power
-      default: single_press
-      selector:
-        select:
-          options:
-            - single_press
-            - double_press
-            - triple_press
-            - long_press
     media_player_entity:
       name: Media player
       description: The TV or media player to control
@@ -494,7 +483,7 @@ triggers:
     event_data:
       suffix: !input suffix
       bank: !input bank
-      press_type: !input press_type
+      press_type: single_press
     id: press
 
 actions:
