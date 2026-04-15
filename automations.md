@@ -875,9 +875,9 @@ mode: single
 ## Sensor gauge — display any sensor value on the dial
 {: #sensor-gauge}
 
-A display-only automation that maps any numeric sensor onto a Pivot bank. Useful for things like a fuel level, water tank, battery, or any sensor where you want a physical gauge without any control.
+A display-only automation that maps any numeric sensor or input_number onto a Pivot bank. Useful for things like a fuel level, water tank, battery, countdown timer, or any numeric value where you want a physical gauge without any control.
 
-Assign an `input_number` helper (range 0–100) to the bank. The automation scales the sensor's value between a configurable minimum and maximum, then keeps the helper in sync as the sensor changes. If the dial is accidentally turned, the automation immediately overwrites it back to the current sensor value — the bank is read-only.
+Assign an `input_number` helper (range 0–100) to the bank. The automation scales the source value between a configurable minimum and maximum, then keeps the helper in sync as the source changes. If the dial is accidentally turned, the automation immediately overwrites it back to the current source value — the bank is read-only.
 
 The LED ring colour can optionally update based on the current percentage, using four configurable colour bands. Defaults are red (0–25%), orange (25–50%), green (50–75%), and blue (75–100%).
 
@@ -892,18 +892,21 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 blueprint:
   name: Pivot - Sensor Gauge
   description: >
-    Map any numeric sensor to a Pivot bank for display only. The dial position
-    reflects the sensor value scaled between a configurable min and max. If the
-    dial is accidentally turned, it automatically reverts to the sensor value.
+    Map any numeric sensor or input_number to a Pivot bank for display only. The dial
+    position reflects the value scaled between a configurable min and max. If the
+    dial is accidentally turned, it automatically reverts to the source value.
     Optionally colours the LED ring based on the current percentage.
   domain: automation
   input:
     sensor_entity:
-      name: Sensor
-      description: The sensor to monitor (e.g. a fuel level, battery, tank sensor)
+      name: Source entity
+      description: The sensor, input_number, or number entity to monitor (e.g. a fuel level, battery, tank sensor, or any numeric helper)
       selector:
         entity:
-          domain: sensor
+          domain:
+            - sensor
+            - input_number
+            - number
     input_number_entity:
       name: Input number helper
       description: The input_number entity assigned to this bank (range 0–100)

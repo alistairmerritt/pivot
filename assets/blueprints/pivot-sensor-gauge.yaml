@@ -1,18 +1,21 @@
 blueprint:
   name: Pivot - Sensor Gauge
   description: >
-    Map any numeric sensor to a Pivot bank for display only. The dial position
-    reflects the sensor value scaled between a configurable min and max. If the
-    dial is accidentally turned, it automatically reverts to the sensor value.
+    Map any numeric sensor or input_number to a Pivot bank for display only. The dial
+    position reflects the value scaled between a configurable min and max. If the
+    dial is accidentally turned, it automatically reverts to the source value.
     Optionally colours the LED ring based on the current percentage.
   domain: automation
   input:
     sensor_entity:
-      name: Sensor
-      description: The sensor to monitor (e.g. a fuel level, battery, tank sensor)
+      name: Source entity
+      description: The sensor, input_number, or number entity to monitor (e.g. a fuel level, battery, tank sensor, or any numeric helper)
       selector:
         entity:
-          domain: sensor
+          domain:
+            - sensor
+            - input_number
+            - number
     input_number_entity:
       name: Input number helper
       description: The input_number entity assigned to this bank (range 0–100)
