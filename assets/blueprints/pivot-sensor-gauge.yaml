@@ -66,22 +66,22 @@ blueprint:
         boolean:
     color_0_25:
       name: Colour — 0 to 25%
-      default: [255, 69, 58]
+      default: [255, 159, 10]
       selector:
         color_rgb: {}
     color_25_50:
       name: Colour — 25 to 50%
-      default: [255, 159, 10]
+      default: [255, 214, 10]
       selector:
         color_rgb: {}
     color_50_75:
       name: Colour — 50 to 75%
-      default: [49, 209, 88]
+      default: [169, 220, 56]
       selector:
         color_rgb: {}
     color_75_100:
       name: Colour — 75 to 100%
-      default: [11, 132, 255]
+      default: [48, 209, 88]
       selector:
         color_rgb: {}
 
