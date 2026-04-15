@@ -1282,6 +1282,10 @@ button_card_templates:
               - border: none
               - height: 50px
               - margin: 10px 0px -15px 0px
+              - opacity: |
+                  [[[
+                    return states[variables.mute_announcements_entity]?.state === 'on' ? '0.4' : '1';
+                  ]]]
               - display: |
                   [[[
                     const entityId = states[variables.name_entity]?.state;
