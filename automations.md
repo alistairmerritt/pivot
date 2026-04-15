@@ -26,7 +26,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer |
 | [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
-| [Sensor gauge](#sensor-gauge) | Display any sensor value on the dial — e.g. fuel level, battery, tank |
+| [Sensor gauge](#sensor-gauge) | Display any numeric value on the dial — always one-way, e.g. fuel level, battery, thermostat target |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
 
 ---
@@ -872,14 +872,16 @@ mode: single
 
 ---
 
-## Sensor gauge — display any sensor value on the dial
+## Sensor gauge — display any numeric value on the dial
 {: #sensor-gauge}
 
-A display-only automation that maps any numeric sensor or input_number onto a Pivot bank. Useful for things like a fuel level, water tank, battery, countdown timer, or any numeric value where you want a physical gauge without any control.
+A display-only automation that maps any numeric value onto a Pivot bank. Works with sensor, input_number, and number entities — useful for things like a fuel level, water tank, battery, thermostat target, or any numeric value where you want a physical gauge without any control.
 
-Assign an `input_number` helper (range 0–100) to the bank. The automation scales the source value between a configurable minimum and maximum, then keeps the helper in sync as the source changes. If the dial is accidentally turned, the automation immediately overwrites it back to the current source value — the bank is read-only.
+This is always one-way. The automation only ever writes to the `input_number` helper assigned to the bank — it never writes back to the source entity. For sensors this is obvious, but it applies equally to `input_number` and `number` entities: even if their value changes elsewhere in HA, Pivot just follows it. And if the dial is accidentally turned, the automation immediately snaps it back to the current source value.
 
 The LED ring colour can optionally update based on the current percentage, using four configurable colour bands. Defaults are red (0–25%), orange (25–50%), green (50–75%), and blue (75–100%).
+
+Assign an `input_number` helper (range 0–100) to the bank. The automation scales the source value between a configurable minimum and maximum.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
 
@@ -892,7 +894,8 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 blueprint:
   name: Pivot - Sensor Gauge
   description: >
-    Map any numeric sensor or input_number to a Pivot bank for display only. The dial
+    Map any numeric sensor, input_number, or number entity to a Pivot bank for
+    display only. Always one-way — the source entity is never written to. The dial
     position reflects the value scaled between a configurable min and max. If the
     dial is accidentally turned, it automatically reverts to the source value.
     Optionally colours the LED ring based on the current percentage.

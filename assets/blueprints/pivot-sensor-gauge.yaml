@@ -1,7 +1,8 @@
 blueprint:
   name: Pivot - Sensor Gauge
   description: >
-    Map any numeric sensor or input_number to a Pivot bank for display only. The dial
+    Map any numeric sensor, input_number, or number entity to a Pivot bank for
+    display only. Always one-way — the source entity is never written to. The dial
     position reflects the value scaled between a configurable min and max. If the
     dial is accidentally turned, it automatically reverts to the source value.
     Optionally colours the LED ring based on the current percentage.
