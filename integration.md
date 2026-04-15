@@ -195,7 +195,7 @@ Fired on every button press regardless of mode.
 | `press_type` | `single_press`, `double_press`, `triple_press`, or `long_press` |
 | `control_mode` | `true` if in Control Mode |
 
-> See [Custom Automations](#custom-automations) below for examples using these events.
+> See [Custom Automations](/pivot/automations/) for examples using these events.
 
 ---
 
@@ -208,7 +208,7 @@ Fired on every button press regardless of mode.
 | `triple_press` | Announces the active bank's assigned entity name via TTS (if announcements configured) |
 | `long_press` | No built-in behaviour |
 
-Custom automations triggered by these events always stack on top of built-in behaviour — they do not replace it. If you want a press that only runs your automation:
+Automations triggered by these events always stack on top of built-in behaviour — they do not replace it. If you want a press that only runs your automation:
 
 - Use `long_press` — no built-in behaviour regardless of entity assignment
 - Leave the bank entity field empty and use `single_press` — with no entity assigned, Pivot has nothing to toggle
