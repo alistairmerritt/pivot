@@ -92,6 +92,8 @@ triggers:
 
 actions:
   - variables:
+      light_entity: !input light_entity
+      input_number_entity: !input input_number_entity
       percent: "{{ states(input_number_entity) | float(0) }}"
       min_mired: "{{ state_attr(light_entity, 'min_mireds') | float(153) }}"
       max_mired: "{{ state_attr(light_entity, 'max_mireds') | float(500) }}"
