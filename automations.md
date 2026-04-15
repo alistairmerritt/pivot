@@ -20,14 +20,15 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 | Automation | What it does |
 |---|---|
-| [Colour temperature control](#colour-temperature-control----dial-adjusts-warmth-press-toggles) | Dial adjusts light warmth via an input_number helper, press toggles |
-| [Button press with configurable action](#button-press-with-configurable-action----eg-control-volume-press-to-playpause) | Run any action on button press, optionally filtered by assigned entity |
-| [Light brightness and toggle](#light-brightness-and-toggle----dial-sets-brightness-press-toggles-onoff) | Dial sets brightness, press toggles on/off |
-| [Media player volume and power toggle](#media-player-volume-and-power-toggle----dial-controls-volume-press-toggles-tv-onoff) | Dial sets volume, press toggles TV on/off |
+| [Colour temperature control](#colour-temperature) | Dial adjusts light warmth via an input_number helper, press toggles |
+| [Button press with configurable action](#button-press-action) | Run any action on button press, optionally filtered by assigned entity |
+| [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off |
+| [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
 
 ---
 
 ## Colour temperature control — dial adjusts warmth, press toggles light
+{: #colour-temperature}
 
 Assigning a light directly to a bank gives you brightness control — the 0–100 dial value maps to brightness percentage. To control colour temperature instead, assign an `input_number` helper to the bank and use this automation to translate that 0–100 value into the correct kelvin for your specific light.
 
@@ -204,6 +205,7 @@ mode: single
 ---
 
 ## Button press with configurable action — e.g. dial controls volume, press to play/pause media
+{: #button-press-action}
 
 The built-in bank toggle handles turning entities on and off, but sometimes a button press should do something extra — like triggering play/pause on your computer when the bank is controlling system volume, or running a scene when a specific entity is active.
 
@@ -311,6 +313,7 @@ mode: single
 ---
 
 ## Light brightness and toggle — dial sets brightness, press toggles on/off
+{: #light-brightness}
 
 The simplest custom automation pattern — the dial controls a light's brightness directly and a single press toggles it. Useful if you want more precise brightness control than Pivot's built-in toggle provides, or if you're using a bank for a light that isn't directly assignable (e.g. a light group).
 
@@ -434,6 +437,7 @@ mode: single
 ---
 
 ## Media player volume and power toggle — dial controls volume, press toggles TV on/off
+{: #media-player-tv}
 
 When a media player is assigned to a bank, Pivot controls volume with the dial and fires play/pause on a single press. For a TV this isn't ideal — you usually want the button to turn the TV on or off, not pause playback.
 
