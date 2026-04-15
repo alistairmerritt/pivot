@@ -879,7 +879,7 @@ A display-only automation that maps any numeric value onto a Pivot bank. Works w
 
 This is always one-way. The automation only ever writes to the `input_number` helper assigned to the bank — it never writes back to the source entity. For sensors this is obvious, but it applies equally to `input_number` and `number` entities: even if their value changes elsewhere in HA, Pivot just follows it. And if the dial is accidentally turned, the automation immediately snaps it back to the current source value.
 
-The LED ring colour can optionally update based on the current percentage, using four configurable colour bands. Defaults are orange (0–25%), yellow (25–50%), yellow-green (50–75%), and green (75–100%).
+The LED ring colour can optionally update based on the current percentage, using six configurable colour bands. Defaults run red → orange → amber → yellow → yellow-green → green.
 
 Assign an `input_number` helper (range 0–100) to the bank. The automation scales the source value between a configurable minimum and maximum.
 
@@ -957,23 +957,33 @@ blueprint:
       default: true
       selector:
         boolean:
-    color_0_25:
-      name: Colour — 0 to 25%
+    color_0_16:
+      name: Colour — 0 to 16%
+      default: [255, 69, 58]
+      selector:
+        color_rgb: {}
+    color_16_33:
+      name: Colour — 16 to 33%
+      default: [255, 122, 0]
+      selector:
+        color_rgb: {}
+    color_33_50:
+      name: Colour — 33 to 50%
       default: [255, 159, 10]
       selector:
         color_rgb: {}
-    color_25_50:
-      name: Colour — 25 to 50%
+    color_50_66:
+      name: Colour — 50 to 66%
       default: [255, 214, 10]
       selector:
         color_rgb: {}
-    color_50_75:
-      name: Colour — 50 to 75%
+    color_66_83:
+      name: Colour — 66 to 83%
       default: [169, 220, 56]
       selector:
         color_rgb: {}
-    color_75_100:
-      name: Colour — 75 to 100%
+    color_83_100:
+      name: Colour — 83 to 100%
       default: [48, 209, 88]
       selector:
         color_rgb: {}
@@ -995,20 +1005,24 @@ actions:
       suffix_var: !input suffix
       bank_var: !input bank
       sync_ring_colour: !input sync_ring_colour
-      color_0_25: !input color_0_25
-      color_25_50: !input color_25_50
-      color_50_75: !input color_50_75
-      color_75_100: !input color_75_100
+      color_0_16: !input color_0_16
+      color_16_33: !input color_16_33
+      color_33_50: !input color_33_50
+      color_50_66: !input color_50_66
+      color_66_83: !input color_66_83
+      color_83_100: !input color_83_100
       sensor_value: "{{ states(sensor_entity) | float(0) }}"
       computed_percent: >-
         {{ [[(sensor_value - sensor_min) / (sensor_max - sensor_min) * 100, 0]
         | max, 100] | min | round(0) | int }}
       current_number: "{{ states(input_number_entity) | float(-1) }}"
       ring_color: >-
-        {% if computed_percent < 25 %}{% set c = color_0_25 %}
-        {% elif computed_percent < 50 %}{% set c = color_25_50 %}
-        {% elif computed_percent < 75 %}{% set c = color_50_75 %}
-        {% else %}{% set c = color_75_100 %}{% endif %}
+        {% if computed_percent < 16 %}{% set c = color_0_16 %}
+        {% elif computed_percent < 33 %}{% set c = color_16_33 %}
+        {% elif computed_percent < 50 %}{% set c = color_33_50 %}
+        {% elif computed_percent < 66 %}{% set c = color_50_66 %}
+        {% elif computed_percent < 83 %}{% set c = color_66_83 %}
+        {% else %}{% set c = color_83_100 %}{% endif %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
   - if:
       - condition: template
@@ -1058,9 +1072,11 @@ actions:
       computed_percent: "{{ [[(sensor_value - 0) / (60 - 0) * 100, 0] | max, 100] | min | round(0) | int }}"
       current_number: "{{ states('input_number.fuel_gauge') | float(-1) }}"
       ring_color: >-
-        {% if computed_percent < 25 %}{% set c = [255, 159, 10] %}
-        {% elif computed_percent < 50 %}{% set c = [255, 214, 10] %}
-        {% elif computed_percent < 75 %}{% set c = [169, 220, 56] %}
+        {% if computed_percent < 16 %}{% set c = [255, 69, 58] %}
+        {% elif computed_percent < 33 %}{% set c = [255, 122, 0] %}
+        {% elif computed_percent < 50 %}{% set c = [255, 159, 10] %}
+        {% elif computed_percent < 66 %}{% set c = [255, 214, 10] %}
+        {% elif computed_percent < 83 %}{% set c = [169, 220, 56] %}
         {% else %}{% set c = [48, 209, 88] %}{% endif %}
         {{ '#%02x%02x%02x' | format(c[0], c[1], c[2]) }}
   - if:
