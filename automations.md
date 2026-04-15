@@ -4,7 +4,7 @@ title: Custom Automations
 permalink: /automations/
 ---
 
-Custom automations are an optional layer you can add on top of the installed blueprints. Because Pivot fires events on every interaction, you can trigger your own automations in response to things the built-in behaviour does not handle — like using a button press on a specific bank to trigger a shell command or run a scene.
+Because Pivot fires events on every interaction, you can trigger your own automations in response to any dial turn or button press — like adjusting colour temperature, running a shell command, or firing a scene. Each example below includes an importable blueprint and a raw YAML version.
 
 Pivot events carry enough context to let automations be as specific or as broad as you need:
 
