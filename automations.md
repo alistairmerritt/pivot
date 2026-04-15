@@ -20,13 +20,13 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 | Automation | What it does |
 |---|---|
-| [Colour temperature control](#colour-temperature-control) | Dial adjusts light warmth via an input_number helper, press toggles |
-| [Button press with configurable action](#button-press-with-configurable-action) | Run any action on button press, optionally filtered by assigned entity |
-| [Light brightness and toggle](#light-brightness-and-toggle) | Dial sets brightness, press toggles on/off |
+| [Colour temperature control](#colour-temperature-control----dial-adjusts-warmth-press-toggles) | Dial adjusts light warmth via an input_number helper, press toggles |
+| [Button press with configurable action](#button-press-with-configurable-action----eg-control-volume-press-to-playpause) | Run any action on button press, optionally filtered by assigned entity |
+| [Light brightness and toggle](#light-brightness-and-toggle----dial-sets-brightness-press-toggles-onoff) | Dial sets brightness, press toggles on/off |
 
 ---
 
-## Colour temperature control
+## Colour temperature control — dial adjusts warmth, press toggles
 
 Lights with adjustable colour temperature (warm to cool white) can't be directly assigned as a bank entity because Pivot expects a 0–100 value range. The workaround is to assign an `input_number` helper to the bank instead — the dial adjusts the helper, and this automation translates that 0–100 value into the correct colour temperature for your specific light.
 
@@ -199,7 +199,7 @@ mode: single
 
 ---
 
-## Button press with configurable action
+## Button press with configurable action — e.g. control volume, press to play/pause
 
 The built-in bank toggle handles turning entities on and off, but sometimes a button press should do something extra — like triggering play/pause on your computer when the bank is controlling system volume, or running a scene when a specific entity is active.
 
@@ -306,7 +306,7 @@ mode: single
 
 ---
 
-## Light brightness and toggle
+## Light brightness and toggle — dial sets brightness, press toggles on/off
 
 The simplest custom automation pattern — the dial controls a light's brightness directly and a single press toggles it. Useful if you want more precise brightness control than Pivot's built-in toggle provides, or if you're using a bank for a light that isn't directly assignable (e.g. a light group).
 
