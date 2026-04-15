@@ -21,7 +21,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | Automation | What it does |
 |---|---|
 | [Colour temperature control](#colour-temperature) | Dial adjusts light warmth, press toggles on/off |
-| [Button press with configurable action](#button-press-action) | Trigger any action on press — e.g. play/pause while the dial controls computer volume |
+| [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer |
 | [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial scrolls through lighting scenes — e.g. Relax, Evening, Bright, Focus |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
