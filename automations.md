@@ -24,6 +24,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer |
 | [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial scrolls through lighting scenes |
+| [Sensor gauge](#sensor-gauge) | Display any sensor value on the dial — e.g. fuel level, battery, tank |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
 
 ---
@@ -693,6 +694,217 @@ mode: single
 {% endraw %}
 
 > **How it works:** The `input_number` helper is what you assign to the bank. The dial updates its value, which triggers this automation. Scenes fire on every dial tick as you scrub, so sweeping quickly across all four bands will briefly hit each scene — only the position where you stop matters in practice. The `default:` block handles the 75–100 band without needing a fourth explicit condition.
+
+---
+
+## Sensor gauge — display any sensor value on the dial
+{: #sensor-gauge}
+
+A display-only automation that maps any numeric sensor onto a Pivot bank. Useful for things like a fuel level, water tank, battery, or any sensor where you want a physical gauge without any control.
+
+Assign an `input_number` helper (range 0–100) to the bank. The automation scales the sensor's value between a configurable minimum and maximum, then keeps the helper in sync as the sensor changes. If the dial is accidentally turned, the automation immediately overwrites it back to the current sensor value — the bank is read-only.
+
+The LED ring colour can optionally update based on the current percentage, using four configurable colour bands. Defaults are red (0–25%), orange (25–50%), green (50–75%), and blue (75–100%).
+
+Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
+
+#### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-sensor-gauge.yaml)
+
+{% raw %}
+```yaml
+blueprint:
+  name: Pivot - Sensor Gauge
+  description: >
+    Map any numeric sensor to a Pivot bank for display only. The dial position
+    reflects the sensor value scaled between a configurable min and max. If the
+    dial is accidentally turned, it automatically reverts to the sensor value.
+    Optionally colours the LED ring based on the current percentage.
+  domain: automation
+  input:
+    sensor_entity:
+      name: Sensor
+      description: The sensor to monitor (e.g. a fuel level, battery, tank sensor)
+      selector:
+        entity:
+          domain: sensor
+    input_number_entity:
+      name: Input number helper
+      description: The input_number entity assigned to this bank (range 0–100)
+      selector:
+        entity:
+          domain: input_number
+    sensor_min:
+      name: Sensor minimum
+      description: The sensor value that corresponds to 0% on the dial
+      default: 0
+      selector:
+        number:
+          min: -9999
+          max: 9999
+          step: 0.1
+          mode: box
+    sensor_max:
+      name: Sensor maximum
+      description: The sensor value that corresponds to 100% on the dial
+      default: 100
+      selector:
+        number:
+          min: -9999
+          max: 9999
+          step: 0.1
+          mode: box
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number this input_number is assigned to (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    sync_ring_colour:
+      name: Sync LED ring colour
+      description: >
+        When enabled, the LED ring colour updates based on the current percentage
+        using the colour bands below.
+      default: true
+      selector:
+        boolean:
+    color_0_25:
+      name: Colour — 0 to 25%
+      default: [255, 69, 58]
+      selector:
+        color_rgb: {}
+    color_25_50:
+      name: Colour — 25 to 50%
+      default: [255, 159, 10]
+      selector:
+        color_rgb: {}
+    color_50_75:
+      name: Colour — 50 to 75%
+      default: [49, 209, 88]
+      selector:
+        color_rgb: {}
+    color_75_100:
+      name: Colour — 75 to 100%
+      default: [11, 132, 255]
+      selector:
+        color_rgb: {}
+
+triggers:
+  - trigger: state
+    entity_id: !input sensor_entity
+    id: sensor
+  - trigger: state
+    entity_id: !input input_number_entity
+    id: number_changed
+
+actions:
+  - variables:
+      input_number_entity: !input input_number_entity
+      sensor_entity: !input sensor_entity
+      sensor_min: !input sensor_min
+      sensor_max: !input sensor_max
+      suffix_var: !input suffix
+      bank_var: !input bank
+      sync_ring_colour: !input sync_ring_colour
+      color_0_25: !input color_0_25
+      color_25_50: !input color_25_50
+      color_50_75: !input color_50_75
+      color_75_100: !input color_75_100
+      sensor_value: "{{ states(sensor_entity) | float(0) }}"
+      computed_percent: >-
+        {{ [[(sensor_value - sensor_min) / (sensor_max - sensor_min) * 100, 0]
+        | max, 100] | min | round(0) | int }}
+      current_number: "{{ states(input_number_entity) | float(-1) }}"
+      ring_color: >-
+        {% if computed_percent < 25 %}{% set c = color_0_25 %}
+        {% elif computed_percent < 50 %}{% set c = color_25_50 %}
+        {% elif computed_percent < 75 %}{% set c = color_50_75 %}
+        {% else %}{% set c = color_75_100 %}{% endif %}
+        {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
+  - if:
+      - condition: template
+        value_template: "{{ computed_percent != current_number and states(sensor_entity) not in ('unknown', 'unavailable') }}"
+    then:
+      - action: input_number.set_value
+        target:
+          entity_id: !input input_number_entity
+        data:
+          value: "{{ computed_percent }}"
+      - if:
+          - condition: template
+            value_template: "{{ sync_ring_colour }}"
+        then:
+          - action: text.set_value
+            target:
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+            data:
+              value: "{{ ring_color }}"
+          - action: text.set_value
+            target:
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+            data:
+              value: "{{ ring_color }}"
+
+mode: single
+```
+{% endraw %}
+
+#### Raw automation example
+
+{% raw %}
+```yaml
+alias: Pivot - Fuel Level
+
+triggers:
+  - trigger: state
+    entity_id: sensor.car_fuel_level
+    id: sensor
+  - trigger: state
+    entity_id: input_number.fuel_gauge
+    id: number_changed
+
+actions:
+  - variables:
+      sensor_value: "{{ states('sensor.car_fuel_level') | float(0) }}"
+      computed_percent: "{{ [[(sensor_value - 0) / (60 - 0) * 100, 0] | max, 100] | min | round(0) | int }}"
+      current_number: "{{ states('input_number.fuel_gauge') | float(-1) }}"
+      ring_color: >-
+        {% if computed_percent < 25 %}{% set c = [255, 69, 58] %}
+        {% elif computed_percent < 50 %}{% set c = [255, 159, 10] %}
+        {% elif computed_percent < 75 %}{% set c = [49, 209, 88] %}
+        {% else %}{% set c = [11, 132, 255] %}{% endif %}
+        {{ '#%02x%02x%02x' | format(c[0], c[1], c[2]) }}
+  - if:
+      - condition: template
+        value_template: "{{ computed_percent != current_number and states('sensor.car_fuel_level') not in ('unknown', 'unavailable') }}"
+    then:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.fuel_gauge
+        data:
+          value: "{{ computed_percent }}"
+      - action: text.set_value
+        target:
+          entity_id: text.ha_voice_lounge_bank_2_color
+        data:
+          value: "{{ ring_color }}"
+      - action: text.set_value
+        target:
+          entity_id: text.ha_voice_lounge_bank_2_configured_color
+        data:
+          value: "{{ ring_color }}"
+
+mode: single
+```
+{% endraw %}
 
 ---
 
