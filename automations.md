@@ -877,7 +877,7 @@ mode: single
 
 A display-only automation that maps any numeric value onto a Pivot bank. Works with sensor, input_number, and number entities — useful for things like a fuel level, water tank, battery, thermostat target, or any numeric value where you want a physical gauge without any control.
 
-This is always one-way. The automation only ever writes to the `input_number` helper assigned to the bank — it never writes back to the source entity. For sensors this is obvious, but it applies equally to `input_number` and `number` entities: even if their value changes elsewhere in HA, Pivot just follows it. And if the dial is accidentally turned, the automation immediately snaps it back to the current source value.
+This is always one-way. The automation only ever writes to the `input_number` helper assigned to the bank — it never writes back to the source entity. For sensors this is obvious, but it applies equally to `input_number` and `number` entities: even if their value changes elsewhere in HA, Pivot just follows it. The dial is fully locked — if it is turned, the automation immediately snaps it back by listening directly to the `pivot_knob_turn` event.
 
 The LED ring colour can optionally update based on the current percentage, using six configurable colour bands. Defaults run red → orange → amber → yellow → yellow-green → green.
 
@@ -995,6 +995,12 @@ triggers:
   - trigger: state
     entity_id: !input input_number_entity
     id: number_changed
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+    id: knob
 
 actions:
   - variables:
@@ -1024,29 +1030,40 @@ actions:
         {% elif computed_percent < 83 %}{% set c = color_66_83 %}
         {% else %}{% set c = color_83_100 %}{% endif %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
-  - if:
-      - condition: template
-        value_template: "{{ computed_percent != current_number and states(sensor_entity) not in ('unknown', 'unavailable') }}"
-    then:
-      - action: input_number.set_value
-        target:
-          entity_id: !input input_number_entity
-        data:
-          value: "{{ computed_percent }}"
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: knob
+        sequence:
+          - action: input_number.set_value
+            target:
+              entity_id: !input input_number_entity
+            data:
+              value: "{{ computed_percent }}"
+    default:
       - if:
           - condition: template
-            value_template: "{{ sync_ring_colour }}"
+            value_template: "{{ computed_percent != current_number and states(sensor_entity) not in ('unknown', 'unavailable') }}"
         then:
-          - action: text.set_value
+          - action: input_number.set_value
             target:
-              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+              entity_id: !input input_number_entity
             data:
-              value: "{{ ring_color }}"
-          - action: text.set_value
-            target:
-              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
-            data:
-              value: "{{ ring_color }}"
+              value: "{{ computed_percent }}"
+          - if:
+              - condition: template
+                value_template: "{{ sync_ring_colour }}"
+            then:
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+                data:
+                  value: "{{ ring_color }}"
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+                data:
+                  value: "{{ ring_color }}"
 
 mode: single
 ```
