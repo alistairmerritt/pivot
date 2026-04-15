@@ -10,9 +10,9 @@ header_pages:
   - integration.md
   - timer.md
   - dashboard.md
+  - automations.md
   - architecture.md
   - help.md
-  - changelog.md
 
 markdown: kramdown
 kramdown:
