@@ -24,6 +24,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | [Button press with configurable action](#button-press-action) | Run any action on button press, optionally filtered by assigned entity |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off |
 | [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
+| [Scene scrubbing](#scene-scrubbing) | Dial scrolls through up to four scenes |
 
 ---
 
@@ -556,6 +557,144 @@ actions:
           - action: media_player.toggle
             target:
               entity_id: media_player.living_room_tv
+
+mode: single
+```
+{% endraw %}
+
+---
+
+## Scene scrubbing — dial scrolls through scenes
+{: #scene-scrubbing}
+
+A useful pattern for rooms where you have a handful of lighting presets. Divides the dial's 0–100 range into four equal bands and activates a different scene in each. The dial behaves like a scene selector rather than a continuous control.
+
+For example: 0–25% → Relax, 25–50% → Evening, 50–75% → Bright, 75–100% → Focus.
+
+Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
+
+#### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-scene-scrubbing.yaml)
+
+{% raw %}
+```yaml
+blueprint:
+  name: Pivot - Scene Scrubbing
+  description: >
+    Map the Pivot dial to scenes. Divides the 0–100 range into four equal bands,
+    each activating a different scene. Assign an input_number helper (range 0–100)
+    to the bank and select a scene for each quarter of the dial.
+  domain: automation
+  input:
+    input_number_entity:
+      name: Input number helper
+      description: The input_number entity assigned to this bank (range 0–100)
+      selector:
+        entity:
+          domain: input_number
+    scene_1:
+      name: Scene 1 (0–25%)
+      description: Activated when the dial is in the lowest quarter
+      selector:
+        entity:
+          domain: scene
+    scene_2:
+      name: Scene 2 (25–50%)
+      description: Activated when the dial is in the second quarter
+      selector:
+        entity:
+          domain: scene
+    scene_3:
+      name: Scene 3 (50–75%)
+      description: Activated when the dial is in the third quarter
+      selector:
+        entity:
+          domain: scene
+    scene_4:
+      name: Scene 4 (75–100%)
+      description: Activated when the dial is in the highest quarter
+      selector:
+        entity:
+          domain: scene
+
+triggers:
+  - trigger: state
+    entity_id: !input input_number_entity
+
+actions:
+  - variables:
+      val: "{{ trigger.to_state.state | float(0) }}"
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ val < 25 }}"
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: !input scene_1
+      - conditions:
+          - condition: template
+            value_template: "{{ val < 50 }}"
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: !input scene_2
+      - conditions:
+          - condition: template
+            value_template: "{{ val < 75 }}"
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: !input scene_3
+    default:
+      - action: scene.turn_on
+        target:
+          entity_id: !input scene_4
+
+mode: single
+```
+{% endraw %}
+
+#### Raw automation example
+
+{% raw %}
+```yaml
+alias: Pivot - Living Room Scenes
+
+triggers:
+  - trigger: state
+    entity_id: input_number.living_room_scene
+
+actions:
+  - variables:
+      val: "{{ trigger.to_state.state | float(0) }}"
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ val < 25 }}"
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.relax
+      - conditions:
+          - condition: template
+            value_template: "{{ val < 50 }}"
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.evening
+      - conditions:
+          - condition: template
+            value_template: "{{ val < 75 }}"
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.bright
+    default:
+      - action: scene.turn_on
+        target:
+          entity_id: scene.focus
 
 mode: single
 ```
