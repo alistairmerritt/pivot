@@ -116,6 +116,8 @@ actions:
             id: dial
           - condition: template
             value_template: "{{ control_mode == 'colour_temperature' }}"
+          - condition: template
+            value_template: "{{ (trigger.to_state.state | float | round(0) | int) != (sync_percent_ct | round(0) | int) }}"
         sequence:
           - action: light.turn_on
             target:
@@ -127,6 +129,8 @@ actions:
             id: dial
           - condition: template
             value_template: "{{ control_mode == 'hue' }}"
+          - condition: template
+            value_template: "{{ (trigger.to_state.state | float | round(0) | int) != (sync_percent_hue | round(0) | int) }}"
         sequence:
           - action: light.turn_on
             target:
