@@ -28,7 +28,8 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 ## Colour temperature control — dial adjusts warmth, press toggles light
 
-Lights with adjustable colour temperature (warm to cool white) can't be directly assigned as a bank entity because Pivot expects a 0–100 value range, which is mapped to brightness by default. The workaround is to assign an `input_number` helper to the bank instead — the dial adjusts the helper, and this automation translates that 0–100 value into the correct colour temperature for your specific light.
+Assigning a light directly to a bank gives you brightness control — the 0–100 dial value maps to brightness percentage. To control colour temperature instead, assign an `input_number` helper to the bank and use this automation to translate that 0–100 value into the correct kelvin for your specific light.
+
 
 The automation also keeps the helper in sync if the light's temperature is changed from elsewhere (e.g. via the HA UI or another automation), so the dial position always reflects the current state.
 
