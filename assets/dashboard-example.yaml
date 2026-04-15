@@ -609,9 +609,13 @@ button_card_templates:
               - margin: 0px 0 0 0
               - border: none
             progress:
-              - background: >
-                  [[[return states[variables.color_entity]?.state ??
-                  '#ff5252';]]]
+              - background: |
+                  [[[
+                    const entityId = states[variables.name_entity]?.state;
+                    const entityState = entityId ? states[entityId]?.state : undefined;
+                    if (entityState === 'off') return 'transparent';
+                    return states[variables.color_entity]?.state ?? '#ff5252';
+                  ]]]
               - border-radius: 25px 0px 0px 25px
               - height: 23px
               - margin: 0 0 0 0
@@ -622,9 +626,10 @@ button_card_templates:
                   '#ff5252';]]]
               - display: |
                   [[[
-                    return parseFloat(states[variables.value_entity]?.state) === 0
-                      ? 'none'
-                      : 'block';
+                    const entityId = states[variables.name_entity]?.state;
+                    const entityState = entityId ? states[entityId]?.state : undefined;
+                    const value = parseFloat(states[variables.value_entity]?.state ?? 0);
+                    return (entityState === 'off' || value === 0) ? 'none' : 'block';
                   ]]]
               - width: 15px
               - height: 23px
