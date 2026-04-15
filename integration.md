@@ -231,6 +231,117 @@ Pivot events carry enough context to let automations be as specific or as broad 
 
 ---
 
+### Example: Play/Pause computer media while Bank 1 is assigned to computer volume
+
+This example adds extra behaviour on top of the integration's built-in toggle. Bank 1 is already controlling computer volume via an `input_number` helper — this automation adds a play/pause shell command to the same button press, but only fires it when that specific helper is assigned to Bank 1. Any other bank behaves normally.
+
+The helper entity is `input_number.example_computer_volume` and the shell command is `shell_command.music_playpause`.
+
+{% raw %}
+```yaml
+alias: Pivot Example - Computer Play Pause
+
+triggers:
+  - trigger: state
+    entity_id: event.example_vpe_button_press
+    not_from:
+      - unavailable
+    not_to:
+      - unavailable
+      - unknown
+
+conditions:
+  - condition: state
+    entity_id: event.example_vpe_button_press
+    attribute: event_type
+    state: single_press
+
+  - condition: numeric_state
+    entity_id: number.ha_voice_lounge_active_bank
+    above: 0
+    below: 2
+
+  - condition: template
+    value_template: >
+      {{ states('text.example_pivot_bank_1_entity') == 'input_number.example_computer_volume' }}
+
+actions:
+  - action: shell_command.music_playpause
+
+mode: single
+```
+{% endraw %}
+
+---
+
+### Example: Controlling colour temperature via an input_number helper
+
+This example uses an `input_number` helper as the bank entity so the dial adjusts the warmth of a lamp. A single press toggles the light. The dial position stays in sync if the light is changed from elsewhere.
+
+Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to Bank 2 on your device.
+
+{% raw %}
+```yaml
+alias: Pivot - Study Lamp Warmth Control
+description: ""
+triggers:
+  - trigger: state
+    entity_id: input_number.study_lamp_warmth
+    id: dial
+  - trigger: event
+    event_type: pivot_button_press
+    event_data:
+      suffix: ha_voice_orange
+      bank: 2
+    id: press
+  - trigger: state
+    entity_id: light.home_desk_light
+    id: sync
+actions:
+  - variables:
+      percent: "{{ states('input_number.study_lamp_warmth') | float(0) }}"
+      min_mired: "{{ state_attr('light.home_desk_light', 'min_mireds') | float(153) }}"
+      max_mired: "{{ state_attr('light.home_desk_light', 'max_mireds') | float(500) }}"
+      target_kelvin: >-
+        {{ (1000000 / ((min_mired | int) + ((percent / 100) * ((max_mired | int)
+        - (min_mired | int))))) | round(0) | int }}
+      current_mired: "{{ state_attr('light.home_desk_light', 'color_temp') | float(0) }}"
+      sync_percent: >-
+        {{ (((current_mired - min_mired) / (max_mired - min_mired)) * 100) |
+        round(0) }}
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: dial
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: light.home_desk_light
+            data:
+              color_temp_kelvin: "{{ target_kelvin | int }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
+          - action: light.toggle
+            target:
+              entity_id: light.home_desk_light
+      - conditions:
+          - condition: trigger
+            id: sync
+          - condition: template
+            value_template: "{{ current_mired > 0 and max_mired > min_mired }}"
+        sequence:
+          - action: input_number.set_value
+            target:
+              entity_id: input_number.study_lamp_warmth
+            data:
+              value: "{{ [[sync_percent, 0] | max, 100] | min }}"
+```
+{% endraw %}
+
+---
+
 ### Example: Controlling a light with custom automations
 
 The example below sets a light's brightness from the knob value and toggles it with a single press, for a device with suffix `ha_voice_lounge` and Bank 1 assigned to `light.living_room`. In this case the built-in toggle is already handled, but the same pattern applies to any action you want to add on top.
@@ -285,47 +396,3 @@ mode: single
 Create one pair of automations like this per bank. You can use any entity domain and any action — the pattern is the same regardless of what you are controlling.
 
 > **Available event fields** — see the [Events](#events) section above for the full list of fields available on `pivot_knob_turn` and `pivot_button_press` events.
-
----
-
-### Example: Play/Pause computer media while Bank 1 is assigned to computer volume
-
-This example adds extra behaviour on top of the integration's built-in toggle. Bank 1 is already controlling computer volume via an `input_number` helper — this automation adds a play/pause shell command to the same button press, but only fires it when that specific helper is assigned to Bank 1. Any other bank behaves normally.
-
-The helper entity is `input_number.example_computer_volume` and the shell command is `shell_command.music_playpause`.
-
-{% raw %}
-```yaml
-alias: Pivot Example - Computer Play Pause
-
-triggers:
-  - trigger: state
-    entity_id: event.example_vpe_button_press
-    not_from:
-      - unavailable
-    not_to:
-      - unavailable
-      - unknown
-
-conditions:
-  - condition: state
-    entity_id: event.example_vpe_button_press
-    attribute: event_type
-    state: single_press
-
-  - condition: numeric_state
-    entity_id: number.ha_voice_lounge_active_bank
-    above: 0
-    below: 2
-
-  - condition: template
-    value_template: >
-      {{ states('text.example_pivot_bank_1_entity') == 'input_number.example_computer_volume' }}
-
-actions:
-  - action: shell_command.music_playpause
-
-mode: single
-```
-{% endraw %}
-
