@@ -46,7 +46,7 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-colour-temperature.yaml)
 
-<details>
+<details markdown="1">
 <summary>Blueprint YAML</summary>
 
 {% raw %}
@@ -258,7 +258,7 @@ mode: single
 
 #### Raw automation examples
 
-<details>
+<details markdown="1">
 <summary>Colour temperature</summary>
 
 {% raw %}
@@ -328,7 +328,7 @@ mode: single
 
 </details>
 
-<details>
+<details markdown="1">
 <summary>Hue</summary>
 
 {% raw %}
@@ -450,7 +450,7 @@ This automation fires any action you choose on button press, with an optional ch
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-button-press-action.yaml)
 
-<details>
+<details markdown="1">
 <summary>Blueprint YAML</summary>
 
 {% raw %}
@@ -526,7 +526,7 @@ mode: single
 
 #### Raw automation example
 
-<details>
+<details markdown="1">
 <summary>Raw automation example</summary>
 
 {% raw %}
@@ -570,7 +570,7 @@ If you want separate play/pause control for streaming apps, it is best to assign
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-media-player-tv.yaml)
 
-<details>
+<details markdown="1">
 <summary>Blueprint YAML</summary>
 
 {% raw %}
@@ -645,7 +645,7 @@ mode: single
 
 #### Raw automation example
 
-<details>
+<details markdown="1">
 <summary>Raw automation example</summary>
 
 {% raw %}
@@ -707,7 +707,7 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-scene-scrubbing.yaml)
 
-<details>
+<details markdown="1">
 <summary>Blueprint YAML</summary>
 
 {% raw %}
@@ -848,7 +848,7 @@ mode: single
 
 #### Raw automation example
 
-<details>
+<details markdown="1">
 <summary>Raw automation example</summary>
 
 {% raw %}
@@ -930,7 +930,7 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-sensor-gauge.yaml)
 
-<details>
+<details markdown="1">
 <summary>Blueprint YAML</summary>
 
 {% raw %}
@@ -1117,7 +1117,7 @@ mode: single
 
 #### Raw automation example
 
-<details>
+<details markdown="1">
 <summary>Raw automation example</summary>
 
 {% raw %}
@@ -1184,7 +1184,7 @@ Unlike the colour temperature example, this one uses the raw `pivot_knob_turn` e
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-light-brightness.yaml)
 
-<details>
+<details markdown="1">
 <summary>Blueprint YAML</summary>
 
 {% raw %}
@@ -1257,7 +1257,7 @@ mode: single
 
 #### Raw automation example
 
-<details>
+<details markdown="1">
 <summary>Raw automation examples</summary>
 
 {% raw %}
