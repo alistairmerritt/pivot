@@ -6,13 +6,13 @@ permalink: /getting-started/
 
 This guide walks you through everything needed to get Pivot running on a Home Assistant Voice Preview Edition (VPE) device. Setup takes around 15–30 minutes depending on your familiarity with Home Assistant and ESPHome.
 
-> **Pivot runs alongside your existing voice setup without interfering with it.** The ESPHome integration remains unchanged, and any settings already configured on your VPE — such as the voice assistant, wake word, volume, or listening-mode LED colour — are left exactly as they are. Pivot cannot read or modify those settings; it simply adds a separate layer of control on top.
+> **Pivot runs alongside your existing voice setup without interfering with it.** The ESPHome integration remains unchanged, and any settings already configured on your VPE (such as the voice assistant, wake word, volume, or listening-mode LED colour) are left exactly as they are. Pivot cannot read or modify those settings; it simply adds a separate layer of control on top.
 
 ## What you need
 
 - A Home Assistant Voice Preview Edition (VPE)
 - Home Assistant with the ESPHome integration installed
-- The **ESPHome Device Builder add-on version 2026.4.0 or later** installed in Home Assistant
+- The **ESPHome Device Builder app (FKA add-on)** (version 2026.4.0 or later) installed
 - HACS installed in Home Assistant
 - Your WiFi credentials
 
