@@ -191,6 +191,6 @@ If you also want to control that timer from a dashboard, set up **Pivot — Time
 
 - [Firmware reference](/pivot/firmware/) — full substitutions reference and multi-device setup
 - [Integration reference](/pivot/integration/) — full entity reference and events
-- [Custom Automations](/pivot/automations/) — blueprints and examples for extending Pivot
+- [Custom Automations](/pivot/automations/) — blueprints and examples for extending Pivot's functionality
 - [Troubleshooting](/pivot/troubleshooting/) — common issues and fixes
 - [Timer setup](/pivot/timer/) — how to set up a countdown timer in Pivot
