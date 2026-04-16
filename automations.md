@@ -46,6 +46,9 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-colour-temperature.yaml)
 
+<details>
+<summary>Blueprint YAML</summary>
+
 {% raw %}
 ```yaml
 blueprint:
@@ -251,9 +254,12 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 #### Raw automation examples
 
-**Colour temperature:**
+<details>
+<summary>Colour temperature</summary>
 
 {% raw %}
 ```yaml
@@ -320,7 +326,10 @@ mode: single
 ```
 {% endraw %}
 
-**Hue:**
+</details>
+
+<details>
+<summary>Hue</summary>
 
 {% raw %}
 ```yaml
@@ -426,6 +435,8 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 ---
 
 ## Button press with configurable action — e.g. dial controls volume, press to play/pause media
@@ -438,6 +449,9 @@ This automation fires any action you choose on button press, with an optional ch
 #### Blueprint
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-button-press-action.yaml)
+
+<details>
+<summary>Blueprint YAML</summary>
 
 {% raw %}
 ```yaml
@@ -508,7 +522,12 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 #### Raw automation example
+
+<details>
+<summary>Raw automation example</summary>
 
 {% raw %}
 ```yaml
@@ -534,6 +553,8 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 ---
 
 ## Media player volume and power toggle — dial controls volume, press toggles TV on/off
@@ -548,6 +569,9 @@ If you want separate play/pause control for streaming apps, it is best to assign
 #### Blueprint
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-media-player-tv.yaml)
+
+<details>
+<summary>Blueprint YAML</summary>
 
 {% raw %}
 ```yaml
@@ -617,7 +641,12 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 #### Raw automation example
+
+<details>
+<summary>Raw automation example</summary>
 
 {% raw %}
 ```yaml
@@ -661,6 +690,8 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 ---
 
 ## Scene scrubbing — dial previews scenes, press activates
@@ -675,6 +706,9 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 #### Blueprint
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-scene-scrubbing.yaml)
+
+<details>
+<summary>Blueprint YAML</summary>
 
 {% raw %}
 ```yaml
@@ -810,7 +844,12 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 #### Raw automation example
+
+<details>
+<summary>Raw automation example</summary>
 
 {% raw %}
 ```yaml
@@ -868,6 +907,8 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 > **How it works:** The dial updates the `input_number` helper, which triggers this automation. Instead of activating the scene immediately, it writes the preview colour to the LED ring so you can see which scene you're hovering over. When you press, the button event fires and the selected scene activates. The scene is computed at press time from the current dial position, so whatever band you stopped in is what gets activated.
 
 ---
@@ -888,6 +929,9 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 #### Blueprint
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-sensor-gauge.yaml)
+
+<details>
+<summary>Blueprint YAML</summary>
 
 {% raw %}
 ```yaml
@@ -1069,7 +1113,12 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 #### Raw automation example
+
+<details>
+<summary>Raw automation example</summary>
 
 {% raw %}
 ```yaml
@@ -1120,6 +1169,8 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 ---
 
 ## Light brightness and toggle — dial sets brightness, press toggles on/off
@@ -1132,6 +1183,9 @@ Unlike the colour temperature example, this one uses the raw `pivot_knob_turn` e
 #### Blueprint
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-light-brightness.yaml)
+
+<details>
+<summary>Blueprint YAML</summary>
 
 {% raw %}
 ```yaml
@@ -1199,7 +1253,12 @@ mode: single
 ```
 {% endraw %}
 
+</details>
+
 #### Raw automation example
+
+<details>
+<summary>Raw automation examples</summary>
 
 {% raw %}
 ```yaml
@@ -1243,3 +1302,5 @@ actions:
 mode: single
 ```
 {% endraw %}
+
+</details>
