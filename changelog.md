@@ -280,6 +280,9 @@ permalink: /changelog/
 
 ## Firmware
 
+### v0.0.21
+- **New:** In control mode, turning the knob while the voice assistant is speaking adjusts the device volume instead of the active bank value. The LED ring switches to the voice mode volume display for the duration. Triggered only by VA TTS replies — integration announcements (bank values, bank changes) are unaffected.
+
 ### v0.0.20
 - **Fix:** Updated component pins for ESPHome 2026.4.0 compatibility. `audio`, `media_player`, `mdns`, `file`, and `speaker_source` components are now merged into ESPHome core and no longer pinned externally. `sendspin`, `media_source`, and `const` are now sourced from the updated PR #14933. `http_request` pin updated to the current PR #12429 commit. Audio pipeline migrated to the new `audio_file` platform and updated `speaker_source` pipeline API. No functional changes.
 
