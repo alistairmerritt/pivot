@@ -23,10 +23,10 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | Automation | What it does |
 |---|---|
 | [Colour control](#colour-temperature) | Dial adjusts colour temperature or hue, press toggles on/off |
-| [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer |
-| [Media player volume and power toggle](#media-player-tv) | Dial sets volume, press toggles TV on/off |
+| [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer while dial controls volume |
+| [Media player volume and power toggle](#media-player-tv) | Dial controls volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
-| [Sensor gauge](#sensor-gauge) | Display any numeric value on the dial — always one-way, e.g. fuel level, battery, thermostat target |
+| [Sensor gauge](#sensor-gauge) | Display any sensor on the dial — always one-way, e.g. fuel level, battery, thermostat target |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
 
 ---
