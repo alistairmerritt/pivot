@@ -375,3 +375,55 @@ To fix: go to **Settings → Devices & Services → Pivot → your device → Co
 ---
 
 ### File & config issues
+
+### Blueprints are missing after installing the integration
+
+Blueprint files are installed automatically when the integration is set up. If they are missing:
+
+1. Go to **Settings → Devices & Services → Pivot → your device** and click the ⋮ menu → **Reload**.
+2. Check `/config/blueprints/automation/pivot/` and `/config/blueprints/script/pivot/` — the files should appear after a reload.
+3. If they still don't appear, remove and re-add the integration.
+
+---
+
+### The `device_suffix` field is greyed out or pre-filled with the wrong value
+
+The config flow pre-fills `device_suffix` based on the ESPHome device name. If the pre-filled value does not match your firmware's actual suffix, clear the field and type the suffix manually — it must match the `device_suffix` substitution in your ESPHome YAML exactly.
+
+---
+
+## Diagnostic flowchart
+
+Use this to quickly narrow down where a problem is.
+
+```
+Is the VPE showing a revolving blue LED pattern?
+├── Yes → Connection problem
+│   ├── Check HA for a notification asking for an encryption key
+│   │   └── Yes → Enter the api_encryption_key from your firmware YAML
+│   └── No notification → WiFi credentials issue
+│       └── Check wifi_ssid / wifi_password in your ESPHome YAML and reflash
+│
+└── No (solid or pulsing colour, or off)
+    │
+    Is the VPE showing the active bank colour on the LED ring?
+    ├── No → Control Mode is off
+    │   └── Double press the button to enable Control Mode
+    │
+    └── Yes → Control Mode is on
+        │
+        Does turning the knob change the entity value?
+        ├── No
+        │   ├── Check bank has an entity assigned (Settings → Pivot → Configure)
+        │   ├── Check the entity type is supported (light, fan, media player, climate, cover)
+        │   └── Check "Allow device to perform HA actions" is enabled in ESPHome integration
+        │
+        └── Yes — knob works
+            │
+            Does pressing the button toggle the entity?
+            ├── No
+            │   ├── Check integration is v0.0.59 or later
+            │   └── Check firmware is v0.0.15 or later
+            │
+            └── Yes — everything is working
+```
