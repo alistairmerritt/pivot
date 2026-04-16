@@ -9,12 +9,10 @@ permalink: /changelog/
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
 | v0.0.21 | v0.0.76 | 2026.4.0+ | 2024.4.0+ |
-| v0.0.20 | v0.0.75 | 2026.4.0+ | 2024.4.0+ |
-| v0.0.15–v0.0.19 | v0.0.59–v0.0.74 | 2026.2.0+ | 2024.4.0+ |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
-> **Breaking change in v0.0.75:** Bank entity IDs changed from 0-based (`bank_0_*`) to 1-based (`bank_1_*`). If upgrading from v0.0.74 or earlier, existing entity registry entries for the renamed entities will be orphaned — remove them after upgrading. Any custom automations or dashboards using the old entity IDs must also be updated.
+> **Home Assistant 2024.4.0 or later is required.** The integration's bundled blueprints use the `action:` key and `trigger:` shorthand syntax introduced in that release. The integration itself will install on older versions, but the blueprints will silently fail to validate.
 
 ---
 
