@@ -16,7 +16,7 @@ Pivot can be enabled or disabled at any time with a double press, allowing you t
   Just turn to adjust, press to activate.
 
 - **Always know what you’re controlling**  
-  Each bank represents a different entity, with clear visual feedback from the LED ring and optional spoken announcements when switching banks or adjusting values.
+  Each bank represents a different entity or action, with clear visual feedback from the LED ring and optional spoken announcements when switching banks or adjusting values.
 
 - **Fast and instinctive**  
   Make adjustments in seconds, without breaking your flow.
