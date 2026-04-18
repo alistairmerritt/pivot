@@ -175,19 +175,8 @@ actions:
         {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
         {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
       ct_ring_hex: >-
-        {% set pct = (sync_percent_ct if trigger.id == 'sync' else percent) | float / 100.0 %}
-        {% if pct <= 0.5 %}
-          {% set t = pct * 2.0 %}
-          {% set r = (180 + t * (255 - 180)) | int %}
-          {% set g = (210 + t * (255 - 210)) | int %}
-          {% set b = 255 %}
-        {% else %}
-          {% set t = (pct - 0.5) * 2.0 %}
-          {% set r = 255 %}
-          {% set g = (255 + t * (147 - 255)) | int %}
-          {% set b = (255 + t * (41 - 255)) | int %}
-        {% endif %}
-        {{ '#%02x%02x%02x' | format(r, g, b) }}
+        {% set rgb = state_attr(light_entity, 'rgb_color') or [255, 255, 255] %}
+        {{ '#%02x%02x%02x' | format(rgb[0] | int, rgb[1] | int, rgb[2] | int) }}
   - condition: template
     value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
   - choose:
