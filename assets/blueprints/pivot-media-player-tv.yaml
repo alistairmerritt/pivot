@@ -2,7 +2,8 @@ blueprint:
   name: Pivot - Media Player Volume & Power Toggle
   description: >
     Control a TV's volume with the Pivot dial and toggle power on single press.
-    Assign your TV entity to the bank as normal. Single press will toggle power alongside
+    Assign your TV entity to the bank as normal — the media player entity is read
+    automatically from the bank assignment. Single press will toggle power alongside
     the native play/pause — in practice the play/pause is harmless for a TV entity.
   domain: automation
   input:
@@ -19,12 +20,10 @@ blueprint:
           min: 1
           max: 4
           mode: box
-    media_player_entity:
-      name: Media player
-      description: The TV or media player to control
-      selector:
-        entity:
-          domain: media_player
+
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
 
 triggers:
   - trigger: event
@@ -42,6 +41,8 @@ triggers:
     id: press
 
 actions:
+  - variables:
+      media_player_entity: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') }}"
   - choose:
       - conditions:
           - condition: trigger
@@ -49,7 +50,7 @@ actions:
         sequence:
           - action: media_player.volume_set
             target:
-              entity_id: !input media_player_entity
+              entity_id: "{{ media_player_entity }}"
             data:
               volume_level: "{{ trigger.event.data.value / 100 }}"
       - conditions:
@@ -58,6 +59,6 @@ actions:
         sequence:
           - action: media_player.toggle
             target:
-              entity_id: !input media_player_entity
+              entity_id: "{{ media_player_entity }}"
 
 mode: single
