@@ -24,6 +24,10 @@ blueprint:
         entity:
           domain: light
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
   - trigger: event
     event_type: pivot_knob_turn
@@ -40,6 +44,10 @@ triggers:
     id: press
 
 actions:
+  - variables:
+      light_entity: !input light_entity
+  - condition: template
+    value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == light_entity }}"
   - choose:
       - conditions:
           - condition: trigger
@@ -47,7 +55,7 @@ actions:
         sequence:
           - action: light.turn_on
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light_entity }}"
             data:
               brightness_pct: "{{ trigger.event.data.value }}"
       - conditions:
@@ -56,6 +64,6 @@ actions:
         sequence:
           - action: light.toggle
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light_entity }}"
 
 mode: single

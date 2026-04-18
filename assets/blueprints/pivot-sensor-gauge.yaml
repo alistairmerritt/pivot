@@ -95,6 +95,10 @@ blueprint:
       selector:
         color_rgb: {}
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
   - trigger: state
     entity_id: !input sensor_entity
@@ -137,6 +141,8 @@ actions:
         {% elif computed_percent < 83 %}{% set c = color_66_83 %}
         {% else %}{% set c = color_83_100 %}{% endif %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
+  - condition: template
+    value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
   - choose:
       - conditions:
           - condition: trigger

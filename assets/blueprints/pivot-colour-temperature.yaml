@@ -53,6 +53,10 @@ blueprint:
       selector:
         boolean:
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
   - trigger: state
     entity_id: !input input_number_entity
@@ -110,6 +114,8 @@ actions:
         {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
         {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
         {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
+  - condition: template
+    value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
   - choose:
       - conditions:
           - condition: trigger
