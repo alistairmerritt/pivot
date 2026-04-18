@@ -1304,3 +1304,202 @@ mode: single
 {% endraw %}
 
 </details>
+
+## Climate control — dial sets temperature, press toggles on/off
+{: #climate-control}
+
+Assign a climate entity directly to a Pivot bank. The integration handles everything natively — turn the knob to change the set temperature, press once in Control Mode to toggle the climate on and off. This blueprint manages only the LED ring colour, which smoothly interpolates across eight configurable temperature stops from deep blue (cold) through green (comfortable) to dark red (hot).
+
+No helper entities required. Just assign your climate entity to the bank as you would any other entity.
+
+#### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-climate-control.yaml)
+
+<details markdown="1">
+<summary>Blueprint YAML</summary>
+
+{% raw %}
+```yaml
+blueprint:
+  name: Pivot - Climate Control
+  description: >
+    Colours the LED ring of a Pivot bank based on the set temperature of a
+    climate entity. Assign the climate entity directly to the bank — the Pivot
+    integration handles temperature control and on/off toggle natively. This
+    blueprint only manages the ring colour, interpolating smoothly across eight
+    configurable temperature colour stops.
+  domain: automation
+  input:
+    climate_entity:
+      name: Climate entity
+      description: The climate entity assigned to this bank
+      selector:
+        entity:
+          domain: climate
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number this climate entity is assigned to (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    temp_min:
+      name: Temperature minimum (°C)
+      description: The temperature mapped to 0% on the dial
+      default: 16
+      selector:
+        number:
+          min: 0
+          max: 40
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+    temp_max:
+      name: Temperature maximum (°C)
+      description: The temperature mapped to 100% on the dial
+      default: 30
+      selector:
+        number:
+          min: 0
+          max: 40
+          step: 0.5
+          unit_of_measurement: "°C"
+          mode: box
+    color_0c:
+      name: Colour — 0°C
+      default: [15, 40, 191]
+      selector:
+        color_rgb: {}
+    color_12c:
+      name: Colour — 12°C
+      default: [5, 122, 255]
+      selector:
+        color_rgb: {}
+    color_15c:
+      name: Colour — 15°C
+      default: [101, 210, 255]
+      selector:
+        color_rgb: {}
+    color_18c:
+      name: Colour — 18°C
+      default: [49, 209, 88]
+      selector:
+        color_rgb: {}
+    color_21c:
+      name: Colour — 21°C
+      default: [255, 204, 0]
+      selector:
+        color_rgb: {}
+    color_24c:
+      name: Colour — 24°C
+      default: [255, 148, 0]
+      selector:
+        color_rgb: {}
+    color_27c:
+      name: Colour — 27°C
+      default: [255, 40, 1]
+      selector:
+        color_rgb: {}
+    color_30c:
+      name: Colour — 30°C
+      default: [191, 30, 30]
+      selector:
+        color_rgb: {}
+
+triggers:
+  - trigger: state
+    entity_id: !input climate_entity
+    attribute: temperature
+    id: climate
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+    id: knob
+
+actions:
+  - variables:
+      climate_entity: !input climate_entity
+      suffix_var: !input suffix
+      bank_var: !input bank
+      temp_min: !input temp_min
+      temp_max: !input temp_max
+      color_0c: !input color_0c
+      color_12c: !input color_12c
+      color_15c: !input color_15c
+      color_18c: !input color_18c
+      color_21c: !input color_21c
+      color_24c: !input color_24c
+      color_27c: !input color_27c
+      color_30c: !input color_30c
+      set_temp: >-
+        {% if trigger.id == 'knob' %}
+          {{ temp_min + (trigger.event.data.value | float(0) / 100) * (temp_max - temp_min) }}
+        {% else %}
+          {{ state_attr(climate_entity, 'temperature') | float(temp_min) }}
+        {% endif %}
+      ring_color: >-
+        {% set ns = namespace(r=0, g=0, b=0) %}
+        {% set t = set_temp | float %}
+        {% if t <= 12 %}
+          {% set frac = t / 12 %}
+          {% set ns.r = (color_0c[0] + frac * (color_12c[0] - color_0c[0])) | int %}
+          {% set ns.g = (color_0c[1] + frac * (color_12c[1] - color_0c[1])) | int %}
+          {% set ns.b = (color_0c[2] + frac * (color_12c[2] - color_0c[2])) | int %}
+        {% elif t <= 15 %}
+          {% set frac = (t - 12) / 3 %}
+          {% set ns.r = (color_12c[0] + frac * (color_15c[0] - color_12c[0])) | int %}
+          {% set ns.g = (color_12c[1] + frac * (color_15c[1] - color_12c[1])) | int %}
+          {% set ns.b = (color_12c[2] + frac * (color_15c[2] - color_12c[2])) | int %}
+        {% elif t <= 18 %}
+          {% set frac = (t - 15) / 3 %}
+          {% set ns.r = (color_15c[0] + frac * (color_18c[0] - color_15c[0])) | int %}
+          {% set ns.g = (color_15c[1] + frac * (color_18c[1] - color_15c[1])) | int %}
+          {% set ns.b = (color_15c[2] + frac * (color_18c[2] - color_15c[2])) | int %}
+        {% elif t <= 21 %}
+          {% set frac = (t - 18) / 3 %}
+          {% set ns.r = (color_18c[0] + frac * (color_21c[0] - color_18c[0])) | int %}
+          {% set ns.g = (color_18c[1] + frac * (color_21c[1] - color_18c[1])) | int %}
+          {% set ns.b = (color_18c[2] + frac * (color_21c[2] - color_18c[2])) | int %}
+        {% elif t <= 24 %}
+          {% set frac = (t - 21) / 3 %}
+          {% set ns.r = (color_21c[0] + frac * (color_24c[0] - color_21c[0])) | int %}
+          {% set ns.g = (color_21c[1] + frac * (color_24c[1] - color_21c[1])) | int %}
+          {% set ns.b = (color_21c[2] + frac * (color_24c[2] - color_21c[2])) | int %}
+        {% elif t <= 27 %}
+          {% set frac = (t - 24) / 3 %}
+          {% set ns.r = (color_24c[0] + frac * (color_27c[0] - color_24c[0])) | int %}
+          {% set ns.g = (color_24c[1] + frac * (color_27c[1] - color_24c[1])) | int %}
+          {% set ns.b = (color_24c[2] + frac * (color_27c[2] - color_24c[2])) | int %}
+        {% else %}
+          {% set frac = [((t - 27) / 3), 1] | min %}
+          {% set ns.r = (color_27c[0] + frac * (color_30c[0] - color_27c[0])) | int %}
+          {% set ns.g = (color_27c[1] + frac * (color_30c[1] - color_27c[1])) | int %}
+          {% set ns.b = (color_27c[2] + frac * (color_30c[2] - color_27c[2])) | int %}
+        {% endif %}
+        {{ '#%02x%02x%02x' | format(ns.r, ns.g, ns.b) }}
+  - action: text.set_value
+    target:
+      entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+    data:
+      value: "{{ ring_color }}"
+  - action: text.set_value
+    target:
+      entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+    data:
+      value: "{{ ring_color }}"
+
+mode: queued
+max: 5
+```
+{% endraw %}
+
+</details>
