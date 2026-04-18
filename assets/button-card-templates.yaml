@@ -568,14 +568,25 @@ button_card_templates:
                   [[[
                     const passive = states[variables.passive_entity]?.state;
                     const value = parseFloat(states[variables.value_entity]?.state ?? 0);
+                    const nameEntityId = states[variables.name_entity]?.state;
+                    const entityState = nameEntityId ? states[nameEntityId]?.state : undefined;
+                    const entityId = nameEntityId?.toLowerCase() ?? '';
+
+                    const unassigned =
+                      !nameEntityId ||
+                      nameEntityId === 'unknown' ||
+                      nameEntityId === 'unavailable' ||
+                      entityState === 'unknown' ||
+                      entityState === 'unavailable';
+
+                    if (unassigned) return '';
+
                     if (passive === 'on') {
-                      const nameEntityId = states[variables.name_entity]?.state;
-                      const namedEntity = nameEntityId ? states[nameEntityId]?.state : undefined;
-                      if (namedEntity === 'on') return 'On';
+                      if (entityState === 'on') return 'On';
                       return value === 0 ? 'Off' : 'On';
                     }
-                    const nameEntityId = states[variables.name_entity]?.state;
-                    if (nameEntityId?.toLowerCase() === 'timer') {
+
+                    if (entityId === 'timer') {
                       const timerState = states[variables.timer_state_entity]?.state;
                       if (timerState === 'alerting') return 'Timer Finished';
                       if (timerState === 'running') {
@@ -596,7 +607,26 @@ button_card_templates:
                       const mins = presets[Math.round(value)] ?? Math.round((value / 100) * 60);
                       return `${mins} ${mins === 1 ? 'min' : 'mins'}`;
                     }
-                    return `${Math.round(value)}%`;
+
+                    if (entityId.startsWith('cover.')) {
+                      const rounded = Math.round(value);
+                      if (rounded === 0) return 'Closed';
+                      if (rounded === 100) return 'Open';
+                      return `${rounded}% Open`;
+                    }
+
+                    if (entityId.startsWith('climate.')) {
+                      const temp = states[nameEntityId]?.attributes?.temperature;
+                      if (temp === undefined || temp === null) return '';
+                      return `${Math.round(temp)}°`;
+                    }
+
+                    if (entityState === 'off') return 'Off';
+
+                    const rounded = Math.round(value);
+                    if (rounded === 0) return '';
+
+                    return `${rounded}%`;
                   ]]]
                 styles:
                   card:
