@@ -25,12 +25,12 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | Automation | What it does |
 |---|---|
 | [Colour control](#colour-temperature) | Dial adjusts colour temperature or hue, press toggles on/off |
-| [Climate control](#climate-control) | Dial sets temperature, press toggles on/off — LED ring colour follows temperature |
-| [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer while dial controls volume |
+| [Climate control](#climate-control) | LED reflects the thermostat set temperature (eg blue to red) — turn to adjust, press to turn on or off  |
+| [Button press with configurable action](#button-press-action) | Button press and knob turn adjust different entities — e.g. play/pause a computer while dial controls volume |
 | [Media player volume and power toggle](#media-player-tv) | Dial controls volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
 | [Sensor gauge](#sensor-gauge) | Display any sensor on the dial, e.g. fuel level, washing machine progress, thermostat target |
-| [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
+| [Light brightness and toggle](#light-brightness) | Basic automation example - dial sets brightness, press toggles on/off — useful for light groups |
 
 ---
 
