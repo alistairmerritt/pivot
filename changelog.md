@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.76 | 2026.4.0+ | 2024.4.0+ |
+| v0.0.21 | v0.0.77 | 2026.4.0+ | 2024.4.0+ |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -17,6 +17,13 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+<details markdown="1">
+<summary>v0.0.77</summary>
+
+- **Fix:** Climate, cover, and media player service calls are now debounced (400 ms) when the knob is turned quickly. Previously, rapid knob turns sent a service call on every tick, which could cause cloud-connected devices (e.g. Tuya, MagiqTouch) to drop commands or go temporarily offline. The actual command now only fires once the knob settles. Visual feedback (LED ring colour, `pivot_knob_turn` events) is unaffected and still updates in real-time.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.76</summary>
