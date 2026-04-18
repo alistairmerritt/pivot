@@ -28,6 +28,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
 | [Sensor gauge](#sensor-gauge) | Display any sensor on the dial, e.g. fuel level, washing machine progress, thermostat target |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
+| [Climate control](#climate-control) | Dial sets temperature, press toggles on/off — LED ring colour follows temperature |
 
 ---
 
