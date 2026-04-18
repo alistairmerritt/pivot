@@ -8,6 +8,8 @@ Pivot already handles common controls like brightness, volume, and toggles out o
 
 The examples below show how to use Pivot as a flexible input device for Home Assistant. Each one includes an importable blueprint and a raw YAML version, so you can either use them as-is or adapt them to your own setup.
 
+All blueprints include a built-in guard: if the entity configured in the blueprint isn't currently assigned to the bank, the automation does nothing. This means you can reassign a bank freely without having to disable automations first.
+
 Pivot events carry enough context to make automations as specific or as broad as you need, including:
 
 - which Pivot device was used
@@ -107,6 +109,10 @@ blueprint:
       selector:
         boolean:
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
   - trigger: state
     entity_id: !input input_number_entity
@@ -164,6 +170,8 @@ actions:
         {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
         {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
         {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
+  - condition: template
+    value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
   - choose:
       - conditions:
           - condition: trigger
@@ -466,17 +474,14 @@ blueprint:
     colour stops that are evenly distributed between your configured minimum and
     maximum temperatures.
 
+    The climate entity is read automatically from the bank assignment — no need
+    to specify it here.
+
     Works with both Celsius and Fahrenheit. Set temp_min and temp_max in whichever
     unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F).
     The colour interpolation is percentage-based and fully unit-agnostic.
   domain: automation
   input:
-    climate_entity:
-      name: Climate entity
-      description: The climate entity assigned to this bank
-      selector:
-        entity:
-          domain: climate
     suffix:
       name: Device suffix
       description: The suffix of your Pivot device (e.g. ha_voice_lounge)
@@ -557,10 +562,14 @@ blueprint:
       selector:
         color_rgb: {}
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
-  - trigger: state
-    entity_id: !input climate_entity
-    attribute: temperature
+  - trigger: template
+    value_template: >
+      {{ state_attr(states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity'), 'temperature') | string }}
     id: climate
   - trigger: event
     event_type: pivot_knob_turn
@@ -571,9 +580,10 @@ triggers:
 
 actions:
   - variables:
-      climate_entity: !input climate_entity
-      suffix_var: !input suffix
-      bank_var: !input bank
+      climate_entity: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') }}"
+  - condition: template
+    value_template: "{{ climate_entity.startswith('climate.') }}"
+  - variables:
       temp_min: !input temp_min
       temp_max: !input temp_max
       color_1: !input color_1
@@ -746,9 +756,9 @@ mode: single
 ## Media player volume and power toggle — dial controls volume, press toggles TV on/off
 {: #media-player-tv}
 
-When a media player is assigned to a bank, Pivot normally controls volume with the dial and play/pause with a single press. For a TV, however, power control is often more useful than play/pause. This automation adds that behaviour, letting you assign your TV as normal while using a single press to toggle power as well.
+When a media player is assigned to a bank, Pivot normally controls volume with the dial and play/pause with a single press. For a TV, however, power control is often more useful than play/pause. This automation adds that behaviour — assign your TV as normal and a single press will toggle power as well.
 
-The standard play/pause action still fires, but in most cases this causes no issue. If the TV is turning off, it is irrelevant. If it is turning on, the command is usually ignored.
+The media player entity is read automatically from the bank assignment. The standard play/pause action still fires alongside the power toggle, but for a TV this is generally harmless.
 
 If you want separate play/pause control for streaming apps, it is best to assign the relevant streaming device to a different bank.
 
@@ -765,7 +775,8 @@ blueprint:
   name: Pivot - Media Player Volume & Power Toggle
   description: >
     Control a TV's volume with the Pivot dial and toggle power on single press.
-    Assign your TV entity to the bank as normal. Single press will toggle power alongside
+    Assign your TV entity to the bank as normal — the media player entity is read
+    automatically from the bank assignment. Single press will toggle power alongside
     the native play/pause — in practice the play/pause is harmless for a TV entity.
   domain: automation
   input:
@@ -782,12 +793,10 @@ blueprint:
           min: 1
           max: 4
           mode: box
-    media_player_entity:
-      name: Media player
-      description: The TV or media player to control
-      selector:
-        entity:
-          domain: media_player
+
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
 
 triggers:
   - trigger: event
@@ -805,6 +814,10 @@ triggers:
     id: press
 
 actions:
+  - variables:
+      media_player_entity: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') }}"
+  - condition: template
+    value_template: "{{ media_player_entity.startswith('media_player.') }}"
   - choose:
       - conditions:
           - condition: trigger
@@ -812,7 +825,7 @@ actions:
         sequence:
           - action: media_player.volume_set
             target:
-              entity_id: !input media_player_entity
+              entity_id: "{{ media_player_entity }}"
             data:
               volume_level: "{{ trigger.event.data.value / 100 }}"
       - conditions:
@@ -821,7 +834,7 @@ actions:
         sequence:
           - action: media_player.toggle
             target:
-              entity_id: !input media_player_entity
+              entity_id: "{{ media_player_entity }}"
 
 mode: single
 ```
@@ -966,6 +979,10 @@ blueprint:
       selector:
         color_rgb: {}
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
   - trigger: state
     entity_id: !input input_number_entity
@@ -1003,6 +1020,8 @@ actions:
         {% elif val < 75 %}{% set c = color_3 %}
         {% else %}{% set c = color_4 %}{% endif %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
+  - condition: template
+    value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
   - choose:
       - conditions:
           - condition: trigger
@@ -1218,6 +1237,10 @@ blueprint:
       selector:
         color_rgb: {}
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
   - trigger: state
     entity_id: !input sensor_entity
@@ -1260,6 +1283,8 @@ actions:
         {% elif computed_percent < 83 %}{% set c = color_66_83 %}
         {% else %}{% set c = color_83_100 %}{% endif %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
+  - condition: template
+    value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
   - choose:
       - conditions:
           - condition: trigger
@@ -1401,6 +1426,10 @@ blueprint:
         entity:
           domain: light
 
+variables:
+  suffix_var: !input suffix
+  bank_var: !input bank
+
 triggers:
   - trigger: event
     event_type: pivot_knob_turn
@@ -1417,6 +1446,10 @@ triggers:
     id: press
 
 actions:
+  - variables:
+      light_entity: !input light_entity
+  - condition: template
+    value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == light_entity }}"
   - choose:
       - conditions:
           - condition: trigger
@@ -1424,7 +1457,7 @@ actions:
         sequence:
           - action: light.turn_on
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light_entity }}"
             data:
               brightness_pct: "{{ trigger.event.data.value }}"
       - conditions:
@@ -1433,7 +1466,7 @@ actions:
         sequence:
           - action: light.toggle
             target:
-              entity_id: !input light_entity
+              entity_id: "{{ light_entity }}"
 
 mode: single
 ```
