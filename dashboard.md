@@ -90,7 +90,7 @@ Available values:
 | `toggle_entity` | Switch |
 | --- | --- |
 | `control_mode` | Enable or disable Pivot control |
-| `announcements` | Announce bank changes and triple-press by voice (System Announcements) |
+| `announcements` | Announce bank changes by voice (System Announcements) |
 | `mute_announcements` | Silence all spoken announcements temporarily |
 | `show_control_value` | Keep value visible on LED ring when idle |
 | `dim_when_idle` | Dim gauge LEDs while not interacting |

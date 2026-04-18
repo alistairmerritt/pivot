@@ -29,7 +29,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | `switch.{device_suffix}_control_mode` | Control Mode vs Normal (voice) Mode |
 | `switch.{device_suffix}_show_control_value` | Keep gauge LEDs permanently visible in control mode |
 | `switch.{device_suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
-| `switch.{device_suffix}_announcements` | System Announcements — enable/disable bank-change and triple-press TTS announcements |
+| `switch.{device_suffix}_announcements` | System Announcements — enable/disable bank-change TTS announcements |
 | `switch.{device_suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, and timer) without changing other settings |
 | `switch.{device_suffix}_bank_1_mirror_light` | Bank 1 — mirror assigned RGB light colour |
 | `switch.{device_suffix}_bank_2_mirror_light` | Bank 2 — mirror assigned RGB light colour |
@@ -113,7 +113,7 @@ Pivot can speak the name of the active bank and the current value of a bank's en
 Three announcement types are supported:
 
 - **Bank change** — speaks the assigned entity's name whenever you switch banks (Control Mode only). Requires the **System Announcements** switch to be on.
-- **Triple press** — re-announces the current bank's entity name. Requires **System Announcements** to be on.
+- **Triple press** — re-announces the current bank's entity name. Works regardless of the System Announcements switch — only **Mute Announcements** silences it.
 - **Value announcement** — speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{device_suffix}_bank_N_announce_value`) — only banks with this switch on will announce.
 
 Supported domains and what is spoken for value announcements:
