@@ -43,6 +43,8 @@ triggers:
 actions:
   - variables:
       media_player_entity: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') }}"
+  - condition: template
+    value_template: "{{ media_player_entity.startswith('media_player.') }}"
   - choose:
       - conditions:
           - condition: trigger

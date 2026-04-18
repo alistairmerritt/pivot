@@ -115,6 +115,9 @@ triggers:
 actions:
   - variables:
       climate_entity: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') }}"
+  - condition: template
+    value_template: "{{ climate_entity.startswith('climate.') }}"
+  - variables:
       temp_min: !input temp_min
       temp_max: !input temp_max
       color_1: !input color_1
