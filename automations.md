@@ -23,12 +23,12 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | Automation | What it does |
 |---|---|
 | [Colour control](#colour-temperature) | Dial adjusts colour temperature or hue, press toggles on/off |
+| [Climate control](#climate-control) | Dial sets temperature, press toggles on/off — LED ring colour follows temperature |
 | [Button press with configurable action](#button-press-action) | Press triggers any action — e.g. play/pause a computer while dial controls volume |
 | [Media player volume and power toggle](#media-player-tv) | Dial controls volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
 | [Sensor gauge](#sensor-gauge) | Display any sensor on the dial, e.g. fuel level, washing machine progress, thermostat target |
 | [Light brightness and toggle](#light-brightness) | Dial sets brightness, press toggles on/off — useful for light groups |
-| [Climate control](#climate-control) | Dial sets temperature, press toggles on/off — LED ring colour follows temperature |
 
 ---
 
@@ -439,6 +439,191 @@ mode: single
 </details>
 
 ---
+
+## Climate control — dial sets temperature, press toggles on/off
+{: #climate-control}
+
+Assign a climate entity directly to a Pivot bank. The integration handles everything natively — turn the knob to change the set temperature, press once in Control Mode to toggle the climate on and off. This blueprint manages only the LED ring colour, which smoothly interpolates across eight configurable colour stops distributed evenly between your minimum and maximum temperature.
+
+No helper entities required. Works with both Celsius and Fahrenheit — just set `temp_min` and `temp_max` in whichever unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F). The colour interpolation is percentage-based and unit-agnostic.
+
+#### Blueprint
+
+[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-climate-control.yaml)
+
+<details markdown="1">
+<summary>Blueprint YAML</summary>
+
+{% raw %}
+```yaml
+blueprint:
+  name: Pivot - Climate Control
+  description: >
+    Colours the LED ring of a Pivot bank based on the set temperature of a
+    climate entity. Assign the climate entity directly to the bank — the Pivot
+    integration handles temperature control and on/off toggle natively. This
+    blueprint only manages the ring colour, smoothly interpolating across eight
+    colour stops that are evenly distributed between your configured minimum and
+    maximum temperatures.
+
+    Works with both Celsius and Fahrenheit. Set temp_min and temp_max in whichever
+    unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F).
+    The colour interpolation is percentage-based and fully unit-agnostic.
+  domain: automation
+  input:
+    climate_entity:
+      name: Climate entity
+      description: The climate entity assigned to this bank
+      selector:
+        entity:
+          domain: climate
+    suffix:
+      name: Device suffix
+      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
+      selector:
+        text: {}
+    bank:
+      name: Bank number
+      description: The bank number this climate entity is assigned to (1–4)
+      selector:
+        number:
+          min: 1
+          max: 4
+          mode: box
+    temp_min:
+      name: Temperature minimum
+      description: >
+        The temperature mapped to 0% on the dial. Use your HA unit — °C or °F
+        (e.g. 16 for Celsius, 61 for Fahrenheit).
+      default: 16
+      selector:
+        number:
+          min: -40
+          max: 120
+          step: 0.5
+          mode: box
+    temp_max:
+      name: Temperature maximum
+      description: >
+        The temperature mapped to 100% on the dial. Use your HA unit — °C or °F
+        (e.g. 30 for Celsius, 86 for Fahrenheit).
+      default: 30
+      selector:
+        number:
+          min: -40
+          max: 120
+          step: 0.5
+          mode: box
+    color_1:
+      name: Colour 1 — coldest (0%)
+      description: Colour shown at or below the minimum temperature
+      default: [101, 210, 255]
+      selector:
+        color_rgb: {}
+    color_2:
+      name: Colour 2 — (~14%)
+      default: [49, 209, 88]
+      selector:
+        color_rgb: {}
+    color_3:
+      name: Colour 3 — (~29%)
+      default: [186, 206, 29]
+      selector:
+        color_rgb: {}
+    color_4:
+      name: Colour 4 — (~43%)
+      default: [255, 185, 0]
+      selector:
+        color_rgb: {}
+    color_5:
+      name: Colour 5 — (~57%)
+      default: [255, 148, 0]
+      selector:
+        color_rgb: {}
+    color_6:
+      name: Colour 6 — (~71%)
+      default: [255, 76, 1]
+      selector:
+        color_rgb: {}
+    color_7:
+      name: Colour 7 — (~86%)
+      default: [234, 37, 11]
+      selector:
+        color_rgb: {}
+    color_8:
+      name: Colour 8 — hottest (100%)
+      description: Colour shown at or above the maximum temperature
+      default: [191, 30, 30]
+      selector:
+        color_rgb: {}
+
+triggers:
+  - trigger: state
+    entity_id: !input climate_entity
+    attribute: temperature
+    id: climate
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
+    id: knob
+
+actions:
+  - variables:
+      climate_entity: !input climate_entity
+      suffix_var: !input suffix
+      bank_var: !input bank
+      temp_min: !input temp_min
+      temp_max: !input temp_max
+      color_1: !input color_1
+      color_2: !input color_2
+      color_3: !input color_3
+      color_4: !input color_4
+      color_5: !input color_5
+      color_6: !input color_6
+      color_7: !input color_7
+      color_8: !input color_8
+      set_temp: >-
+        {% if trigger.id == 'knob' %}
+          {{ temp_min + (trigger.event.data.value | float(0) / 100) * (temp_max - temp_min) }}
+        {% else %}
+          {{ state_attr(climate_entity, 'temperature') | float(temp_min) }}
+        {% endif %}
+      ring_color: >-
+        {% set pct = [[(set_temp | float - temp_min) / (temp_max - temp_min) * 100, 0] | max, 100] | min %}
+        {% set sw = 100 / 7 %}
+        {% set seg = [[((pct / sw) | int), 0] | max, 6] | min %}
+        {% set frac = (pct - seg * sw) / sw %}
+        {% set ns = namespace(c0=[0, 0, 0], c1=[0, 0, 0]) %}
+        {% if seg == 0 %}{% set ns.c0 = color_1 %}{% set ns.c1 = color_2 %}
+        {% elif seg == 1 %}{% set ns.c0 = color_2 %}{% set ns.c1 = color_3 %}
+        {% elif seg == 2 %}{% set ns.c0 = color_3 %}{% set ns.c1 = color_4 %}
+        {% elif seg == 3 %}{% set ns.c0 = color_4 %}{% set ns.c1 = color_5 %}
+        {% elif seg == 4 %}{% set ns.c0 = color_5 %}{% set ns.c1 = color_6 %}
+        {% elif seg == 5 %}{% set ns.c0 = color_6 %}{% set ns.c1 = color_7 %}
+        {% else %}{% set ns.c0 = color_7 %}{% set ns.c1 = color_8 %}{% endif %}
+        {% set r = (ns.c0[0] + frac * (ns.c1[0] - ns.c0[0])) | int %}
+        {% set g = (ns.c0[1] + frac * (ns.c1[1] - ns.c0[1])) | int %}
+        {% set b = (ns.c0[2] + frac * (ns.c1[2] - ns.c0[2])) | int %}
+        {{ '#%02x%02x%02x' | format(r, g, b) }}
+  - action: text.set_value
+    target:
+      entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+    data:
+      value: "{{ ring_color }}"
+  - action: text.set_value
+    target:
+      entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+    data:
+      value: "{{ ring_color }}"
+
+mode: queued
+max: 5
+```
+{% endraw %}
+
+</details>
 
 ## Button press with configurable action — e.g. dial controls volume, press to play/pause media
 {: #button-press-action}
@@ -1301,191 +1486,6 @@ actions:
       entity_id: light.living_room
 
 mode: single
-```
-{% endraw %}
-
-</details>
-
-## Climate control — dial sets temperature, press toggles on/off
-{: #climate-control}
-
-Assign a climate entity directly to a Pivot bank. The integration handles everything natively — turn the knob to change the set temperature, press once in Control Mode to toggle the climate on and off. This blueprint manages only the LED ring colour, which smoothly interpolates across eight configurable colour stops distributed evenly between your minimum and maximum temperature.
-
-No helper entities required. Works with both Celsius and Fahrenheit — just set `temp_min` and `temp_max` in whichever unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F). The colour interpolation is percentage-based and unit-agnostic.
-
-#### Blueprint
-
-[![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-climate-control.yaml)
-
-<details markdown="1">
-<summary>Blueprint YAML</summary>
-
-{% raw %}
-```yaml
-blueprint:
-  name: Pivot - Climate Control
-  description: >
-    Colours the LED ring of a Pivot bank based on the set temperature of a
-    climate entity. Assign the climate entity directly to the bank — the Pivot
-    integration handles temperature control and on/off toggle natively. This
-    blueprint only manages the ring colour, smoothly interpolating across eight
-    colour stops that are evenly distributed between your configured minimum and
-    maximum temperatures.
-
-    Works with both Celsius and Fahrenheit. Set temp_min and temp_max in whichever
-    unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F).
-    The colour interpolation is percentage-based and fully unit-agnostic.
-  domain: automation
-  input:
-    climate_entity:
-      name: Climate entity
-      description: The climate entity assigned to this bank
-      selector:
-        entity:
-          domain: climate
-    suffix:
-      name: Device suffix
-      description: The suffix of your Pivot device (e.g. ha_voice_lounge)
-      selector:
-        text: {}
-    bank:
-      name: Bank number
-      description: The bank number this climate entity is assigned to (1–4)
-      selector:
-        number:
-          min: 1
-          max: 4
-          mode: box
-    temp_min:
-      name: Temperature minimum
-      description: >
-        The temperature mapped to 0% on the dial. Use your HA unit — °C or °F
-        (e.g. 16 for Celsius, 61 for Fahrenheit).
-      default: 16
-      selector:
-        number:
-          min: -40
-          max: 120
-          step: 0.5
-          mode: box
-    temp_max:
-      name: Temperature maximum
-      description: >
-        The temperature mapped to 100% on the dial. Use your HA unit — °C or °F
-        (e.g. 30 for Celsius, 86 for Fahrenheit).
-      default: 30
-      selector:
-        number:
-          min: -40
-          max: 120
-          step: 0.5
-          mode: box
-    color_1:
-      name: Colour 1 — coldest (0%)
-      description: Colour shown at or below the minimum temperature
-      default: [101, 210, 255]
-      selector:
-        color_rgb: {}
-    color_2:
-      name: Colour 2 — (~14%)
-      default: [49, 209, 88]
-      selector:
-        color_rgb: {}
-    color_3:
-      name: Colour 3 — (~29%)
-      default: [186, 206, 29]
-      selector:
-        color_rgb: {}
-    color_4:
-      name: Colour 4 — (~43%)
-      default: [255, 185, 0]
-      selector:
-        color_rgb: {}
-    color_5:
-      name: Colour 5 — (~57%)
-      default: [255, 148, 0]
-      selector:
-        color_rgb: {}
-    color_6:
-      name: Colour 6 — (~71%)
-      default: [255, 76, 1]
-      selector:
-        color_rgb: {}
-    color_7:
-      name: Colour 7 — (~86%)
-      default: [234, 37, 11]
-      selector:
-        color_rgb: {}
-    color_8:
-      name: Colour 8 — hottest (100%)
-      description: Colour shown at or above the maximum temperature
-      default: [191, 30, 30]
-      selector:
-        color_rgb: {}
-
-triggers:
-  - trigger: state
-    entity_id: !input climate_entity
-    attribute: temperature
-    id: climate
-  - trigger: event
-    event_type: pivot_knob_turn
-    event_data:
-      suffix: !input suffix
-      bank: !input bank
-    id: knob
-
-actions:
-  - variables:
-      climate_entity: !input climate_entity
-      suffix_var: !input suffix
-      bank_var: !input bank
-      temp_min: !input temp_min
-      temp_max: !input temp_max
-      color_1: !input color_1
-      color_2: !input color_2
-      color_3: !input color_3
-      color_4: !input color_4
-      color_5: !input color_5
-      color_6: !input color_6
-      color_7: !input color_7
-      color_8: !input color_8
-      set_temp: >-
-        {% if trigger.id == 'knob' %}
-          {{ temp_min + (trigger.event.data.value | float(0) / 100) * (temp_max - temp_min) }}
-        {% else %}
-          {{ state_attr(climate_entity, 'temperature') | float(temp_min) }}
-        {% endif %}
-      ring_color: >-
-        {% set pct = [[(set_temp | float - temp_min) / (temp_max - temp_min) * 100, 0] | max, 100] | min %}
-        {% set sw = 100 / 7 %}
-        {% set seg = [[((pct / sw) | int), 0] | max, 6] | min %}
-        {% set frac = (pct - seg * sw) / sw %}
-        {% set ns = namespace(c0=[0, 0, 0], c1=[0, 0, 0]) %}
-        {% if seg == 0 %}{% set ns.c0 = color_1 %}{% set ns.c1 = color_2 %}
-        {% elif seg == 1 %}{% set ns.c0 = color_2 %}{% set ns.c1 = color_3 %}
-        {% elif seg == 2 %}{% set ns.c0 = color_3 %}{% set ns.c1 = color_4 %}
-        {% elif seg == 3 %}{% set ns.c0 = color_4 %}{% set ns.c1 = color_5 %}
-        {% elif seg == 4 %}{% set ns.c0 = color_5 %}{% set ns.c1 = color_6 %}
-        {% elif seg == 5 %}{% set ns.c0 = color_6 %}{% set ns.c1 = color_7 %}
-        {% else %}{% set ns.c0 = color_7 %}{% set ns.c1 = color_8 %}{% endif %}
-        {% set r = (ns.c0[0] + frac * (ns.c1[0] - ns.c0[0])) | int %}
-        {% set g = (ns.c0[1] + frac * (ns.c1[1] - ns.c0[1])) | int %}
-        {% set b = (ns.c0[2] + frac * (ns.c1[2] - ns.c0[2])) | int %}
-        {{ '#%02x%02x%02x' | format(r, g, b) }}
-  - action: text.set_value
-    target:
-      entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
-    data:
-      value: "{{ ring_color }}"
-  - action: text.set_value
-    target:
-      entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
-    data:
-      value: "{{ ring_color }}"
-
-mode: queued
-max: 5
 ```
 {% endraw %}
 
