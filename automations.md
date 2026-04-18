@@ -41,7 +41,7 @@ Assigning a light directly to a bank gives you brightness control. This automati
 
 Assign an `input_number` helper (range 0–100) to the bank. The automation translates the dial position into the appropriate colour value for your light, and keeps the helper in sync if the light is changed from elsewhere.
 
-In hue mode, an optional **Sync LED ring colour** setting will update the LED ring to match the light's current hue — both when the dial is turned and when the light changes externally.
+An optional **Sync LED ring colour** setting updates the LED ring to match the light — both when the dial is turned and when the light changes externally. In colour temperature mode, the ring fades from cool blue to warm amber. In hue mode, it matches the light's current hue.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to the bank on your device.
 
@@ -59,7 +59,7 @@ blueprint:
   description: >
     Control a light's colour temperature or hue with the Pivot dial via an input_number helper.
     Single press toggles the light. Dial position stays in sync with the light.
-    In hue mode, optionally syncs the LED ring colour to match the light.
+    Optionally syncs the LED ring colour to match the light in both colour temperature and hue modes.
   domain: automation
   input:
     suffix:
@@ -101,10 +101,11 @@ blueprint:
             - label: Hue
               value: hue
     sync_ring_colour:
-      name: Sync LED ring colour (hue mode only)
+      name: Sync LED ring colour
       description: >
-        When enabled, the LED ring colour updates to match the light's current hue.
-        Has no effect in colour temperature mode.
+        When enabled, the LED ring colour updates to match the light's current colour.
+        In colour temperature mode, the ring fades from cool blue to warm amber.
+        In hue mode, the ring matches the light's current hue.
       default: false
       selector:
         boolean:
@@ -146,7 +147,7 @@ actions:
       sync_percent_ct: >-
         {{ (((current_mired - min_mired) / (max_mired - min_mired)) * 100) | round(0) }}
       target_hue: "{{ (percent / 100 * 360) | int }}"
-      current_hue: "{{ (state_attr(light_entity, 'hs_color') | default([0, 0]))[0] | float(0) }}"
+      current_hue: "{{ (state_attr(light_entity, 'hs_color') or [0, 0])[0] | float(0) }}"
       sync_percent_hue: "{{ (current_hue / 360 * 100) | round(0) }}"
       target_hex: >-
         {% set h = (percent / 100 * 360) | float %}
@@ -160,7 +161,7 @@ actions:
         {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
         {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
       current_hex: >-
-        {% set h = (state_attr(light_entity, 'hs_color') | default([0, 0]))[0] | float %}
+        {% set h = (state_attr(light_entity, 'hs_color') or [0, 0])[0] | float %}
         {% set ns = namespace(r=0.0, g=0.0, b=0.0) %}
         {% set x = 1.0 - ((h / 60.0) % 2.0 - 1.0) | abs %}
         {% if h < 60 %}{% set ns.r = 1.0 %}{% set ns.g = x %}
@@ -170,6 +171,12 @@ actions:
         {% elif h < 300 %}{% set ns.r = x %}{% set ns.b = 1.0 %}
         {% else %}{% set ns.r = 1.0 %}{% set ns.b = x %}{% endif %}
         {{ '#%02x%02x%02x' | format((ns.r * 255) | round | int, (ns.g * 255) | round | int, (ns.b * 255) | round | int) }}
+      ct_ring_hex: >-
+        {% set pct = (sync_percent_ct if trigger.id == 'sync' else percent) | float / 100.0 %}
+        {% set r = (100 + pct * (255 - 100)) | int %}
+        {% set g = (180 + pct * (147 - 180)) | int %}
+        {% set b = (255 + pct * (41 - 255)) | int %}
+        {{ '#%02x%02x%02x' | format(r, g, b) }}
   - condition: template
     value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
   - choose:
@@ -186,6 +193,20 @@ actions:
               entity_id: !input light_entity
             data:
               color_temp_kelvin: "{{ target_kelvin | int }}"
+          - if:
+              - condition: template
+                value_template: "{{ sync_ring_colour }}"
+            then:
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+                data:
+                  value: "{{ ct_ring_hex }}"
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+                data:
+                  value: "{{ ct_ring_hex }}"
       - conditions:
           - condition: trigger
             id: dial
@@ -233,6 +254,20 @@ actions:
               entity_id: !input input_number_entity
             data:
               value: "{{ [[sync_percent_ct, 0] | max, 100] | min }}"
+          - if:
+              - condition: template
+                value_template: "{{ sync_ring_colour }}"
+            then:
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+                data:
+                  value: "{{ ct_ring_hex }}"
+              - action: text.set_value
+                target:
+                  entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+                data:
+                  value: "{{ ct_ring_hex }}"
       - conditions:
           - condition: trigger
             id: sync
