@@ -25,7 +25,7 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 | Automation | What it does |
 |---|---|
 | [Colour control](#colour-temperature) | Dial adjusts colour temperature or hue of a light, press toggles on/off |
-| [Climate control](#climate-control) | LED reflects the thermostat set temperature (eg blue to red) — turn to adjust, press to turn on or off  |
+| [Climate control](#climate-control) | LED reflects the thermostat set temperature (e.g. a spectrum from blue to red) — turn to adjust, press to turn on or off  |
 | [Button press with configurable action](#button-press-action) | Button press and knob turn adjust different entities — e.g. play/pause a computer while dial controls volume |
 | [Media player volume and power toggle](#media-player-tv) | Dial controls volume, press toggles TV on/off |
 | [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
