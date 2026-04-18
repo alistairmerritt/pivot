@@ -115,6 +115,9 @@ variables:
   bank_var: !input bank
 
 triggers:
+  - trigger: homeassistant
+    event: start
+    id: sync
   - trigger: state
     entity_id: !input input_number_entity
     id: dial
