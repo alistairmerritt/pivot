@@ -1309,9 +1309,9 @@ mode: single
 ## Climate control — dial sets temperature, press toggles on/off
 {: #climate-control}
 
-Assign a climate entity directly to a Pivot bank. The integration handles everything natively — turn the knob to change the set temperature, press once in Control Mode to toggle the climate on and off. This blueprint manages only the LED ring colour, which smoothly interpolates across eight configurable temperature stops from deep blue (cold) through green (comfortable) to dark red (hot).
+Assign a climate entity directly to a Pivot bank. The integration handles everything natively — turn the knob to change the set temperature, press once in Control Mode to toggle the climate on and off. This blueprint manages only the LED ring colour, which smoothly interpolates across eight configurable colour stops distributed evenly between your minimum and maximum temperature.
 
-No helper entities required. Just assign your climate entity to the bank as you would any other entity.
+No helper entities required. Works with both Celsius and Fahrenheit — just set `temp_min` and `temp_max` in whichever unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F). The colour interpolation is percentage-based and unit-agnostic.
 
 #### Blueprint
 
@@ -1328,8 +1328,13 @@ blueprint:
     Colours the LED ring of a Pivot bank based on the set temperature of a
     climate entity. Assign the climate entity directly to the bank — the Pivot
     integration handles temperature control and on/off toggle natively. This
-    blueprint only manages the ring colour, interpolating smoothly across eight
-    configurable temperature colour stops.
+    blueprint only manages the ring colour, smoothly interpolating across eight
+    colour stops that are evenly distributed between your configured minimum and
+    maximum temperatures.
+
+    Works with both Celsius and Fahrenheit. Set temp_min and temp_max in whichever
+    unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F).
+    The colour interpolation is percentage-based and fully unit-agnostic.
   domain: automation
   input:
     climate_entity:
@@ -1352,64 +1357,68 @@ blueprint:
           max: 4
           mode: box
     temp_min:
-      name: Temperature minimum (°C)
-      description: The temperature mapped to 0% on the dial
+      name: Temperature minimum
+      description: >
+        The temperature mapped to 0% on the dial. Use your HA unit — °C or °F
+        (e.g. 16 for Celsius, 61 for Fahrenheit).
       default: 16
       selector:
         number:
-          min: 0
-          max: 40
+          min: -40
+          max: 120
           step: 0.5
-          unit_of_measurement: "°C"
           mode: box
     temp_max:
-      name: Temperature maximum (°C)
-      description: The temperature mapped to 100% on the dial
+      name: Temperature maximum
+      description: >
+        The temperature mapped to 100% on the dial. Use your HA unit — °C or °F
+        (e.g. 30 for Celsius, 86 for Fahrenheit).
       default: 30
       selector:
         number:
-          min: 0
-          max: 40
+          min: -40
+          max: 120
           step: 0.5
-          unit_of_measurement: "°C"
           mode: box
-    color_0c:
-      name: Colour — 0°C
-      default: [15, 40, 191]
-      selector:
-        color_rgb: {}
-    color_12c:
-      name: Colour — 12°C
-      default: [5, 122, 255]
-      selector:
-        color_rgb: {}
-    color_15c:
-      name: Colour — 15°C
+    color_1:
+      name: Colour 1 — coldest (0%)
+      description: Colour shown at or below the minimum temperature
       default: [101, 210, 255]
       selector:
         color_rgb: {}
-    color_18c:
-      name: Colour — 18°C
+    color_2:
+      name: Colour 2 — (~14%)
       default: [49, 209, 88]
       selector:
         color_rgb: {}
-    color_21c:
-      name: Colour — 21°C
-      default: [255, 204, 0]
+    color_3:
+      name: Colour 3 — (~29%)
+      default: [186, 206, 29]
       selector:
         color_rgb: {}
-    color_24c:
-      name: Colour — 24°C
+    color_4:
+      name: Colour 4 — (~43%)
+      default: [255, 185, 0]
+      selector:
+        color_rgb: {}
+    color_5:
+      name: Colour 5 — (~57%)
       default: [255, 148, 0]
       selector:
         color_rgb: {}
-    color_27c:
-      name: Colour — 27°C
-      default: [255, 40, 1]
+    color_6:
+      name: Colour 6 — (~71%)
+      default: [255, 76, 1]
       selector:
         color_rgb: {}
-    color_30c:
-      name: Colour — 30°C
+    color_7:
+      name: Colour 7 — (~86%)
+      default: [234, 37, 11]
+      selector:
+        color_rgb: {}
+    color_8:
+      name: Colour 8 — hottest (100%)
+      description: Colour shown at or above the maximum temperature
       default: [191, 30, 30]
       selector:
         color_rgb: {}
@@ -1433,14 +1442,14 @@ actions:
       bank_var: !input bank
       temp_min: !input temp_min
       temp_max: !input temp_max
-      color_0c: !input color_0c
-      color_12c: !input color_12c
-      color_15c: !input color_15c
-      color_18c: !input color_18c
-      color_21c: !input color_21c
-      color_24c: !input color_24c
-      color_27c: !input color_27c
-      color_30c: !input color_30c
+      color_1: !input color_1
+      color_2: !input color_2
+      color_3: !input color_3
+      color_4: !input color_4
+      color_5: !input color_5
+      color_6: !input color_6
+      color_7: !input color_7
+      color_8: !input color_8
       set_temp: >-
         {% if trigger.id == 'knob' %}
           {{ temp_min + (trigger.event.data.value | float(0) / 100) * (temp_max - temp_min) }}
@@ -1448,45 +1457,22 @@ actions:
           {{ state_attr(climate_entity, 'temperature') | float(temp_min) }}
         {% endif %}
       ring_color: >-
-        {% set ns = namespace(r=0, g=0, b=0) %}
-        {% set t = set_temp | float %}
-        {% if t <= 12 %}
-          {% set frac = t / 12 %}
-          {% set ns.r = (color_0c[0] + frac * (color_12c[0] - color_0c[0])) | int %}
-          {% set ns.g = (color_0c[1] + frac * (color_12c[1] - color_0c[1])) | int %}
-          {% set ns.b = (color_0c[2] + frac * (color_12c[2] - color_0c[2])) | int %}
-        {% elif t <= 15 %}
-          {% set frac = (t - 12) / 3 %}
-          {% set ns.r = (color_12c[0] + frac * (color_15c[0] - color_12c[0])) | int %}
-          {% set ns.g = (color_12c[1] + frac * (color_15c[1] - color_12c[1])) | int %}
-          {% set ns.b = (color_12c[2] + frac * (color_15c[2] - color_12c[2])) | int %}
-        {% elif t <= 18 %}
-          {% set frac = (t - 15) / 3 %}
-          {% set ns.r = (color_15c[0] + frac * (color_18c[0] - color_15c[0])) | int %}
-          {% set ns.g = (color_15c[1] + frac * (color_18c[1] - color_15c[1])) | int %}
-          {% set ns.b = (color_15c[2] + frac * (color_18c[2] - color_15c[2])) | int %}
-        {% elif t <= 21 %}
-          {% set frac = (t - 18) / 3 %}
-          {% set ns.r = (color_18c[0] + frac * (color_21c[0] - color_18c[0])) | int %}
-          {% set ns.g = (color_18c[1] + frac * (color_21c[1] - color_18c[1])) | int %}
-          {% set ns.b = (color_18c[2] + frac * (color_21c[2] - color_18c[2])) | int %}
-        {% elif t <= 24 %}
-          {% set frac = (t - 21) / 3 %}
-          {% set ns.r = (color_21c[0] + frac * (color_24c[0] - color_21c[0])) | int %}
-          {% set ns.g = (color_21c[1] + frac * (color_24c[1] - color_21c[1])) | int %}
-          {% set ns.b = (color_21c[2] + frac * (color_24c[2] - color_21c[2])) | int %}
-        {% elif t <= 27 %}
-          {% set frac = (t - 24) / 3 %}
-          {% set ns.r = (color_24c[0] + frac * (color_27c[0] - color_24c[0])) | int %}
-          {% set ns.g = (color_24c[1] + frac * (color_27c[1] - color_24c[1])) | int %}
-          {% set ns.b = (color_24c[2] + frac * (color_27c[2] - color_24c[2])) | int %}
-        {% else %}
-          {% set frac = [((t - 27) / 3), 1] | min %}
-          {% set ns.r = (color_27c[0] + frac * (color_30c[0] - color_27c[0])) | int %}
-          {% set ns.g = (color_27c[1] + frac * (color_30c[1] - color_27c[1])) | int %}
-          {% set ns.b = (color_27c[2] + frac * (color_30c[2] - color_27c[2])) | int %}
-        {% endif %}
-        {{ '#%02x%02x%02x' | format(ns.r, ns.g, ns.b) }}
+        {% set pct = [[(set_temp | float - temp_min) / (temp_max - temp_min) * 100, 0] | max, 100] | min %}
+        {% set sw = 100 / 7 %}
+        {% set seg = [[((pct / sw) | int), 0] | max, 6] | min %}
+        {% set frac = (pct - seg * sw) / sw %}
+        {% set ns = namespace(c0=[0, 0, 0], c1=[0, 0, 0]) %}
+        {% if seg == 0 %}{% set ns.c0 = color_1 %}{% set ns.c1 = color_2 %}
+        {% elif seg == 1 %}{% set ns.c0 = color_2 %}{% set ns.c1 = color_3 %}
+        {% elif seg == 2 %}{% set ns.c0 = color_3 %}{% set ns.c1 = color_4 %}
+        {% elif seg == 3 %}{% set ns.c0 = color_4 %}{% set ns.c1 = color_5 %}
+        {% elif seg == 4 %}{% set ns.c0 = color_5 %}{% set ns.c1 = color_6 %}
+        {% elif seg == 5 %}{% set ns.c0 = color_6 %}{% set ns.c1 = color_7 %}
+        {% else %}{% set ns.c0 = color_7 %}{% set ns.c1 = color_8 %}{% endif %}
+        {% set r = (ns.c0[0] + frac * (ns.c1[0] - ns.c0[0])) | int %}
+        {% set g = (ns.c0[1] + frac * (ns.c1[1] - ns.c0[1])) | int %}
+        {% set b = (ns.c0[2] + frac * (ns.c1[2] - ns.c0[2])) | int %}
+        {{ '#%02x%02x%02x' | format(r, g, b) }}
   - action: text.set_value
     target:
       entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
