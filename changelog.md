@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.77 | 2026.4.0+ | 2024.4.0+ |
+| v0.0.21 | v0.0.78 | 2026.4.0+ | 2024.4.0+ |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -17,6 +17,13 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+<details markdown="1">
+<summary>v0.0.78</summary>
+
+- **Fix:** Climate and cover value announcements now speak the commanded value rather than reading from the entity attribute. Previously the announcement fired ~200 ms after the debounced service call, which was not enough time for cloud devices to confirm the new state — so the spoken temperature or position was always the previous value. Climate now computes the target temperature from the knob position using the entity's min/max range; cover announces the commanded position directly.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.77</summary>
