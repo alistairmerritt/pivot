@@ -19,6 +19,15 @@ permalink: /changelog/
 ## Integration
 
 <details markdown="1">
+<summary>v0.0.80</summary>
+
+- **New (Blueprint):** Adds the **Pivot - Timer - Voice** blueprint. Lets you control the Pivot timer entirely by voice via Home Assistant Assist — set a duration, start, pause, resume, cancel, dismiss the alarm, and query remaining time. A bank does not need to be assigned to `timer`; only the three timer helper entities are required. If a bank is assigned (e.g. because Timer Control is also installed), the LED gauge stays in sync automatically. Supports natural language durations including *"set a timer for half an hour"*, *"start a 1 hour and 30 minute timer"*, *"set a timer for a quarter of an hour"*, and more.
+- **New:** **Pivot - Announce** blueprint now ships with the integration and is installed automatically alongside the other blueprints.
+- **Change:** All blueprint display names updated to use a hyphen separator for consistency. **Pivot — Timer** is now **Pivot - Timer Control**; **Pivot — Timer Toggle Script** is now **Pivot - Timer Toggle Script**; **Pivot — Announce** is now **Pivot - Announce**; **Pivot — Bank Toggle** is now **Pivot - Bank Toggle**. Existing automations are unaffected — this is a display name change only.
+
+</details>
+
+<details markdown="1">
 <summary>v0.0.79</summary>
 
 - **Change:** Triple press now announces the assigned bank entity regardless of the System Announcements switch. Mute Announcements still silences it.
