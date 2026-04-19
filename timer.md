@@ -106,7 +106,16 @@ Once assigned, turn the knob to set a duration (the gauge shows the selected pro
 
 ### Step 4 — Optional: Add voice control
 
-The **Pivot - Timer - Voice** blueprint lets you control the Pivot timer by speaking to the device. Voice and physical input share the same timer state — you can start a timer by voice and cancel it from the knob, or start it from the knob and ask how much time is left.
+By default, spoken timer commands on the VPE use the stock Home Assistant timer behaviour — they are handled by the Assist pipeline and are completely independent of Pivot. **Installing this blueprint is the only thing that changes that.** If you skip this step, voice timers continue to work exactly as they did before.
+
+You have two options:
+
+- **Do nothing** — spoken timer commands continue to use the stock VPE timer. The Pivot timer (knob, gauge, dashboard) and the stock voice timer remain separate.
+- **Install Pivot - Timer - Voice** — spoken timer commands are routed into the Pivot timer instead, giving you a single unified timer across voice, knob, gauge, and dashboard.
+
+If you install the blueprint and later want to go back to stock behaviour, simply disable or delete the automation — the stock timer is restored immediately with no other changes needed.
+
+When installed, voice and physical input share the same timer state — you can start a timer by voice and cancel it from the knob, or start it from the knob and ask how much time is left.
 
 A bank does not need to be assigned. Timer Control (Step 2) must be running.
 
