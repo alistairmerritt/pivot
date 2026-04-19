@@ -22,16 +22,15 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 
 Some examples gently extend Pivot’s native behaviour. Others completely change what a bank does. Start with the ones that match how you already use Pivot, then branch into the more custom setups once you’re comfortable.
 
-| Automation | What it does |
+| Automation | What it changes |
 |---|---|
-| [Colour control](#colour-temperature) | Dial adjusts colour temperature or hue of a light, press toggles on/off |
-| [Climate control](#climate-control) | LED reflects the thermostat set temperature (e.g. a spectrum from blue to red) — turn to adjust, press to turn on or off  |
-| [Button press with configurable action](#button-press-action) | Button press and knob turn adjust different entities — e.g. play/pause a computer while dial controls volume |
-| [Media player volume and power toggle](#media-player-tv) | Dial controls volume, press toggles TV on/off |
-| [Scene scrubbing](#scene-scrubbing) | Dial position maps to one of four entity slots, LED colour shows the active zone, press toggles it |
-| [Sensor gauge](#sensor-gauge) | Display any sensor on the dial, e.g. fuel level, washing machine progress, thermostat target |
-| [Light brightness and toggle](#light-brightness) | Basic automation example - dial sets brightness, press toggles on/off — useful for light groups |
-
+| [Colour control](#colour-temperature) | Uses the dial for colour temperature or hue instead of brightness, while press still toggles the light |
+| [Climate control](#climate-control) | Adds LED ring colour feedback to reflect the thermostat set temperature |
+| [Button press with configurable action](#button-press-action) | Runs a custom action on button press while leaving dial control unchanged |
+| [Media player volume and power toggle](#media-player-tv) | Uses the dial for volume and single press for TV power toggle |
+| [Scene scrubbing](#scene-scrubbing) | Uses the dial to browse between scenes and the LED ring to preview the current selection |
+| [Sensor gauge](#sensor-gauge) | Displays a numeric value on the dial without allowing the source entity to be controlled |
+| [Light brightness and toggle](#light-brightness) | Uses automation to provide dial brightness control and press toggle for a light or light group |
 ---
 
 ## Colour control — dial adjusts colour temperature or hue, press toggles light
