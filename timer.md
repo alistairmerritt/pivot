@@ -34,18 +34,27 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 ## Voice timers and Pivot timers
 
-Your voice assistant can still set timers by voice, such as “set a 25 minute timer” — that behaviour is unchanged.
+Your voice assistant can still set timers by voice, such as “set a 25 minute timer”. By default, this uses the VPE’s built-in timer system and does not interact with Pivot.
 
-However, the built-in voice timer and the Pivot timer are currently two separate systems, each with its own logic and state:
+The built-in voice timer and the Pivot timer are separate systems with different state and behaviour:
 
-- **Starting a timer by voice** uses the VPE’s built-in timer pipeline, which runs entirely within ESPHome. It does not update any Pivot entities, so the gauge will not reflect the countdown and the blueprint will not know the timer is running.
-- **Starting a timer with the knob** uses Pivot’s Home Assistant entities and blueprint. Because this timer exists within Pivot rather than the built-in voice pipeline, it cannot currently be queried by voice — for example, asking *“how long is left on the timer?”* will not return the Pivot timer’s remaining time.
+- **Starting a timer by voice** uses the VPE’s built-in timer pipeline, which runs entirely within ESPHome. It does not update any Pivot entities, so the gauge will not reflect the countdown and the Pivot timer automation will not know the timer is running.
+- **Starting a timer with the knob** uses Pivot’s Home Assistant entities and timer automation. Because this timer exists within Pivot rather than the built-in voice pipeline, it cannot be queried through the stock timer system — for example, asking “how long is left on the timer?” will not return the Pivot timer’s remaining time.
 
-At the moment, there is no bridge between the two. They operate independently and do not sync or interact with each other. The only overlap is at the end of the countdown: both use the device’s built-in `timer_ringing` mechanism, so the alarm sound and LED ring effect may appear the same when they finish.
+By default, the two systems operate independently and do not sync or interact with each other. The main overlap is at the end of the countdown: both can use the device’s built-in `timer_ringing` mechanism, so the alarm sound and LED ring effect may appear similar when they finish.
 
 Use whichever timer suits the moment — they can coexist without interfering with each other.
 
-> **Enhanced timer support** — Future improvements include a Pivot-backed timer experience that can be started by voice and fully surfaced in Home Assistant. The aim is to let users say something like *“set a timer for 25 minutes”* and have it run through Pivot instead of the stock VPE timer, with visibility and control across the gauge, LED ring, and dashboard. No current timelines on this feature.
+### Optional: route voice timer commands into Pivot
+
+If you prefer, you can optionally install a separate blueprint that listens for spoken timer commands (for example, “set a 4 minute timer”) and creates the timer through Pivot instead of the stock VPE timer.
+
+This is entirely optional:
+
+- **Do nothing** → spoken timers continue to use the stock VPE timer behaviour
+- **Install the blueprint** → spoken timer commands can create Pivot timers, giving you visibility and control through Pivot entities, the gauge, and dashboard integrations
+
+This optional blueprint is intended for users who want a more unified timer experience, but it is not required for normal Pivot timer setup.
 
 ---
 
@@ -102,6 +111,8 @@ The bank number, TTS service, and media player are all read automatically from y
 4. Save the automation.
    
 That's it — single-press the bank to start. Single-press to pause. Long-press to reset.
+
+> **Optional voice timer integration:** If you want spoken timer commands such as “set a 4 minute timer” to use Pivot instead of the stock VPE timer, you can install the optional voice timer blueprint. If you skip it, spoken timers continue to use the stock timer behaviour.
 
 ---
 
