@@ -155,27 +155,12 @@ The **Pivot - Timer Toggle Script** blueprint was installed automatically when y
 
 > **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly. The script only needs to be created once and works across all your Pivot devices.
 
-**Step 2 — Add a button card**
+**Step 2 — Add a tile card**
+
+This uses the `sensor.pivot_timer_remaining` template sensor to display the current timer state — see [Template sensors](#template-sensors) below for how to create it.
 
 ```yaml
-type: button
-name: Timer
-tap_action:
-  action: perform-action
-  perform_action: script.turn_on
-  target:
-    entity_id: script.pivot_timer_toggle
-  data:
-    variables:
-      device_suffix: ha_voice_lounge
-      bank: 2
-show_state: false
-```
-
-To show the current timer state on the button, point it at a template sensor (see [Template sensors](#template-sensors) below):
-
-```yaml
-type: button
+type: tile
 name: Timer
 entity: sensor.pivot_timer_remaining
 tap_action:
@@ -187,7 +172,6 @@ tap_action:
     variables:
       device_suffix: ha_voice_lounge
       bank: 2
-show_state: true
 ```
 
 **Cancel button**
@@ -195,9 +179,10 @@ show_state: true
 To add a dedicated cancel button, set `timer_state` to `idle` directly:
 
 ```yaml
-type: button
-name: Cancel
+type: tile
+name: Cancel Timer
 icon: mdi:timer-off-outline
+entity: select.ha_voice_lounge_timer_state
 tap_action:
   action: perform-action
   perform_action: select.select_option
@@ -205,7 +190,6 @@ tap_action:
     entity_id: select.ha_voice_lounge_timer_state
   data:
     option: idle
-show_state: false
 ```
 
 > This resets the timer immediately without a TTS announcement. Only takes effect when the timer is running or paused.
