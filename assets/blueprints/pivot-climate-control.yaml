@@ -56,43 +56,43 @@ blueprint:
     color_1:
       name: Colour 1 — coldest (0%)
       description: Colour shown at or below the minimum temperature
-      default: [101, 210, 255]
+      default: [77, 92, 224]
       selector:
         color_rgb: {}
     color_2:
       name: Colour 2 — (~14%)
-      default: [49, 209, 88]
+      default: [75, 176, 208]
       selector:
         color_rgb: {}
     color_3:
       name: Colour 3 — (~29%)
-      default: [186, 206, 29]
+      default: [77, 196, 168]
       selector:
         color_rgb: {}
     color_4:
       name: Colour 4 — (~43%)
-      default: [255, 185, 0]
+      default: [61, 232, 112]
       selector:
         color_rgb: {}
     color_5:
       name: Colour 5 — (~57%)
-      default: [255, 148, 0]
+      default: [244, 224, 28]
       selector:
         color_rgb: {}
     color_6:
       name: Colour 6 — (~71%)
-      default: [255, 76, 1]
+      default: [240, 128, 48]
       selector:
         color_rgb: {}
     color_7:
       name: Colour 7 — (~86%)
-      default: [234, 37, 11]
+      default: [216, 60, 32]
       selector:
         color_rgb: {}
     color_8:
       name: Colour 8 — hottest (100%)
       description: Colour shown at or above the maximum temperature
-      default: [191, 30, 30]
+      default: [190, 46, 30]
       selector:
         color_rgb: {}
 
