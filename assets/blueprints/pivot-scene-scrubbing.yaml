@@ -1,11 +1,11 @@
 blueprint:
   name: Pivot - Scene Scrubbing
   description: >
-    Cycle through up to four entities with the Pivot button. Press to jump to
-    the next slot and activate it — stepping through your configured entities in
-    order and looping back to the first after the last. The LED ring colour
-    updates to reflect the active slot. Turning the dial also previews slots
-    without activating. Assign an input_number helper (range 0–100) to the bank.
+    Cycle through up to four entities with the Pivot dial. Each knob turn
+    advances one slot (jumping to the next 25% boundary), updating the LED ring
+    to show which slot is active. Press to activate the current slot's entity.
+    Works with scenes, lights, switches, or anything Home Assistant can turn on.
+    Assign an input_number helper (range 0–100) to the bank.
   domain: automation
   input:
     suffix:
@@ -69,8 +69,14 @@ variables:
   bank_var: !input bank
 
 triggers:
-  - trigger: state
-    entity_id: !input input_number_entity
+  - trigger: homeassistant
+    event: start
+    id: start
+  - trigger: event
+    event_type: pivot_knob_turn
+    event_data:
+      suffix: !input suffix
+      bank: !input bank
     id: dial
   - trigger: event
     event_type: pivot_button_press
@@ -94,7 +100,7 @@ actions:
       color_3: !input color_3
       color_4: !input color_4
       val: "{{ states(input_number_entity) | float(0) }}"
-      selected_scene: >-
+      selected_entity: >-
         {% if val < 25 %}{{ scene_1 }}
         {% elif val < 50 %}{{ scene_2 }}
         {% elif val < 75 %}{{ scene_3 }}
@@ -112,31 +118,12 @@ actions:
           - condition: trigger
             id: dial
         sequence:
-          - action: text.set_value
-            target:
-              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
-            data:
-              value: "{{ ring_color }}"
-          - action: text.set_value
-            target:
-              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
-            data:
-              value: "{{ ring_color }}"
-      - conditions:
-          - condition: trigger
-            id: press
-        sequence:
           - variables:
               next_val: >-
                 {% if val < 25 %}25
                 {% elif val < 50 %}50
                 {% elif val < 75 %}75
                 {% else %}0{% endif %}
-              next_entity: >-
-                {% if val < 25 %}{{ scene_2 }}
-                {% elif val < 50 %}{{ scene_3 }}
-                {% elif val < 75 %}{{ scene_4 }}
-                {% else %}{{ scene_1 }}{% endif %}
               next_ring_color: >-
                 {% if val < 25 %}{% set c = color_2 %}
                 {% elif val < 50 %}{% set c = color_3 %}
@@ -158,8 +145,26 @@ actions:
               entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
             data:
               value: "{{ next_ring_color }}"
+      - conditions:
+          - condition: trigger
+            id: press
+        sequence:
           - action: homeassistant.turn_on
             target:
-              entity_id: "{{ next_entity }}"
+              entity_id: "{{ selected_entity }}"
+      - conditions:
+          - condition: trigger
+            id: start
+        sequence:
+          - action: text.set_value
+            target:
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+            data:
+              value: "{{ ring_color }}"
+          - action: text.set_value
+            target:
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+            data:
+              value: "{{ ring_color }}"
 
 mode: single
