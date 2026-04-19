@@ -1,9 +1,11 @@
 blueprint:
   name: Pivot - Scene Scrubbing
   description: >
-    Scrub through up to four scenes with the Pivot dial. The LED ring colour
-    updates as you turn to preview which scene is selected. Press to activate it.
-    Assign an input_number helper (range 0–100) to the bank.
+    Cycle through up to four entities with the Pivot button. Press to jump to
+    the next slot and activate it — stepping through your configured entities in
+    order and looping back to the first after the last. The LED ring colour
+    updates to reflect the active slot. Turning the dial also previews slots
+    without activating. Assign an input_number helper (range 0–100) to the bank.
   domain: automation
   input:
     suffix:
@@ -26,43 +28,39 @@ blueprint:
         entity:
           domain: input_number
     scene_1:
-      name: Scene 1 (0–25%)
+      name: Entity 1 (0–25%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     scene_2:
-      name: Scene 2 (25–50%)
+      name: Entity 2 (25–50%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     scene_3:
-      name: Scene 3 (50–75%)
+      name: Entity 3 (50–75%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     scene_4:
-      name: Scene 4 (75–100%)
+      name: Entity 4 (75–100%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     color_1:
-      name: Colour — Scene 1
-      default: [255, 147, 41]
+      name: Colour — Entity 1
+      default: [40, 137, 255]
       selector:
         color_rgb: {}
     color_2:
-      name: Colour — Scene 2
-      default: [10, 132, 255]
+      name: Colour — Entity 2
+      default: [255, 125, 25]
       selector:
         color_rgb: {}
     color_3:
-      name: Colour — Scene 3
-      default: [48, 209, 88]
+      name: Colour — Entity 3
+      default: [151, 255, 61]
       selector:
         color_rgb: {}
     color_4:
-      name: Colour — Scene 4
-      default: [191, 90, 242]
+      name: Colour — Entity 4
+      default: [200, 0, 255]
       selector:
         color_rgb: {}
 
@@ -128,8 +126,40 @@ actions:
           - condition: trigger
             id: press
         sequence:
-          - action: scene.turn_on
+          - variables:
+              next_val: >-
+                {% if val < 25 %}25
+                {% elif val < 50 %}50
+                {% elif val < 75 %}75
+                {% else %}0{% endif %}
+              next_entity: >-
+                {% if val < 25 %}{{ scene_2 }}
+                {% elif val < 50 %}{{ scene_3 }}
+                {% elif val < 75 %}{{ scene_4 }}
+                {% else %}{{ scene_1 }}{% endif %}
+              next_ring_color: >-
+                {% if val < 25 %}{% set c = color_2 %}
+                {% elif val < 50 %}{% set c = color_3 %}
+                {% elif val < 75 %}{% set c = color_4 %}
+                {% else %}{% set c = color_1 %}{% endif %}
+                {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
+          - action: input_number.set_value
             target:
-              entity_id: "{{ selected_scene }}"
+              entity_id: "{{ input_number_entity }}"
+            data:
+              value: "{{ next_val }}"
+          - action: text.set_value
+            target:
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
+            data:
+              value: "{{ next_ring_color }}"
+          - action: text.set_value
+            target:
+              entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
+            data:
+              value: "{{ next_ring_color }}"
+          - action: homeassistant.turn_on
+            target:
+              entity_id: "{{ next_entity }}"
 
 mode: single

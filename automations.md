@@ -28,7 +28,7 @@ Some examples gently extend Pivot’s native behaviour. Others completely change
 | [Climate control](#climate-control) | LED reflects the thermostat set temperature (e.g. a spectrum from blue to red) — turn to adjust, press to turn on or off  |
 | [Button press with configurable action](#button-press-action) | Button press and knob turn adjust different entities — e.g. play/pause a computer while dial controls volume |
 | [Media player volume and power toggle](#media-player-tv) | Dial controls volume, press toggles TV on/off |
-| [Scene scrubbing](#scene-scrubbing) | Dial previews scenes via LED colour, press activates |
+| [Scene scrubbing](#scene-scrubbing) | Press cycles through up to four entities (scenes, lights, or anything) — LED colour shows the active slot |
 | [Sensor gauge](#sensor-gauge) | Display any sensor on the dial, e.g. fuel level, washing machine progress, thermostat target |
 | [Light brightness and toggle](#light-brightness) | Basic automation example - dial sets brightness, press toggles on/off — useful for light groups |
 
@@ -959,19 +959,19 @@ mode: single
 
 ---
 
-## Scene scrubbing — dial previews scenes, press activates
+## Scene scrubbing — press to cycle through up to four entities
 {: #scene-scrubbing}
 
 **Default behaviour**  
 If a light is assigned to a bank, the knob adjusts brightness and the button toggles the light.
 
 **Automation behaviour**  
-This automation turns the bank into a scene selector instead. Turning the dial previews a scene via the LED ring, and pressing activates the selected scene.
+This automation turns the bank into a slot cycler. Each press jumps to the next entity slot and activates it — scenes, lights, switches, or anything HA can turn on. The LED ring updates immediately to show which slot is active. After the last slot it loops back to the first. Turning the dial previews slots without activating them.
 
 **Why use it**  
-A really tactile way to browse a small set of room moods or presets without opening a dashboard.
+A really tactile way to browse a small set of room moods or presets without opening a dashboard. No dial-turning required — just press to step through.
 
-The dial’s 0–100 range is split into four equal bands, each mapped to a different scene. As you turn, the LED ring changes colour to show which scene you are hovering over. Press to activate the one you want.
+The dial’s 0–100 range is split into four equal bands, each mapped to a different entity.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
 
@@ -987,9 +987,11 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 blueprint:
   name: Pivot - Scene Scrubbing
   description: >
-    Scrub through up to four scenes with the Pivot dial. The LED ring colour
-    updates as you turn to preview which scene is selected. Press to activate it.
-    Assign an input_number helper (range 0–100) to the bank.
+    Cycle through up to four entities with the Pivot button. Press to jump to
+    the next slot and activate it — stepping through your configured entities in
+    order and looping back to the first after the last. The LED ring colour
+    updates to reflect the active slot. Turning the dial also previews slots
+    without activating. Assign an input_number helper (range 0–100) to the bank.
   domain: automation
   input:
     suffix:
@@ -1012,43 +1014,39 @@ blueprint:
         entity:
           domain: input_number
     scene_1:
-      name: Scene 1 (0–25%)
+      name: Entity 1 (0–25%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     scene_2:
-      name: Scene 2 (25–50%)
+      name: Entity 2 (25–50%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     scene_3:
-      name: Scene 3 (50–75%)
+      name: Entity 3 (50–75%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     scene_4:
-      name: Scene 4 (75–100%)
+      name: Entity 4 (75–100%)
       selector:
-        entity:
-          domain: scene
+        entity: {}
     color_1:
-      name: Colour — Scene 1
-      default: [255, 147, 41]
+      name: Colour — Entity 1
+      default: [40, 137, 255]
       selector:
         color_rgb: {}
     color_2:
-      name: Colour — Scene 2
-      default: [10, 132, 255]
+      name: Colour — Entity 2
+      default: [255, 125, 25]
       selector:
         color_rgb: {}
     color_3:
-      name: Colour — Scene 3
-      default: [48, 209, 88]
+      name: Colour — Entity 3
+      default: [151, 255, 61]
       selector:
         color_rgb: {}
     color_4:
-      name: Colour — Scene 4
-      default: [191, 90, 242]
+      name: Colour — Entity 4
+      default: [200, 0, 255]
       selector:
         color_rgb: {}
 
@@ -1177,9 +1175,19 @@ actions:
           - condition: trigger
             id: press
         sequence:
-          - action: scene.turn_on
+          - action: input_number.set_value
             target:
-              entity_id: "{{ selected_scene }}"
+              entity_id: input_number.living_room_scene
+            data:
+              value: >-
+                {% if val < 25 %}25{% elif val < 50 %}50{% elif val < 75 %}75{% else %}0{% endif %}
+          - action: homeassistant.turn_on
+            target:
+              entity_id: >-
+                {% if val < 25 %}scene.evening
+                {% elif val < 50 %}scene.bright
+                {% elif val < 75 %}scene.focus
+                {% else %}scene.relax{% endif %}
 
 mode: single
 ```
@@ -1187,7 +1195,7 @@ mode: single
 
 </details>
 
-> **How it works:** The dial updates the `input_number` helper, which triggers this automation. Instead of activating the scene immediately, it writes the preview colour to the LED ring so you can see which scene you're hovering over. When you press, the button event fires and the selected scene activates. The scene is computed at press time from the current dial position, so whatever band you stopped in is what gets activated.
+> **How it works:** The dial previews which entity is active by updating the LED ring colour as you turn. Pressing the button jumps to the next slot — advancing the `input_number` to the start of the next band, updating the ring colour, and activating the corresponding entity. After the last slot it loops back to the first. You never need to turn the dial; the button alone cycles through all four entities.
 
 ---
 
