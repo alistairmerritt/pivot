@@ -4,7 +4,7 @@ title: Timer
 permalink: /timer/
 ---
 
-Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a focus block — controlled from the device's knob and button, and reflected on the gauge LEDs. This is an optional feature: the timer entities are included with each configured device but disabled by default, and the blueprint is installed manually.
+Pivot includes an optional timer feature — a Pomodoro session, a cooking countdown, a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the blueprints are installed manually.
 
 ---
 
@@ -23,14 +23,19 @@ Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a
 
 ## How it works
 
-Once set up, a single bank on your Pivot device becomes a timer controller:
+The timer always requires the **Pivot - Timer Control** blueprint, which manages the countdown and fires the alarm. Bank assignment is optional — it adds physical control on top.
 
-- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and, if a TTS service is configured in the integration settings, a voice announcement confirms the chosen time (*"25 minute timer — press to start"*)
-- **Single press** — start the timer if idle, pause if running, resume if paused
-- **Long press** — cancel and reset (only when the timer bank is active — long press on other banks is passed through for custom actions); announces *"Timer cancelled"* if a TTS service is configured in the integration settings
-- **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
-- **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press, "stop" wake word, or the dashboard button dismisses the alarm.
+**Always available (with or without a bank assigned):**
+- **Finish** — plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press, "stop" wake word, or the dashboard button dismisses the alarm
+- **TTS announcements** — spoken feedback on start, pause, resume, and finish
+- **Voice control** — via the optional Pivot - Timer - Voice blueprint
 - **Alarm control** — the timer alarm can be triggered manually or set to silent via Home Assistant switches
+
+**Available when a bank is assigned:**
+- **Knob (idle)** — turn to set the duration; the gauge shows how much of the maximum time is selected and announces the chosen time (*"25 minute timer — press to start"*)
+- **Single press** — start the timer if idle, pause if running, resume if paused
+- **Long press** — cancel and reset (only when the timer bank is active — long press on other banks is passed through for custom actions)
+- **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out; device switches back to the timer bank when the alarm fires
 
 ---
 
@@ -89,7 +94,7 @@ Once set, the knob is active for duration setting when the timer is idle, and pa
 
 ### Step 3 — Set your duration
 
-Turn the knob on the timer bank to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and, if a TTS service is configured in the integration settings, announces the selected time once you stop turning. You can also set the duration directly on number.{device_suffix}_timer_duration in HA — the gauge will update the next time you switch to that bank.
+If a bank is assigned, turn the knob to select a duration. The gauge shows the proportion of the maximum (default max: 60 minutes) and announces the selected time once you stop turning. You can also set the duration directly on `number.{device_suffix}_timer_duration` in HA at any time — if a bank is assigned, the gauge updates the next time you switch to it.
 
 ### Step 4 — Create an automation from the blueprint
 
@@ -109,8 +114,8 @@ The **Pivot - Timer Control** blueprint was installed automatically when you add
 | **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. |
 
 4. Save the automation.
-   
-That's it — single-press the bank to start. Single-press to pause. Long-press to reset.
+
+If a bank is assigned: single-press to start, single-press to pause, long-press to cancel. If no bank is assigned, use voice commands or the dashboard button instead.
 
 > **Optional voice control:** To control this timer by voice, install the **Pivot - Timer - Voice** blueprint. See [Voice and Pivot timers](#voice-and-pivot-timers) above. **Pivot - Timer Control must be running** for the alarm to fire — set Bank Number to `0` if you have no bank assigned.
 
