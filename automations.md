@@ -966,12 +966,12 @@ mode: single
 If a light is assigned to a bank, the knob adjusts brightness and the button toggles the light.
 
 **Automation behaviour**  
-This automation turns the bank into a slot cycler. Each knob turn jumps one slot forward (0 → 25 → 50 → 75 → 0), updating the LED ring colour to show which slot is active. Press to activate the current slot’s entity. Works with scenes, lights, switches, or anything Home Assistant can turn on.
+This automation turns the bank into a slot cycler. Each knob turn jumps one slot forward, updating the LED ring colour to show which slot is active. Press to activate the current slot’s entity. Works with scenes, lights, switches, or anything Home Assistant can turn on. You don’t have to fill all four slots — empty slots are skipped automatically.
 
 **Why use it**  
 A really tactile way to step through a small set of room moods or presets. One click per slot — no fine-tuning the dial position required.
 
-The dial’s 0–100 range is split into four equal bands, each mapped to a different entity.
+The dial’s 0–100 range is split into four equal bands. Assign an entity to as many slots as you need (minimum one).
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
 
@@ -991,6 +991,7 @@ blueprint:
     advances one slot (jumping to the next 25% boundary), updating the LED ring
     to show which slot is active. Press to activate the current slot's entity.
     Works with scenes, lights, switches, or anything Home Assistant can turn on.
+    Slots 2–4 are optional — only filled slots are cycled through.
     Assign an input_number helper (range 0–100) to the bank.
   domain: automation
   input:
@@ -1019,14 +1020,20 @@ blueprint:
         entity: {}
     scene_2:
       name: Entity 2 (25–50%)
+      description: Optional
+      default:
       selector:
         entity: {}
     scene_3:
       name: Entity 3 (50–75%)
+      description: Optional
+      default:
       selector:
         entity: {}
     scene_4:
       name: Entity 4 (75–100%)
+      description: Optional
+      default:
       selector:
         entity: {}
     color_1:
@@ -1086,16 +1093,14 @@ actions:
       color_3: !input color_3
       color_4: !input color_4
       val: "{{ states(input_number_entity) | float(0) }}"
+      current_slot: "{{ [(val / 25) | int, 3] | min }}"
       selected_entity: >-
-        {% if val < 25 %}{{ scene_1 }}
-        {% elif val < 50 %}{{ scene_2 }}
-        {% elif val < 75 %}{{ scene_3 }}
-        {% else %}{{ scene_4 }}{% endif %}
+        {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
+        {% set e = entities[current_slot | int] %}
+        {{ e if e not in [none, ''] else scene_1 }}
       ring_color: >-
-        {% if val < 25 %}{% set c = color_1 %}
-        {% elif val < 50 %}{% set c = color_2 %}
-        {% elif val < 75 %}{% set c = color_3 %}
-        {% else %}{% set c = color_4 %}{% endif %}
+        {% set colors = [color_1, color_2, color_3, color_4] %}
+        {% set c = colors[current_slot | int] %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
   - condition: template
     value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
@@ -1106,15 +1111,26 @@ actions:
         sequence:
           - variables:
               next_val: >-
-                {% if val < 25 %}25
-                {% elif val < 50 %}50
-                {% elif val < 75 %}75
-                {% else %}0{% endif %}
+                {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
+                {% set boundaries = [0, 25, 50, 75] %}
+                {% set cur = current_slot | int %}
+                {% set ns = namespace(result=boundaries[cur], found=false) %}
+                {% for i in range(1, 5) %}
+                  {% if not ns.found %}
+                    {% set idx = (cur + i) % 4 %}
+                    {% if entities[idx] not in [none, ''] %}
+                      {% set ns.result = boundaries[idx] %}
+                      {% set ns.found = true %}
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+                {{ ns.result }}
               next_ring_color: >-
-                {% if val < 25 %}{% set c = color_2 %}
-                {% elif val < 50 %}{% set c = color_3 %}
-                {% elif val < 75 %}{% set c = color_4 %}
-                {% else %}{% set c = color_1 %}{% endif %}
+                {% set colors = [color_1, color_2, color_3, color_4] %}
+                {% if next_val | int == 25 %}{% set c = colors[1] %}
+                {% elif next_val | int == 50 %}{% set c = colors[2] %}
+                {% elif next_val | int == 75 %}{% set c = colors[3] %}
+                {% else %}{% set c = colors[0] %}{% endif %}
                 {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
           - action: input_number.set_value
             target:
@@ -1230,7 +1246,7 @@ mode: single
 
 </details>
 
-> **How it works:** Each `pivot_knob_turn` event advances the `input_number` to the next slot boundary (0 → 25 → 50 → 75 → 0), updates the ring colour, and stops there — the dial does not freely track its physical position. Pressing the button reads the current slot from the `input_number` and calls `homeassistant.turn_on` on the corresponding entity. The ring colour syncs to the current slot on HA startup.
+> **How it works:** Each `pivot_knob_turn` event advances the `input_number` to the next filled slot boundary, skipping any empty slots, then updates the ring colour. The dial does not freely track its physical position — it only ever sits at 0, 25, 50, or 75. Pressing calls `homeassistant.turn_on` on the entity in the current slot. Ring colour syncs on HA startup.
 
 ---
 
