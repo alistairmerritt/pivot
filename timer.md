@@ -38,7 +38,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 Pivot includes an optional **Pivot - Timer - Voice** blueprint that routes spoken timer commands into Pivot’s timer system, giving you a unified experience across voice, knob, gauge, and dashboard.
 
-**Bank assignment is not required for voice control.** The voice blueprint only needs the three timer helper entities enabled — you do not need to assign a bank to `timer` or set up the **Pivot - Timer Control** blueprint first. If you do have a bank assigned (because Timer Control is also installed), the LED gauge and dim behaviour stay in sync automatically.
+**A bank assignment is optional, but the Pivot - Timer Control blueprint is always required.** Timer Control manages the countdown, fires the alarm, and handles TTS announcements — without it, timers started by voice will run silently and never finish. The voice blueprint only needs the three timer helper entities enabled. If no bank is assigned, set Bank Number to `0` in Timer Control — the alarm and TTS still work, but the LED gauge and physical button control are not available. If a bank is assigned, the LED gauge and dim behaviour stay in sync automatically.
 
 You have two options:
 
@@ -72,9 +72,11 @@ The timer helpers are provisioned with every Pivot device but disabled by defaul
 
 All three must be enabled for the blueprint to work correctly.
 
-### Step 2 — Assign the bank to timer
+### Step 2 — Optionally assign a bank to timer
 
-The timer blueprint only activates on a bank whose entity is set to the reserved keyword `timer`. This prevents the timer from triggering on banks that have a real entity assigned.
+A bank assignment is optional. Without one, the alarm fires and TTS announcements play, but the LED gauge and physical button control (knob, single press, long press) are not available.
+
+If you want LED gauge and physical button control:
 
 1. Go to **Settings → Devices & Services → Pivot → your device → Configure**
 2. Step through to the **Bank Entity Assignment** screen
@@ -99,19 +101,18 @@ The **Pivot - Timer Control** blueprint was installed automatically when you add
 
 | Input | Description |
 |---|---|
-| **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs, bank assignment, and TTS settings are all derived from this. |
+| **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. Timer entity IDs and TTS settings are all derived from this. |
+| **Bank Number** | The bank reserved for the timer (1–4). Set to `0` if no bank is assigned — the alarm and TTS still work, but the LED gauge and physical button control are not available. |
 | **Pivot Device** | Your Pivot VPE device. The `timer_ringing` switch is derived automatically from this. |
 | **Button Event Entity** | The button press event entity for your Pivot device, e.g. `event.home_assistant_voice_study`. Used to detect long press (cancel). Find it under Settings → Devices & Services → ESPHome → your device. |
 | **Finish Message** | Optional message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 | **Silent Mode** | When enabled, the alarm sound is suppressed at finish — the LED ring still pulses and the "stop" wake word still works. Off by default. |
 
-The bank number, TTS service, and media player are all read automatically from your Pivot integration settings — no manual input needed for any of them. The blueprint detects the timer bank by looking for whichever bank is reserved as `timer` in the configure screen. If no bank is reserved yet when you create the automation, the blueprint will be inert and activate automatically once you reserve one — no changes to the blueprint needed.
-
 4. Save the automation.
    
 That's it — single-press the bank to start. Single-press to pause. Long-press to reset.
 
-> **Optional voice control:** To control this timer by voice, install the **Pivot - Timer - Voice** blueprint. See [Voice and Pivot timers](#voice-and-pivot-timers) above. Bank assignment is not required — just the timer helper entities from Step 1.
+> **Optional voice control:** To control this timer by voice, install the **Pivot - Timer - Voice** blueprint. See [Voice and Pivot timers](#voice-and-pivot-timers) above. **Pivot - Timer Control must be running** for the alarm to fire — set Bank Number to `0` if you have no bank assigned.
 
 ---
 

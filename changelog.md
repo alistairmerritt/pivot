@@ -21,7 +21,8 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.80</summary>
 
-- **New (Blueprint):** Adds the **Pivot - Timer - Voice** blueprint. Lets you control the Pivot timer entirely by voice via Home Assistant Assist — set a duration, start, pause, resume, cancel, dismiss the alarm, and query remaining time. A bank does not need to be assigned to `timer`; only the three timer helper entities are required. If a bank is assigned (e.g. because Timer Control is also installed), the LED gauge stays in sync automatically. Supports natural language durations including *"set a timer for half an hour"*, *"start a 1 hour and 30 minute timer"*, *"set a timer for a quarter of an hour"*, and more.
+- **New (Blueprint):** Adds the **Pivot - Timer - Voice** blueprint. Lets you control the Pivot timer entirely by voice via Home Assistant Assist — set a duration, start, pause, resume, cancel, dismiss the alarm, and query remaining time. Supports natural language durations including *"set a timer for half an hour"*, *"start a 1 hour and 30 minute timer"*, *"set a timer for a quarter of an hour"*, and more. Requires **Pivot - Timer Control** to be running (for the alarm to fire), but a bank assignment is not required — set Bank Number to `0` in Timer Control to run alarm-only with no gauge or physical button control.
+- **Change (Blueprint):** **Pivot - Timer Control** Bank Number input now accepts `0` (no bank assigned). When set to `0`, the timer alarm and TTS announcements work normally but the LED gauge, physical button control, and bank switching are disabled. This allows Timer Control to run alongside the Voice blueprint without needing a bank reserved.
 - **Change:** All blueprint display names updated to use a hyphen separator for consistency. **Pivot — Timer** is now **Pivot - Timer Control**; **Pivot — Timer Toggle Script** is now **Pivot - Timer Toggle Script**. Existing automations are unaffected — this is a display name change only.
 
 </details>
