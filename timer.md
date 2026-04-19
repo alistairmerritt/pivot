@@ -4,7 +4,7 @@ title: Timer
 permalink: /timer/
 ---
 
-Pivot includes an optional timer feature — a Pomodoro session, a cooking countdown, a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the blueprints are installed manually.
+Pivot includes an optional timer feature — a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the required automations/scripts are created manually from blueprints included with Pivot.
 
 ---
 
@@ -25,25 +25,25 @@ The timer is built around three blueprints. One is required; the others are opti
 
 | Blueprint | Required? | What it does |
 | --- | --- | --- |
-| **Pivot - Timer Control** | Yes | Manages the countdown and fires the alarm. Also handles physical button control and LED gauge when a bank is assigned. |
+| **Pivot - Timer Control** | Yes | Manages the countdown and fires the alarm. Also handles physical button control and the LED gauge when a bank is assigned. |
 | **Pivot - Timer - Voice** | No | Voice control via Home Assistant Assist — set, start, pause, resume, cancel, dismiss, and query the timer by speaking to the device. |
 | **Pivot - Timer Toggle Script** | No | Dashboard helper — lets a button card start, pause, resume, or dismiss the timer the same way the physical button does. |
 
 **Pivot - Timer Control is always required**, even if you only plan to use voice control. It manages the countdown and is what sets the alarm state when time runs out — without it, a running timer simply expires silently.
 
-Bank assignment is optional. Without a bank, the alarm fires and TTS announcements play, but the LED gauge and physical knob and button control are not available.
+Bank assignment is optional. Without a bank, the alarm still fires and TTS announcements still play, but the LED gauge and physical knob and button control are not available.
 
 **Always available (with or without a bank assigned):**
-- **Alarm** — plays the built-in alarm sound and pulses the LED ring when the timer finishes; single press, "stop" wake word, or dashboard button dismisses it
+- **Alarm** — plays the built-in alarm sound and pulses the LED ring when the timer finishes; single press, "stop" wake word, or the dashboard button dismisses it
 - **TTS announcements** — spoken feedback on start, pause, resume, and finish
-- **Voice control** — via the optional Pivot - Timer - Voice blueprint
-- **Dashboard control** — via the optional Pivot - Timer Toggle Script blueprint
+- **Voice control** — via the optional **Pivot - Timer - Voice** blueprint
+- **Dashboard control** — via the optional **Pivot - Timer Toggle Script** blueprint
 
 **Available when a bank is assigned:**
 - **Knob** — turn to set the duration while idle; announces the chosen time when the knob settles
 - **Single press** — start if idle, pause if running, resume if paused
 - **Long press** — cancel and reset (only when the timer bank is active; long press on other banks is left free for custom actions)
-- **Gauge LEDs** — fill to 100% on start and drain to 0% as time runs out; device switches to the timer bank automatically when the alarm fires
+- **Gauge LEDs** — fill to 100% on start and drain to 0% as time runs out; the device switches to the timer bank automatically when the alarm fires
 
 ---
 
@@ -56,7 +56,7 @@ The timer helper entities are provisioned with every Pivot device but disabled b
 1. Go to **Settings → Devices & Services → Pivot** and open your device
 2. Find the three timer entities:
    - `number.{device_suffix}_timer_duration` — duration in minutes
-   - `select.{device_suffix}_timer_state` — state mirror (idle / running / paused / alerting)
+   - `select.{device_suffix}_timer_state` — state mirror (`idle` / `running` / `paused` / `alerting`)
    - `text.{device_suffix}_timer_end` — internal countdown tracker
 3. Click each entity, go to **Settings**, and toggle **Enable**
 
@@ -64,7 +64,7 @@ The timer helper entities are provisioned with every Pivot device but disabled b
 
 ### Step 2 — Set up Timer Control
 
-The **Pivot - Timer Control** blueprint was installed automatically when you added your device. Set it up now — it is required regardless of how you plan to control the timer.
+The **Pivot - Timer Control** blueprint is included with Pivot. Set it up now — it is required regardless of how you plan to control the timer.
 
 1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot - Timer Control**
 2. Click **Create Automation**
@@ -73,19 +73,19 @@ The **Pivot - Timer Control** blueprint was installed automatically when you add
 | Input | Description |
 |---|---|
 | **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. All timer entity IDs are derived from this. |
-| **Bank Number** | The bank reserved for the timer (1–4). Set to `0` if no bank is assigned — the alarm and TTS still work, but the LED gauge and physical button control are not available. |
-| **Pivot Device** | Your Pivot VPE device. The media player and timer ringing switch are derived automatically. |
-| **Button Event Entity** | The button press event entity for your device, e.g. `event.home_assistant_voice_lounge`. Used to detect long press (cancel). Find it under Settings → Devices & Services → ESPHome → your device. |
+| **Bank Number** | The bank reserved for the timer (`1–4`). Set to `0` if no bank is assigned — the alarm and TTS still work, but the LED gauge and physical button control are not available. |
+| **Pivot Device** | Your Pivot VPE device. The media player and `timer_ringing` switch are derived automatically. |
+| **Button Event Entity** | The button press event entity for your device, e.g. `event.home_assistant_voice_lounge`. Used to detect long press (cancel). Find it under **Settings → Devices & Services → ESPHome → your device**. |
 | **Finish Message** | Optional TTS message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 | **Silent Mode** | When enabled, the alarm sound is suppressed — the LED ring still pulses and the "stop" wake word still works. Off by default. |
 
 4. Save the automation
 
-If a bank is assigned, the timer is now ready for physical control: single-press to start, single-press to pause, long-press to cancel. If no bank is assigned, move on to Step 4 or Step 5 to set up voice or dashboard control.
+If a bank is assigned, the timer is now ready for physical control: single press to start, single press to pause, and long press to cancel. If no bank is assigned, move on to Step 4 or Step 5 to set up voice or dashboard control.
 
 ---
 
-### Step 3 — Optional: Assign a bank
+### Step 3 — Optional: assign a bank
 
 Skip this step if you only want to control the timer by voice or dashboard.
 
@@ -96,15 +96,15 @@ Assigning a bank enables the LED gauge countdown, knob-based duration setting, a
 3. Under **Timer banks**, tick the bank you want to use
 4. Save
 
-Once assigned, turn the knob to set a duration (the gauge shows the selected proportion of the maximum), then single-press to start.
+Once assigned, turn the knob to set a duration (the gauge shows the selected proportion of the maximum), then single press to start.
 
-> Go back to Step 2 and update Bank Number in your Timer Control automation to match the bank you assigned here.
+> Go back to Step 2 and update **Bank Number** in your **Pivot - Timer Control** automation to match the bank you assigned here.
 
 > You can also assign the bank directly by writing `timer` (lowercase) to `text.{device_suffix}_bank_N_entity` via Developer Tools — the Configure screen and the entity stay in sync.
 
 ---
 
-### Step 4 — Optional: Add voice control
+### Step 4 — Optional: add voice control
 
 By default, spoken timer commands on the VPE use the stock Home Assistant timer behaviour — they are handled by the Assist pipeline and are completely independent of Pivot. **Installing this blueprint is the only thing that changes that.** If you skip this step, voice timers continue to work exactly as they did before.
 
@@ -117,7 +117,7 @@ If you install the blueprint and later want to go back to stock behaviour, simpl
 
 When installed, voice and physical input share the same timer state — you can start a timer by voice and cancel it from the knob, or start it from the knob and ask how much time is left.
 
-A bank does not need to be assigned. Timer Control (Step 2) must be running.
+A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must already be running.
 
 **Setup:**
 
@@ -141,23 +141,25 @@ A bank does not need to be assigned. Timer Control (Step 2) must be running.
 | Dismiss alarm | *"dismiss the alarm"*, *"dismiss alarm"* |
 | Status | *"how much time is left?"*, *"how long is left on the timer?"*, *"what's left on the timer?"* |
 
+> **Note:** The voice blueprint matches common natural phrases, but it is not a full language model. Most everyday timer commands will work, but simpler phrasing is more reliable.
+
 ---
 
-### Step 5 — Optional: Add dashboard control
+### Step 5 — Optional: add dashboard control
 
 The **Pivot - Timer Toggle Script** blueprint lets a dashboard button card start, pause, resume, and dismiss the timer — the same way the physical button does.
 
-A bank does not need to be assigned. Timer Control (Step 2) must be running.
+A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must already be running.
 
-**Step 1 — Install the script**
+#### Step 1 — Install the script
 
-The **Pivot - Timer Toggle Script** blueprint was installed automatically when you added your device. Go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**.
+The **Pivot - Timer Toggle Script** blueprint is included with Pivot. Go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**.
 
 > **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly. The script only needs to be created once and works across all your Pivot devices.
 
-**Step 2 — Add a tile card**
+#### Step 2 — Add a tile card
 
-This uses the `sensor.pivot_timer_remaining` template sensor to display the current timer state — see [Template sensors](#template-sensors) below for how to create it.
+This example uses the `sensor.pivot_timer_remaining` template sensor to display the current timer state — see [Template sensors](#template-sensors) below for how to create it.
 
 ```yaml
 type: tile
@@ -174,7 +176,7 @@ tap_action:
       bank: 2
 ```
 
-**Cancel button**
+#### Cancel button
 
 To add a dedicated cancel button, set `timer_state` to `idle` directly:
 
@@ -192,9 +194,9 @@ tap_action:
     option: idle
 ```
 
-> This resets the timer immediately without a TTS announcement. Only takes effect when the timer is running or paused.
+> This resets the timer immediately without a TTS announcement. It only takes effect when the timer is running or paused.
 
-**Complete dashboard examples**
+#### Complete dashboard examples
 
 The cards above are intentionally minimal. If you want a fully worked example — timer state display, start/pause/cancel controls, and a progress indicator in a polished device card — the [Dashboard](/pivot/dashboard/) page has complete working examples that include timer support.
 
@@ -204,11 +206,11 @@ The cards above are intentionally minimal. If you want a fully worked example �
 
 | Entity | Purpose |
 | --- | --- |
-| `number.{device_suffix}_timer_duration` | Duration in minutes (1–60, default 25) |
-| `select.{device_suffix}_timer_state` | State mirror — updated by blueprint and firmware (idle / running / paused / alerting) |
+| `number.{device_suffix}_timer_duration` | Duration in minutes (`1–60`, default `25`) |
+| `select.{device_suffix}_timer_state` | State mirror — updated by blueprint and firmware (`idle` / `running` / `paused` / `alerting`) |
 | `text.{device_suffix}_timer_end` | Internal — stores an ISO end timestamp while running, and a `P{seconds}` remaining-time value while paused |
 
-All three entities are **disabled by default** and live under the Pivot device in the HA device registry. `text.{device_suffix}_timer_end` is managed entirely by the blueprint; you don't need to interact with it directly.
+All three entities are **disabled by default** and live under the Pivot device in the HA device registry. `text.{device_suffix}_timer_end` is managed entirely by the blueprint; you do not need to interact with it directly.
 
 ---
 
@@ -225,9 +227,9 @@ template:
       - name: "Pivot Timer Remaining"
         icon: mdi:timer-outline
         state: >
-          {% set suffix = 'ha_voice_lounge' %}
-          {% set state = states('select.' ~ suffix ~ '_timer_state') %}
-          {% set end_str = states('text.' ~ suffix ~ '_timer_end') %}
+          {% set device_suffix = 'ha_voice_lounge' %}
+          {% set state = states('select.' ~ device_suffix ~ '_timer_state') %}
+          {% set end_str = states('text.' ~ device_suffix ~ '_timer_end') %}
           {% if state == 'running' and end_str and not end_str.startswith('P') %}
             {% set secs = [(as_datetime(end_str) - now()).total_seconds(), 0] | max | int %}
             {% set h = secs // 3600 %}
@@ -250,9 +252,9 @@ template:
       - name: "Pivot Timer Ends At"
         icon: mdi:clock-end
         state: >
-          {% set suffix = 'ha_voice_lounge' %}
-          {% set state = states('select.' ~ suffix ~ '_timer_state') %}
-          {% set end_str = states('text.' ~ suffix ~ '_timer_end') %}
+          {% set device_suffix = 'ha_voice_lounge' %}
+          {% set state = states('select.' ~ device_suffix ~ '_timer_state') %}
+          {% set end_str = states('text.' ~ device_suffix ~ '_timer_end') %}
           {% if state == 'running' and end_str and not end_str.startswith('P') %}
             {{ as_datetime(end_str) | as_local | strftime('%H:%M') }}
           {% else %}
@@ -264,9 +266,9 @@ template:
         icon: mdi:timer-sand
         unit_of_measurement: s
         state: >
-          {% set suffix = 'ha_voice_lounge' %}
-          {% set state = states('select.' ~ suffix ~ '_timer_state') %}
-          {% set end_str = states('text.' ~ suffix ~ '_timer_end') %}
+          {% set device_suffix = 'ha_voice_lounge' %}
+          {% set state = states('select.' ~ device_suffix ~ '_timer_state') %}
+          {% set end_str = states('text.' ~ device_suffix ~ '_timer_end') %}
           {% if state == 'running' and end_str and not end_str.startswith('P') %}
             {{ [(as_datetime(end_str) - now()).total_seconds(), 0] | max | int }}
           {% elif state == 'paused' and end_str and end_str.startswith('P') %}
@@ -293,13 +295,13 @@ Pivot exposes two switches that let you control how timer alarms behave. These a
 
 ### Trigger the alarm manually
 
-The `timer_ringing` switch can be turned on to trigger the timer alarm at any time — playing the built-in alarm sound and LED animation, just as if a timer had finished. Useful for testing the alarm, triggering it from a dashboard, or using it as part of a larger automation.
+The `timer_ringing` switch can be turned on to trigger the timer alarm at any time — playing the built-in alarm sound and LED animation, just as if a timer had finished. This is useful for testing the alarm, triggering it from a dashboard, or using it as part of a larger automation.
 
 ### Silent timers
 
-The `silent_timer` switch suppresses the audible alarm while keeping the visual behaviour. When enabled, timers will still finish normally — the LED ring pulses and the device behaves as expected — but no sound is played.
+The `silent_timer` switch suppresses the audible alarm while keeping the visual behaviour. When enabled, timers still finish normally — the LED ring pulses and the timer enters its normal finished state — but no sound is played.
 
-Useful for focus sessions, late-night use, or situations where visual feedback is enough. Because this applies at the device level, it works consistently across both Pivot timers and voice-set timers.
+This is useful for focus sessions, late-night use, or situations where visual feedback is enough. Because this applies at the device level, it works consistently across both Pivot timers and voice-set timers.
 
 ---
 
@@ -313,7 +315,7 @@ Useful for focus sessions, late-night use, or situations where visual feedback i
 
 **Changing duration mid-session** — Turning the knob while the timer is running or paused does nothing. To change the duration, long press to cancel, then turn the knob to select a new time.
 
-**Multiple devices** — Create one Timer Control automation per Pivot device, each with its own suffix. The Voice and Dashboard Toggle blueprints are set up once and work across all devices.
+**Multiple devices** — Create one **Pivot - Timer Control** automation per Pivot device, each with its own suffix. The voice and dashboard blueprints are set up once and work across all devices.
 
 **Pausing and resuming** — Remaining time is stored in `text.{device_suffix}_timer_end` and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the countdown sync will detect this within 30 seconds and trigger the finish sequence normally.
 
