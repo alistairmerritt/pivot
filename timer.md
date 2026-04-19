@@ -34,29 +34,71 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 ---
 
-## Voice timers and Pivot timers
+## Voice and Pivot timers
 
-Your voice assistant can still set timers by voice, such as “set a 25 minute timer”. By default, this uses the VPE’s built-in timer system and does not interact with Pivot.
+Pivot timers can be controlled by voice as well as from the device itself. Pivot includes an optional blueprint that lets spoken timer commands use the same timer system as the knob, gauge, and dashboard.
 
-The built-in voice timer and the Pivot timer are separate systems with different state and behaviour:
+You have two options:
 
-- **Starting a timer by voice** uses the VPE’s built-in timer pipeline, which runs entirely within ESPHome. It does not update any Pivot entities, so the gauge will not reflect the countdown and the Pivot timer automation will not know the timer is running.
-- **Starting a timer with the knob** uses Pivot’s Home Assistant entities and timer automation. Because this timer exists within Pivot rather than the built-in voice pipeline, it cannot be queried through the stock timer system — for example, asking “how long is left on the timer?” will not return the Pivot timer’s remaining time.
+- **Do nothing** → spoken timer commands continue to use the stock VPE timer behaviour
+- **Create the automation from the included blueprint** → spoken timer commands are routed into Pivot, giving you a unified timer experience across voice, knob, gauge, and dashboard
+  
+Once this blueprint is set up, voice and physical input work with the same Pivot timer state. That means you can:
 
-By default, the two systems operate independently and do not sync or interact with each other. The main overlap is at the end of the countdown: both can use the device’s built-in `timer_ringing` mechanism, so the alarm sound and LED ring effect may appear similar when they finish.
+- start a timer by voice, then adjust or cancel it from the knob
+- start a timer from the knob, then ask how much time is left
+- pause, resume, cancel, dismiss, or query the timer using either voice or the device
 
-Use whichever timer suits the moment — they can coexist without interfering with each other.
+Because everything runs through Pivot’s timer entities and automation, the timer stays visible and controllable through:
 
-### Optional: route voice timer commands into Pivot
+- the LED gauge
+- Home Assistant entities
+- dashboard controls
+- spoken status queries
 
-Pivot includes an optional blueprint that can listen for spoken timer commands (for example, “set a 4 minute timer”) and create the timer through Pivot instead of the stock VPE timer.
+Supported voice intents from the current blueprint:
 
-This is entirely optional:
+**Start**
+- `start timer`
+- `set timer`
+- `start a {n} minute timer`
+- `start a {n} hour timer`
+- `set a {n} minute timer`
+- `set a {n} hour timer`
+- `set timer for {n} minutes`
+- `set timer for {n} hours`
 
-- **Do nothing** → spoken timers continue to use the stock VPE timer behaviour
-- **Create the automation from the included blueprint** → spoken timer commands can create Pivot timers, giving you visibility and control through Pivot entities, the gauge, and dashboard integrations
+**Pause**
+- `pause timer`
+- `pause the timer`
 
-This is not required for normal Pivot timer setup, but is available if you want a more unified timer experience.
+**Resume**
+- `resume timer`
+- `resume the timer`
+- `continue timer`
+- `continue the timer`
+- `unpause timer`
+- `unpause the timer`
+
+**Cancel**
+- `cancel timer`
+- `cancel the timer`
+- `stop timer`
+- `stop the timer`
+- `reset timer`
+- `reset the timer`
+
+**Dismiss**
+- `dismiss timer`
+- `dismiss the timer`
+- `stop the alarm`
+
+**Status**
+- `how long is left on the timer`
+- `how much time is left`
+- `how much time is left on the timer`
+- `what's the timer at`
+- `timer status`
 
 ---
 
