@@ -108,6 +108,9 @@ actions:
       color_4: !input color_4
       val: "{{ states(input_number_entity) | float(0) }}"
       current_slot: "{{ [(val / 25) | int, 3] | min }}"
+      filled_count: >-
+        {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
+        {{ entities | reject('equalto', none) | reject('equalto', '') | list | count }}
       selected_entity: >-
         {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
         {% set e = entities[current_slot | int] %}
@@ -122,6 +125,8 @@ actions:
       - conditions:
           - condition: trigger
             id: dial
+          - condition: template
+            value_template: "{{ filled_count | int > 1 }}"
         sequence:
           - variables:
               next_val: >-
