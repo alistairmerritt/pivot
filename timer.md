@@ -28,6 +28,7 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 - **Long press** — cancel and reset (only when the timer bank is active — long press on other banks is passed through for custom actions); announces *"Timer cancelled"* if a TTS service is configured in the integration settings
 - **Gauge LEDs** — fill to 100% when started, drain to 0% as time runs out
 - **Finish** — the device switches back to the timer bank, plays the built-in alarm sound, pulses the LED ring, and optionally speaks a TTS message; single press, "stop" wake word, or the dashboard button dismisses the alarm.
+- **Alarm control** — the timer alarm can be triggered manually or set to silent via Home Assistant switches
 
 ---
 
@@ -263,6 +264,32 @@ show_state: false
 ### Complete dashboard examples
 
 The cards above are intentionally minimal. If you want a fully worked example — timer state display, start/pause/cancel controls, and a progress indicator all built into a polished device card — the [Dashboard](/pivot/dashboard/) page has complete, working examples built around `custom:button-card` that include timer bank support.
+
+---
+
+## Controlling the timer alarm
+
+Pivot exposes two switches that let you control how timer alarms behave. These apply to both Pivot timers and voice-activated timers on the device.
+
+### Trigger the alarm manually
+
+The `timer_ringing` switch can be turned on to trigger the timer alarm at any time. This plays the built-in alarm sound and LED animation, just as if a timer had finished.
+
+This is useful for:
+- testing the alarm
+- triggering it from a dashboard
+- using the alarm as part of a larger automation
+
+### Silent timers
+
+The `silent_timer` switch suppresses the audible alarm while keeping the visual behaviour. When enabled, timers will still “finish” normally — the LED ring pulses and the device behaves as expected — but no sound is played.
+
+This is useful for:
+- focus timers or work sessions
+- late-night use
+- situations where visual feedback is enough
+
+Because this applies at the device level, it works consistently across both Pivot timers and voice-set timers.
 
 ---
 
