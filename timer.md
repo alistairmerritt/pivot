@@ -11,10 +11,12 @@ Pivot can act as a physical timer — a Pomodoro session, a cooking countdown, a
 ## On this page
 
 - [How it works](#how-it-works)  
+- [Voice timers and Pivot timers](#voice-timers-and-pivot-timers)
 - [Getting started with timers](#getting-started-with-timers)  
 - [Timer entities](#timer-entities)  
-- [Template sensors](#template-sensors)  
+- [Template sensors](#template-sensors)
 - [Dashboard control](#dashboard-control)  
+- [Controlling the timer alarm](#controlling-the-timer-alarm)
 - [Tips](#tips)
 
 ---
@@ -47,14 +49,14 @@ Use whichever timer suits the moment — they can coexist without interfering wi
 
 ### Optional: route voice timer commands into Pivot
 
-If you prefer, you can optionally install a separate blueprint that listens for spoken timer commands (for example, “set a 4 minute timer”) and creates the timer through Pivot instead of the stock VPE timer.
+Pivot includes an optional blueprint that can listen for spoken timer commands (for example, “set a 4 minute timer”) and create the timer through Pivot instead of the stock VPE timer.
 
 This is entirely optional:
 
 - **Do nothing** → spoken timers continue to use the stock VPE timer behaviour
-- **Install the blueprint** → spoken timer commands can create Pivot timers, giving you visibility and control through Pivot entities, the gauge, and dashboard integrations
+- **Create the automation from the included blueprint** → spoken timer commands can create Pivot timers, giving you visibility and control through Pivot entities, the gauge, and dashboard integrations
 
-This optional blueprint is intended for users who want a more unified timer experience, but it is not required for normal Pivot timer setup.
+This is not required for normal Pivot timer setup, but is available if you want a more unified timer experience.
 
 ---
 
