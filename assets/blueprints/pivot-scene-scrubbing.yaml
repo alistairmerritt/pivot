@@ -106,18 +106,29 @@ actions:
       color_2: !input color_2
       color_3: !input color_3
       color_4: !input color_4
-      val: "{{ states(input_number_entity) | float(0) }}"
-      current_slot: "{{ [(val / 25) | int, 3] | min }}"
+      entities: "{{ [scene_1, scene_2, scene_3, scene_4] }}"
+      colors: "{{ [color_1, color_2, color_3, color_4] }}"
       filled_count: >-
-        {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
-        {{ entities | reject('equalto', none) | reject('equalto', '') | list | count }}
+        {% set ns = namespace(count=0) %}
+        {% for e in [scene_1, scene_2, scene_3, scene_4] %}
+          {% if e is not none and e != '' %}{% set ns.count = ns.count + 1 %}{% endif %}
+        {% endfor %}
+        {{ ns.count }}
+      # For dial trigger: use the raw event value to determine which physical zone
+      # the dial is in. This avoids the race between the integration writing the
+      # physical position and our snapping logic.
+      raw_val: >-
+        {% if trigger.id == 'dial' %}
+          {{ trigger.event.data.value | float(0) }}
+        {% else %}
+          {{ states(input_number_entity) | float(0) }}
+        {% endif %}
+      current_slot: "{{ [(raw_val / 25) | int, 3] | min }}"
       selected_entity: >-
-        {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
-        {% set e = entities[current_slot | int] %}
-        {{ e if e not in [none, ''] else scene_1 }}
+        {% set e = [scene_1, scene_2, scene_3, scene_4][current_slot | int] %}
+        {{ e if e is not none and e != '' else scene_1 }}
       ring_color: >-
-        {% set colors = [color_1, color_2, color_3, color_4] %}
-        {% set c = colors[current_slot | int] %}
+        {% set c = [color_1, color_2, color_3, color_4][current_slot | int] %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
   - condition: template
     value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
@@ -129,27 +140,23 @@ actions:
             value_template: "{{ filled_count | int > 1 }}"
         sequence:
           - variables:
-              next_val: >-
-                {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
-                {% set boundaries = [0, 25, 50, 75] %}
+              next_slot: >-
                 {% set cur = current_slot | int %}
-                {% set ns = namespace(result=boundaries[cur], found=false) %}
+                {% set ns = namespace(result=cur, found=false) %}
                 {% for i in range(1, 5) %}
                   {% if not ns.found %}
                     {% set idx = (cur + i) % 4 %}
-                    {% if entities[idx] not in [none, ''] %}
-                      {% set ns.result = boundaries[idx] %}
+                    {% set e = [scene_1, scene_2, scene_3, scene_4][idx] %}
+                    {% if e is not none and e != '' %}
+                      {% set ns.result = idx %}
                       {% set ns.found = true %}
                     {% endif %}
                   {% endif %}
                 {% endfor %}
                 {{ ns.result }}
+              next_val: "{{ [0, 25, 50, 75][next_slot | int] }}"
               next_ring_color: >-
-                {% set colors = [color_1, color_2, color_3, color_4] %}
-                {% if next_val | int == 25 %}{% set c = colors[1] %}
-                {% elif next_val | int == 50 %}{% set c = colors[2] %}
-                {% elif next_val | int == 75 %}{% set c = colors[3] %}
-                {% else %}{% set c = colors[0] %}{% endif %}
+                {% set c = [color_1, color_2, color_3, color_4][next_slot | int] %}
                 {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
           - action: input_number.set_value
             target:
