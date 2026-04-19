@@ -36,27 +36,24 @@ Once set up, a single bank on your Pivot device becomes a timer controller:
 
 ## Voice and Pivot timers
 
-Pivot timers can be controlled by voice as well as from the device itself. Pivot includes an optional blueprint that lets spoken timer commands use the same timer system as the knob, gauge, and dashboard.
+Pivot includes an optional **Pivot - Timer - Voice** blueprint that routes spoken timer commands into Pivot’s timer system, giving you a unified experience across voice, knob, gauge, and dashboard.
+
+**Bank assignment is not required for voice control.** The voice blueprint only needs the three timer helper entities enabled — you do not need to assign a bank to `timer` or set up the **Pivot - Timer Control** blueprint first. If you do have a bank assigned (because Timer Control is also installed), the LED gauge and dim behaviour stay in sync automatically.
 
 You have two options:
 
 - **Do nothing** → spoken timer commands continue to use the stock VPE timer behaviour
-- **Create the automation from the included blueprint** → spoken timer commands are routed into Pivot, giving you a unified timer experience across voice, knob, gauge, and dashboard
-  
-Once this blueprint is set up, voice and physical input work with the same Pivot timer state. That means you can:
+- **Install the voice blueprint** → spoken timer commands use Pivot’s timer, giving you a unified timer experience
+
+Once installed, voice and physical input share the same timer state. That means you can:
 
 - start a timer by voice, then adjust or cancel it from the knob
 - start a timer from the knob, then ask how much time is left
 - pause, resume, cancel, dismiss, or query the timer using either voice or the device
 
-Because everything runs through Pivot’s timer entities and automation, the timer stays visible and controllable through:
+Supported phrases include natural language like *”set a timer for half an hour”*, *”start a 1 hour and 30 minute timer”*, *”pause the timer”*, *”how much time is left?”*, and more. See the blueprint description in Home Assistant for the full list.
 
-- the LED gauge
-- Home Assistant entities
-- dashboard controls
-- spoken status queries
-
-> Note: The voice timer automation matches common natural phrases, but it isn’t a full language model. Most everyday phrasings like “set a 5 minute timer” will work, but you may need to keep commands simple and consistent.
+> **Note:** The voice blueprint matches specific phrases registered as local intents. Ensure your Assist pipeline has **Prefer local intents** enabled so commands are matched by the blueprint before being passed to an LLM agent.
 
 ---
 
@@ -94,9 +91,9 @@ Turn the knob on the timer bank to select a duration. The gauge shows the propor
 
 ### Step 4 — Create an automation from the blueprint
 
-The **Pivot — Timer** blueprint was installed automatically when you added your device.
+The **Pivot - Timer Control** blueprint was installed automatically when you added your device.
 
-1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot — Timer**.
+1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot - Timer Control**.
 2. Click **Create Automation**.
 3. Fill in the inputs:
 
@@ -114,7 +111,7 @@ The bank number, TTS service, and media player are all read automatically from y
    
 That's it — single-press the bank to start. Single-press to pause. Long-press to reset.
 
-> **Optional voice timer integration:** If you want spoken timer commands such as “set a 4 minute timer” to use Pivot instead of the stock VPE timer, you can install the optional voice timer blueprint. If you skip it, spoken timers continue to use the stock timer behaviour.
+> **Optional voice control:** To control this timer by voice, install the **Pivot - Timer - Voice** blueprint. See [Voice and Pivot timers](#voice-and-pivot-timers) above. Bank assignment is not required — just the timer helper entities from Step 1.
 
 ---
 
@@ -213,7 +210,7 @@ Dashboard control is optional, but the below script is required if you want dash
 
 ### Step 1 — Install the Timer Toggle script
 
-The **Pivot — Timer Toggle** blueprint was installed automatically when you added your device. Go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot — Timer Toggle**.
+The **Pivot - Timer Toggle Script** blueprint was installed automatically when you added your device. Go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**.
 
 > **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly by entity ID. The script only needs to be set up **once** — it works for all your Pivot devices, with the device suffix and bank number passed by each card at call time.
 
