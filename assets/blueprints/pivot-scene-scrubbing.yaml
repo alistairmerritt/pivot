@@ -170,7 +170,7 @@ actions:
           - condition: trigger
             id: press
         sequence:
-          - action: homeassistant.turn_on
+          - action: homeassistant.toggle
             target:
               entity_id: "{{ selected_entity }}"
       - conditions:
