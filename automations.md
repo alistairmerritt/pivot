@@ -28,7 +28,7 @@ Some examples gently extend Pivot’s native behaviour. Others completely change
 | [Climate control](#climate-control) | LED reflects the thermostat set temperature (e.g. a spectrum from blue to red) — turn to adjust, press to turn on or off  |
 | [Button press with configurable action](#button-press-action) | Button press and knob turn adjust different entities — e.g. play/pause a computer while dial controls volume |
 | [Media player volume and power toggle](#media-player-tv) | Dial controls volume, press toggles TV on/off |
-| [Scene scrubbing](#scene-scrubbing) | Each dial turn steps to the next slot (scene, light, or anything), LED colour shows the active slot, press activates it |
+| [Scene scrubbing](#scene-scrubbing) | Dial position maps to one of four entity slots, LED colour shows the active zone, press toggles it |
 | [Sensor gauge](#sensor-gauge) | Display any sensor on the dial, e.g. fuel level, washing machine progress, thermostat target |
 | [Light brightness and toggle](#light-brightness) | Basic automation example - dial sets brightness, press toggles on/off — useful for light groups |
 
@@ -959,19 +959,19 @@ mode: single
 
 ---
 
-## Scene scrubbing — dial cycles through slots, press activates
+## Scene scrubbing — dial selects a slot, press toggles it
 {: #scene-scrubbing}
 
 **Default behaviour**  
 If a light is assigned to a bank, the knob adjusts brightness and the button toggles the light.
 
 **Automation behaviour**  
-This automation turns the bank into a slot cycler. Each knob turn jumps one slot forward, updating the LED ring colour to show which slot is active. Press to activate the current slot’s entity. Works with scenes, lights, switches, or anything Home Assistant can turn on. You don’t have to fill all four slots — empty slots are skipped automatically.
+This automation divides the dial’s 0–100 range into four equal zones, each mapped to a different entity. Turning the dial updates the LED ring colour to show which zone you’re in. Pressing the button toggles the entity in the current zone. Works with scenes, lights, switches, or anything Home Assistant can turn on or toggle. Slots 2–4 are optional.
 
 **Why use it**  
-A really tactile way to step through a small set of room moods or presets. One click per slot — no fine-tuning the dial position required.
+A tactile way to switch between a small set of room moods or presets — turn to the one you want, press to activate it.
 
-The dial’s 0–100 range is split into four equal bands. Assign an entity to as many slots as you need (minimum one).
+The dial’s 0–100 range is split into four equal bands (0–25%, 25–50%, 50–75%, 75–100%). Assign an entity to as many slots as you need — minimum one.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
 
@@ -987,11 +987,11 @@ Create a helper: **Settings → Devices & Services → Helpers → Number**, wit
 blueprint:
   name: Pivot - Scene Scrubbing
   description: >
-    Cycle through up to four entities with the Pivot dial. Each knob turn
-    advances one slot (jumping to the next 25% boundary), updating the LED ring
-    to show which slot is active. Press to activate the current slot's entity.
-    Works with scenes, lights, switches, or anything Home Assistant can turn on.
-    Slots 2–4 are optional — only filled slots are cycled through.
+    Map up to four entities across the dial's 0–100 range. Turning the dial
+    moves between four equal zones and the LED ring colour updates to show which
+    slot is active. Press to toggle the current slot's entity. Works with
+    scenes, lights, switches, or anything Home Assistant can turn on or toggle.
+    Slots 2–4 are optional — zones with no entity assigned are skipped on press.
     Assign an input_number helper (range 0–100) to the bank.
   domain: automation
   input:
@@ -1065,11 +1065,8 @@ triggers:
   - trigger: homeassistant
     event: start
     id: start
-  - trigger: event
-    event_type: pivot_knob_turn
-    event_data:
-      suffix: !input suffix
-      bank: !input bank
+  - trigger: state
+    entity_id: !input input_number_entity
     id: dial
   - trigger: event
     event_type: pivot_button_press
@@ -1097,10 +1094,9 @@ actions:
       selected_entity: >-
         {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
         {% set e = entities[current_slot | int] %}
-        {{ e if e not in [none, ''] else scene_1 }}
+        {{ e if e is not none and e != '' else scene_1 }}
       ring_color: >-
-        {% set colors = [color_1, color_2, color_3, color_4] %}
-        {% set c = colors[current_slot | int] %}
+        {% set c = [color_1, color_2, color_3, color_4][current_slot | int] %}
         {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
   - condition: template
     value_template: "{{ states('text.' ~ suffix_var ~ '_bank_' ~ bank_var ~ '_entity') == input_number_entity }}"
@@ -1109,49 +1105,23 @@ actions:
           - condition: trigger
             id: dial
         sequence:
-          - variables:
-              next_val: >-
-                {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
-                {% set boundaries = [0, 25, 50, 75] %}
-                {% set cur = current_slot | int %}
-                {% set ns = namespace(result=boundaries[cur], found=false) %}
-                {% for i in range(1, 5) %}
-                  {% if not ns.found %}
-                    {% set idx = (cur + i) % 4 %}
-                    {% if entities[idx] not in [none, ''] %}
-                      {% set ns.result = boundaries[idx] %}
-                      {% set ns.found = true %}
-                    {% endif %}
-                  {% endif %}
-                {% endfor %}
-                {{ ns.result }}
-              next_ring_color: >-
-                {% set colors = [color_1, color_2, color_3, color_4] %}
-                {% if next_val | int == 25 %}{% set c = colors[1] %}
-                {% elif next_val | int == 50 %}{% set c = colors[2] %}
-                {% elif next_val | int == 75 %}{% set c = colors[3] %}
-                {% else %}{% set c = colors[0] %}{% endif %}
-                {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
-          - action: input_number.set_value
-            target:
-              entity_id: "{{ input_number_entity }}"
-            data:
-              value: "{{ next_val }}"
           - action: text.set_value
             target:
               entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
             data:
-              value: "{{ next_ring_color }}"
+              value: "{{ ring_color }}"
           - action: text.set_value
             target:
               entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
             data:
-              value: "{{ next_ring_color }}"
+              value: "{{ ring_color }}"
       - conditions:
           - condition: trigger
             id: press
         sequence:
-          - action: homeassistant.turn_on
+          - condition: template
+            value_template: "{{ selected_entity is not none and selected_entity != '' }}"
+          - action: homeassistant.toggle
             target:
               entity_id: "{{ selected_entity }}"
       - conditions:
@@ -1185,11 +1155,8 @@ mode: single
 alias: Pivot - Living Room Scenes
 
 triggers:
-  - trigger: event
-    event_type: pivot_knob_turn
-    event_data:
-      suffix: ha_voice_lounge
-      bank: 1
+  - trigger: state
+    entity_id: input_number.living_room_scene
     id: dial
   - trigger: event
     event_type: pivot_button_press
@@ -1202,41 +1169,33 @@ triggers:
 actions:
   - variables:
       val: "{{ states('input_number.living_room_scene') | float(0) }}"
+      current_slot: "{{ [(val / 25) | int, 3] | min }}"
       selected_entity: >-
-        {% if val < 25 %}scene.relax
-        {% elif val < 50 %}scene.evening
-        {% elif val < 75 %}scene.bright
-        {% else %}scene.focus{% endif %}
+        {% set entities = ['scene.relax', 'scene.evening', 'scene.bright', 'scene.focus'] %}
+        {{ entities[current_slot | int] }}
+      ring_color: >-
+        {% set colors = ['#2889ff', '#ff7d19', '#97ff3d', '#c800ff'] %}
+        {{ colors[current_slot | int] }}
   - choose:
       - conditions:
           - condition: trigger
             id: dial
         sequence:
-          - variables:
-              next_val: >-
-                {% if val < 25 %}25{% elif val < 50 %}50{% elif val < 75 %}75{% else %}0{% endif %}
-              next_color: >-
-                {% if val < 25 %}#ff7d19{% elif val < 50 %}#97ff3d{% elif val < 75 %}#c800ff{% else %}#2889ff{% endif %}
-          - action: input_number.set_value
-            target:
-              entity_id: input_number.living_room_scene
-            data:
-              value: "{{ next_val }}"
           - action: text.set_value
             target:
               entity_id: text.ha_voice_lounge_bank_1_color
             data:
-              value: "{{ next_color }}"
+              value: "{{ ring_color }}"
           - action: text.set_value
             target:
               entity_id: text.ha_voice_lounge_bank_1_configured_color
             data:
-              value: "{{ next_color }}"
+              value: "{{ ring_color }}"
       - conditions:
           - condition: trigger
             id: press
         sequence:
-          - action: homeassistant.turn_on
+          - action: homeassistant.toggle
             target:
               entity_id: "{{ selected_entity }}"
 
@@ -1246,7 +1205,7 @@ mode: single
 
 </details>
 
-> **How it works:** Each `pivot_knob_turn` event advances the `input_number` to the next filled slot boundary, skipping any empty slots, then updates the ring colour. The dial does not freely track its physical position — it only ever sits at 0, 25, 50, or 75. Pressing calls `homeassistant.turn_on` on the entity in the current slot. Ring colour syncs on HA startup.
+> **How it works:** The `input_number` tracks the dial's 0–100 position. Each state change maps the value to one of four 25% zones and updates the ring colour. Pressing calls `homeassistant.toggle` on the entity assigned to the current zone — turning it on if it's off, and off if it's on. Ring colour syncs to the current position on HA startup.
 
 ---
 

@@ -1,11 +1,11 @@
 blueprint:
   name: Pivot - Scene Scrubbing
   description: >
-    Cycle through up to four entities with the Pivot dial. Each knob turn
-    advances one slot (jumping to the next 25% boundary), updating the LED ring
-    to show which slot is active. Press to activate the current slot's entity.
-    Works with scenes, lights, switches, or anything Home Assistant can turn on.
-    Slots 2–4 are optional — only filled slots are cycled through.
+    Map up to four entities across the dial's 0–100 range. Turning the dial
+    moves between four equal zones and the LED ring colour updates to show which
+    slot is active. Press to toggle the current slot's entity. Works with
+    scenes, lights, switches, or anything Home Assistant can turn on or toggle.
+    Slots 2–4 are optional — zones with no entity assigned are skipped on press.
     Assign an input_number helper (range 0–100) to the bank.
   domain: automation
   input:
@@ -79,11 +79,8 @@ triggers:
   - trigger: homeassistant
     event: start
     id: start
-  - trigger: event
-    event_type: pivot_knob_turn
-    event_data:
-      suffix: !input suffix
-      bank: !input bank
+  - trigger: state
+    entity_id: !input input_number_entity
     id: dial
   - trigger: event
     event_type: pivot_button_press
@@ -106,26 +103,11 @@ actions:
       color_2: !input color_2
       color_3: !input color_3
       color_4: !input color_4
-      entities: "{{ [scene_1, scene_2, scene_3, scene_4] }}"
-      colors: "{{ [color_1, color_2, color_3, color_4] }}"
-      filled_count: >-
-        {% set ns = namespace(count=0) %}
-        {% for e in [scene_1, scene_2, scene_3, scene_4] %}
-          {% if e is not none and e != '' %}{% set ns.count = ns.count + 1 %}{% endif %}
-        {% endfor %}
-        {{ ns.count }}
-      # For dial trigger: use the raw event value to determine which physical zone
-      # the dial is in. This avoids the race between the integration writing the
-      # physical position and our snapping logic.
-      raw_val: >-
-        {% if trigger.id == 'dial' %}
-          {{ trigger.event.data.value | float(0) }}
-        {% else %}
-          {{ states(input_number_entity) | float(0) }}
-        {% endif %}
-      current_slot: "{{ [(raw_val / 25) | int, 3] | min }}"
+      val: "{{ states(input_number_entity) | float(0) }}"
+      current_slot: "{{ [(val / 25) | int, 3] | min }}"
       selected_entity: >-
-        {% set e = [scene_1, scene_2, scene_3, scene_4][current_slot | int] %}
+        {% set entities = [scene_1, scene_2, scene_3, scene_4] %}
+        {% set e = entities[current_slot | int] %}
         {{ e if e is not none and e != '' else scene_1 }}
       ring_color: >-
         {% set c = [color_1, color_2, color_3, color_4][current_slot | int] %}
@@ -136,47 +118,23 @@ actions:
       - conditions:
           - condition: trigger
             id: dial
-          - condition: template
-            value_template: "{{ filled_count | int > 1 }}"
         sequence:
-          - variables:
-              next_slot: >-
-                {% set cur = current_slot | int %}
-                {% set ns = namespace(result=cur, found=false) %}
-                {% for i in range(1, 5) %}
-                  {% if not ns.found %}
-                    {% set idx = (cur + i) % 4 %}
-                    {% set e = [scene_1, scene_2, scene_3, scene_4][idx] %}
-                    {% if e is not none and e != '' %}
-                      {% set ns.result = idx %}
-                      {% set ns.found = true %}
-                    {% endif %}
-                  {% endif %}
-                {% endfor %}
-                {{ ns.result }}
-              next_val: "{{ [0, 25, 50, 75][next_slot | int] }}"
-              next_ring_color: >-
-                {% set c = [color_1, color_2, color_3, color_4][next_slot | int] %}
-                {{ '#%02x%02x%02x' | format(c[0] | int, c[1] | int, c[2] | int) }}
-          - action: input_number.set_value
-            target:
-              entity_id: "{{ input_number_entity }}"
-            data:
-              value: "{{ next_val }}"
           - action: text.set_value
             target:
               entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_color"
             data:
-              value: "{{ next_ring_color }}"
+              value: "{{ ring_color }}"
           - action: text.set_value
             target:
               entity_id: "text.{{ suffix_var }}_bank_{{ bank_var }}_configured_color"
             data:
-              value: "{{ next_ring_color }}"
+              value: "{{ ring_color }}"
       - conditions:
           - condition: trigger
             id: press
         sequence:
+          - condition: template
+            value_template: "{{ selected_entity is not none and selected_entity != '' }}"
           - action: homeassistant.toggle
             target:
               entity_id: "{{ selected_entity }}"
