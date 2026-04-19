@@ -4,23 +4,23 @@ title: Custom Automations
 permalink: /automations/
 ---
 
-Pivot already handles common controls like brightness, volume, and toggles out of the box. But because it fires events on every interaction, it can also be used for much more custom behaviour — from colour control and scene scrubbing to sensor gauges, media shortcuts, and context-aware button actions.
+Pivot already handles common controls like brightness, volume and toggles out of the box, but because every press and turn also fires an event in Home Assistant, Pivot can become much more than a dial for default controls.
 
-The examples below show how to use Pivot as a flexible input device for Home Assistant. Each one includes an importable blueprint and a raw YAML version, so you can either use them as-is or adapt them to your own setup.
+These examples show how Pivot can be extended into a more flexible input device — from colour control and scene scrubbing to sensor gauges, media shortcuts and context-aware button actions. Some examples simply add feedback, like changing the LED ring colour, while others completely repurpose the dial or button to do something new.
 
-All blueprints include a built-in guard: if the entity configured in the blueprint isn't currently assigned to the bank, the automation does nothing. This means you can reassign a bank freely without having to disable automations first.
+Each example includes:
+- a quick explanation of the default Pivot behaviour
+- what the automation changes
+- an importable blueprint
+- a raw YAML version you can adapt to your own setup
 
-Pivot events carry enough context to make automations as specific or as broad as you need, including:
-
-- which Pivot device was used
-- which bank was active
-- which entity is assigned to that bank
-- which button press type occurred (`single_press`, `long_press`, etc.)
-- the new value and direction of a knob turn
+All blueprints include a built-in guard: if the entity configured in the blueprint is not currently assigned to the bank, the automation does nothing. That means you can reassign banks freely without needing to disable automations first.
 
 For the full list of event fields, see the [Events](/pivot/integration/#events) section of the Integration page.
 
 ---
+
+Some examples gently extend Pivot’s native behaviour. Others completely change what a bank does. Start with the ones that match how you already use Pivot, then branch into the more custom setups once you’re comfortable.
 
 | Automation | What it does |
 |---|---|
@@ -37,14 +37,20 @@ For the full list of event fields, see the [Events](/pivot/integration/#events) 
 ## Colour control — dial adjusts colour temperature or hue, press toggles light
 {: #colour-temperature}
 
-Assigning a light directly to a bank gives you brightness control. This automation lets you use the dial for colour instead — either colour temperature (cool to warm) or hue (sweeping through the colour wheel at full saturation). Choose the mode when setting up the blueprint.
+**Default behaviour**  
+When a light is assigned directly to a bank, the knob adjusts brightness and a single press toggles the light on or off.
 
-Assign an `input_number` helper (range 0–100) to the bank. The automation translates the dial position into the appropriate colour value for your light, and keeps the helper in sync if the light is changed from elsewhere.
+**Automation behaviour**  
+This automation keeps the button behaviour the same, but repurposes the dial for colour control instead — either colour temperature (cool to warm) or hue (across the colour wheel).
 
-An optional **Sync LED ring colour** setting updates the LED ring to match the light — both when the dial is turned and when the light changes externally. In colour temperature mode, the ring fades from cool blue to warm amber. In hue mode, it matches the light's current hue.
+**Why use it**  
+Great for lamps and accent lighting where colour matters more than brightness, or where brightness is already set elsewhere.
+
+Assign an `input_number` helper (range 0–100) to the bank. The automation translates the dial position into the appropriate colour value for your light, and can also keep the helper in sync if the light changes from elsewhere.
+
+An optional **Sync LED ring colour** setting lets the ring reflect the light’s current colour. In colour temperature mode, it fades from cool blue to warm amber. In hue mode, it follows the light’s hue directly.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Then assign it to the bank on your device.
-
 #### Blueprint
 
 [![Import Blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/alistairmerritt/pivot/main/assets/blueprints/pivot-colour-temperature.yaml)
@@ -486,9 +492,20 @@ mode: single
 ## Climate control — dial sets temperature, press toggles on/off
 {: #climate-control}
 
-Assign a climate entity directly to a Pivot bank. The integration handles everything natively — turn the knob to change the set temperature, press once in Control Mode to toggle the climate on and off. This blueprint manages only the LED ring colour, which smoothly interpolates across eight configurable colour stops distributed evenly between your minimum and maximum temperature.
+**Default behaviour**  
+When a climate entity is assigned to a bank, Pivot already handles temperature adjustment with the dial and on/off control with a press.
 
-No helper entities required. Works with both Celsius and Fahrenheit — just set `temp_min` and `temp_max` in whichever unit your Home Assistant uses (e.g. 16 and 30 for °C, or 61 and 86 for °F). The colour interpolation is percentage-based and unit-agnostic.
+**Automation behaviour**  
+This automation does not change the control behaviour. Instead, it adds richer LED feedback by mapping the thermostat set temperature to a colour range on the ring.
+
+**Why use it**  
+It makes climate control feel more physical at a glance — cooler settings can look blue, warmer settings can fade toward orange or red.
+
+No helper entities are required. Assign a climate entity directly to a bank as normal, then use this blueprint to colour the LED ring based on the current set temperature.
+
+The ring interpolates smoothly across eight configurable colour stops distributed evenly between your minimum and maximum temperature.
+
+Works with both Celsius and Fahrenheit — just set `temp_min` and `temp_max` in whichever unit Home Assistant uses.
 
 #### Blueprint
 
@@ -673,9 +690,16 @@ max: 5
 ## Button press with configurable action — e.g. dial controls volume, press to play/pause media
 {: #button-press-action}
 
-The built-in bank toggle handles turning entities on and off, but sometimes a button press should do something extra — like triggering play/pause on your computer when the bank is controlling system volume, or running a scene when a specific entity is active.
+**Default behaviour**  
+A bank normally uses its built-in button action for the currently assigned entity.
 
-This automation fires any action you choose on button press, with an optional check that a particular entity is currently assigned to the bank. That check is what makes it context-aware: reassign the bank to something else and the automation automatically stops firing.
+**Automation behaviour**  
+This automation lets the button press do something completely custom instead, while the dial continues controlling the assigned bank value as normal.
+
+**Why use it**  
+Useful when the thing you want on press is related to the bank, but not the entity’s native toggle action — for example, pausing your computer while the dial controls system volume.
+
+You can choose the press type and action, and optionally require that a specific entity is currently assigned to the bank. That makes the automation context-aware: reassign the bank and the custom action stops firing automatically.
 
 #### Blueprint
 
@@ -791,11 +815,18 @@ mode: single
 ## Media player volume and power toggle — dial controls volume, press toggles TV on/off
 {: #media-player-tv}
 
-When a media player is assigned to a bank, Pivot normally controls volume with the dial and play/pause with a single press. For a TV, however, power control is often more useful than play/pause. This automation adds that behaviour — assign your TV as normal and a single press will toggle power as well.
+**Default behaviour**  
+When a media player is assigned to a bank, the knob adjusts volume and a single press sends play/pause.
 
-The media player entity is read automatically from the bank assignment. The standard play/pause action still fires alongside the power toggle, but for a TV this is generally harmless.
+**Automation behaviour**  
+This automation keeps volume on the dial, but changes the press action to toggle power instead — better suited to TV-style use.
 
-If you want separate play/pause control for streaming apps, it is best to assign the relevant streaming device to a different bank.
+**Why use it**  
+For televisions, power control is usually more useful than play/pause from the bank itself.
+
+Assign your TV entity to the bank as normal. The automation reads the assigned media player automatically and adds power toggle behaviour on single press.
+
+The standard play/pause action may still fire alongside the power toggle, but for most TV entities this is harmless. If you want separate play/pause control for streaming apps, it is usually better to assign the streaming device to a different bank.
 
 #### Blueprint
 
@@ -931,9 +962,16 @@ mode: single
 ## Scene scrubbing — dial previews scenes, press activates
 {: #scene-scrubbing}
 
-A useful pattern for rooms where you have a handful of lighting presets. Divide the dial's 0–100 range into four equal bands, each mapped to a different scene. As you turn the dial the LED ring changes colour to preview which scene you're about to select — turn to the one you want, then press to activate it.
+**Default behaviour**  
+If a light is assigned to a bank, the knob adjusts brightness and the button toggles the light.
 
-For example: 0–25% → Relax (warm amber), 25–50% → Evening (blue), 50–75% → Bright (green), 75–100% → Focus (purple).
+**Automation behaviour**  
+This automation turns the bank into a scene selector instead. Turning the dial previews a scene via the LED ring, and pressing activates the selected scene.
+
+**Why use it**  
+A really tactile way to browse a small set of room moods or presets without opening a dashboard.
+
+The dial’s 0–100 range is split into four equal bands, each mapped to a different scene. As you turn, the LED ring changes colour to show which scene you are hovering over. Press to activate the one you want.
 
 Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
 
@@ -1156,15 +1194,18 @@ mode: single
 ## Sensor gauge — display any numeric value on the dial
 {: #sensor-gauge}
 
-A display-only automation that maps any numeric value onto a Pivot bank. Works with sensor, input_number, and number entities — useful for things like a fuel level, water tank, battery, thermostat target, or any numeric value where you want a physical gauge without any control.
+**Default behaviour**  
+A bank normally controls the assigned entity by writing values back to it when the dial is turned.
 
-This is always one-way. The automation only ever writes to the `input_number` helper assigned to the bank — it never writes back to the source entity. For sensors this is obvious, but it applies equally to `input_number` and `number` entities: even if their value changes elsewhere in HA, Pivot just follows it. The dial is fully locked — if it is turned, the automation immediately snaps it back by listening directly to the `pivot_knob_turn` event.
+**Automation behaviour**  
+This automation turns the bank into a read-only gauge. Pivot follows a numeric value and displays it physically, but the dial itself does not control the source.
 
-The LED ring colour can optionally update based on the current percentage, using six configurable colour bands. Defaults run red → orange → amber → yellow → yellow-green → green.
+**Why use it**  
+A nice way to surface live values like fuel level, battery charge, washing machine progress or a thermostat target on a physical dial.
 
-Assign an `input_number` helper (range 0–100) to the bank. The automation scales the source value between a configurable minimum and maximum.
+This is always one-way. The automation only writes to the `input_number` helper assigned to the bank — never back to the source entity. If the dial is turned, it snaps back to the real value.
 
-Create a helper: **Settings → Devices & Services → Helpers → Number**, with a range of 0–100 and step 1. Assign it to the bank on your device.
+The LED ring can also optionally reflect the current percentage using six configurable colour bands.
 
 #### Blueprint
 
@@ -1422,9 +1463,16 @@ mode: single
 ## Light brightness and toggle — dial sets brightness, press toggles on/off
 {: #light-brightness}
 
-The simplest custom automation pattern — the dial controls a light's brightness directly and a single press toggles it. Useful if you want more precise brightness control than Pivot's built-in toggle provides, or if you're using a bank for a light that isn't directly assignable (e.g. a light group).
+**Default behaviour**  
+Assigning a light directly to a bank already gives you brightness on the dial and toggle on press.
 
-Unlike the colour temperature example, this one uses the raw `pivot_knob_turn` event directly rather than going via an `input_number` helper — the dial value is passed straight through as a brightness percentage.
+**Automation behaviour**  
+This reproduces that behaviour using an automation instead of relying on the built-in bank handling.
+
+**Why use it**  
+Useful as a simple example, or when you want the same light-style control pattern for something Pivot would not normally handle directly, such as a light group.
+
+Unlike the colour control example, this one uses the raw `pivot_knob_turn` event directly rather than an `input_number` helper. The dial value is passed straight through as a brightness percentage.
 
 #### Blueprint
 
