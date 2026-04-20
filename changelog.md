@@ -18,7 +18,7 @@ permalink: /changelog/
 
 ## Integration
 
-> **Blueprints are updated independently of the integration.** Import them directly from GitHub — see the [Timer page](/timer) for links. Re-importing picks up any fixes without needing an integration update.
+> **Blueprints are updated independently of the integration.** Import them directly from GitHub — see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
 
 <details markdown="1">
 <summary>v0.0.80</summary>
