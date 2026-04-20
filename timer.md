@@ -4,7 +4,19 @@ title: Timer
 permalink: /timer/
 ---
 
-Pivot includes an optional timer feature: a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the required automations/scripts are created manually from blueprints imported via URL.
+Pivot includes an optional timer feature: a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both.
+
+## Blueprints
+
+Import these into Home Assistant once — they work across all your Pivot devices. Click a link to open the HA import screen directly.
+
+| Blueprint | Import |
+|---|---|
+| **Pivot - Timer Control** *(required)* | [Import into Home Assistant](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml) |
+| **Pivot - Timer - Voice** *(optional)* | [Import into Home Assistant](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer_voice.yaml) |
+| **Pivot - Timer Toggle Script** *(optional)* | [Import into Home Assistant](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) |
+
+To pick up blueprint updates, re-import from the same link and choose **Overwrite**. No integration update needed.
 
 ---
 
@@ -49,20 +61,6 @@ Bank assignment is optional. Without a bank, the alarm still fires and TTS annou
 ---
 
 ## Getting started
-
-### Import the blueprints
-
-Pivot blueprints are hosted on GitHub and imported directly into Home Assistant via URL. Click each link below — HA will open the blueprint import screen automatically. You only need to do this once per Home Assistant instance, not once per device.
-
-| Blueprint | Import link |
-|---|---|
-| **Pivot - Timer Control** *(required)* | [Import](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml) |
-| **Pivot - Timer - Voice** *(optional)* | [Import](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer_voice.yaml) |
-| **Pivot - Timer Toggle Script** *(optional)* | [Import](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) |
-
-To pick up blueprint updates later, just click the import link again and choose **Overwrite**. No integration update needed.
-
----
 
 ### Step 1. Enable the timer entities
 
