@@ -4,7 +4,7 @@ title: Timer
 permalink: /timer/
 ---
 
-Pivot includes an optional timer feature — a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the required automations/scripts are created manually from blueprints included with Pivot.
+Pivot includes an optional timer feature: a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the required automations/scripts are created manually from blueprints included with Pivot.
 
 ---
 
@@ -26,10 +26,10 @@ The timer is built around three blueprints. One is required; the others are opti
 | Blueprint | Required? | What it does |
 | --- | --- | --- |
 | **Pivot - Timer Control** | Yes | Manages the countdown and fires the alarm. Also handles physical button control and the LED gauge when a bank is assigned. |
-| **Pivot - Timer - Voice** | No | Voice control via Home Assistant Assist — set, start, pause, resume, cancel, dismiss, and query the timer by speaking to the device. |
-| **Pivot - Timer Toggle Script** | No | Dashboard helper — lets a button card start, pause, resume, or dismiss the timer the same way the physical button does. |
+| **Pivot - Timer - Voice** | No | Voice control via Home Assistant Assist. Set, start, pause, resume, cancel, dismiss, and query the timer by speaking to the device. |
+| **Pivot - Timer Toggle Script** | No | Dashboard helper. Lets a button card start, pause, resume, or dismiss the timer the same way the physical button does. |
 
-**Pivot - Timer Control is always required**, even if you only plan to use voice control. It manages the countdown and is what sets the alarm state when time runs out — without it, a running timer simply expires silently.
+**Pivot - Timer Control is always required**, even if you only plan to use voice control. It manages the countdown and is what sets the alarm state when time runs out. Without it, a running timer simply expires silently.
 
 Bank assignment is optional. Without a bank, the alarm still fires and TTS announcements still play, but the LED gauge and physical knob and button control are not available.
 
@@ -49,7 +49,7 @@ Bank assignment is optional. Without a bank, the alarm still fires and TTS annou
 
 ## Getting started
 
-### Step 1 — Enable the timer entities
+### Step 1. Enable the timer entities
 
 The timer helper entities are provisioned with every Pivot device but disabled by default. All three must be enabled before any timer blueprint will work.
 
@@ -62,7 +62,7 @@ The timer helper entities are provisioned with every Pivot device but disabled b
 
 ---
 
-### Step 2 — Set up Timer Control
+### Step 2. Set up Timer Control
 
 The **Pivot - Timer Control** blueprint is included with Pivot. Set it up now — it is required regardless of how you plan to control the timer.
 
@@ -85,7 +85,7 @@ If a bank is assigned, the timer is now ready for physical control: single press
 
 ---
 
-### Step 3 — Optional: assign a bank
+### Step 3. Optional: assign a bank
 
 Skip this step if you only want to control the timer by voice or dashboard.
 
@@ -104,7 +104,7 @@ Once assigned, turn the knob to set a duration (the gauge shows the selected pro
 
 ---
 
-### Step 4 — Optional: add voice control
+### Step 4. Optional: add voice control
 
 By default, spoken timer commands on the VPE use the stock Home Assistant timer behaviour — they are handled by the Assist pipeline and are completely independent of Pivot. **Installing this blueprint is the only thing that changes that.** If you skip this step, voice timers continue to work exactly as they did before.
 
@@ -145,19 +145,19 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 
 ---
 
-### Step 5 — Optional: add dashboard control
+### Step 5. Optional: add dashboard control
 
-The **Pivot - Timer Toggle Script** blueprint lets a dashboard button card start, pause, resume, and dismiss the timer — the same way the physical button does.
+The **Pivot - Timer Toggle Script** blueprint lets a dashboard button card start, pause, resume, and dismiss the timer the same way the physical button does.
 
 A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must already be running.
 
-#### Step 1 — Install the script
+#### Step 1. Install the script
 
 The **Pivot - Timer Toggle Script** blueprint is included with Pivot. Go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**.
 
 > **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly. The script only needs to be created once and works across all your Pivot devices.
 
-#### Step 2 — Add a tile card
+#### Step 2. Add a tile card
 
 This example uses the `sensor.pivot_timer_remaining` template sensor to display the current timer state — see [Template sensors](#template-sensors) below for how to create it.
 
