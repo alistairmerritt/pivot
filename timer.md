@@ -6,8 +6,6 @@ permalink: /timer/
 
 Pivot includes an optional timer feature: a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both.
 
----
-
 ## On this page
 
 - [How it works](#how-it-works)
