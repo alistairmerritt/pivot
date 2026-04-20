@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.85 | 2026.4.0+ | 2024.4.0+* |
+| v0.0.21 | v0.0.86 | 2026.4.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -17,6 +17,13 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+<details markdown="1">
+<summary>v0.0.86</summary>
+
+- **Fix (Blueprint):** **Pivot - Timer - Voice** now only responds to commands from its own Pivot device. When multiple Pivot devices share the same Assist pipeline, spoken timer commands previously fired all Voice blueprint automations simultaneously — starting timers on every device at once and causing all alarms to sound at expiry. A device condition (`trigger.device_id`) now gates each automation so only the device that processed the wake word starts its timer.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.85</summary>
