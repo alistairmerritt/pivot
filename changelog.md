@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.86 | 2026.4.0+ | 2024.4.0+* |
+| v0.0.21 | v0.0.87 | 2026.4.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -17,6 +17,13 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+<details markdown="1">
+<summary>v0.0.87</summary>
+
+- **Change (Blueprint):** Simplified blueprint inputs for both **Pivot - Timer Control** and **Pivot - Timer - Voice**. The **Pivot Device** selector has been removed from both blueprints — it was previously needed to derive the media player and button event entities, but these are now derived from the device suffix or taken from the explicit entity inputs already required. **Timer Control** required fields are now: Device Suffix, Bank Number, Button Event Entity, Timer Ringing Switch. **Voice** required fields are now: Device Suffix, Timer Ringing Switch. The device-gating condition in the Voice blueprint now uses `device_id()` on the Timer Ringing Switch rather than comparing against the Pivot Device input. **Action required:** Open and re-save all Timer Control and Voice automations.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.86</summary>

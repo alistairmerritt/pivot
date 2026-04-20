@@ -75,7 +75,6 @@ The **Pivot - Timer Control** blueprint is included with Pivot. Set it up now �
 |---|---|
 | **Device Suffix** | Your Pivot device suffix, e.g. `ha_voice_lounge`. All timer entity IDs are derived from this. |
 | **Bank Number** | The bank reserved for the timer (`1–4`). Set to `0` if no bank is assigned — the alarm and TTS still work, but the LED gauge and physical button control are not available. |
-| **Pivot Device** | Your Pivot VPE device. The media player and `timer_ringing` switch are derived automatically. |
 | **Button Event Entity** | The button press event entity for your device, e.g. `event.home_assistant_voice_lounge`. Used to detect long press (cancel). Find it under **Settings → Devices & Services → ESPHome → your device**. |
 | **Timer Ringing Switch** | The `timer_ringing` switch for your device. Find it under **Settings → Devices & Services → ESPHome → your device**. |
 | **Timer Silent Mode Switch** | Optional. The `timer_silent_mode` switch for your device. Only present on firmware v0.0.14 or later. Leave blank if not available. |
@@ -126,7 +125,7 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 
 1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot - Timer - Voice**
 2. Click **Create Automation**
-3. Fill in **Device Suffix**, **Pivot Device**, and **Timer Ringing Switch**
+3. Fill in **Device Suffix** and **Timer Ringing Switch**
 4. Save
 
 > **Important:** The voice blueprint registers local Assist intents. Open your Assist pipeline settings and ensure **Prefer local intents** is enabled — this ensures spoken timer commands are matched by the blueprint before being passed to an LLM agent.
