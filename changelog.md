@@ -19,6 +19,14 @@ permalink: /changelog/
 ## Integration
 
 <details markdown="1">
+<summary>v0.0.81</summary>
+
+- **Change (Blueprint):** **Pivot - Timer - Voice** now supports second-based durations. *"Set a 30 second timer"*, *"Start a timer for 45 seconds"*, and similar phrases are now recognised. For timers under one minute, `timer_duration` is left unchanged and `timer_end` is set directly — the alarm fires correctly, and TTS announcements speak in seconds. If a bank is assigned, the gauge will show under a minute remaining for the duration.
+- **Fix (Blueprint):** Hour-based voice phrases (*"set a 2 hour timer"*) now correctly set a 2-hour timer. Previously, the minute and hour triggers shared the same ID, causing hour values to be treated as minutes.
+
+</details>
+
+<details markdown="1">
 <summary>v0.0.80</summary>
 
 - **New (Blueprint):** Adds the **Pivot - Timer - Voice** blueprint. Lets you control the Pivot timer entirely by voice via Home Assistant Assist — set a duration, start, pause, resume, cancel, dismiss the alarm, and query remaining time. Supports natural language durations including *"set a timer for half an hour"*, *"start a 1 hour and 30 minute timer"*, *"set a timer for a quarter of an hour"*, and more. Requires **Pivot - Timer Control** to be running (for the alarm to fire), but a bank assignment is not required — set Bank Number to `0` in Timer Control to run alarm-only with no gauge or physical button control.

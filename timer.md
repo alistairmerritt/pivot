@@ -133,6 +133,7 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 | Intent | Example phrases |
 |---|---|
 | Set and start | *"set a 10 minute timer"*, *"start a 25 minute timer"*, *"set a timer for 45 minutes"*, *"set me a timer"*, *"start a timer"* |
+| Seconds | *"set a 30 second timer"*, *"start a 45 second timer"*, *"set a timer for 90 seconds"* |
 | Hours | *"set a 2 hour timer"*, *"start a 1 hour timer"* |
 | Combined | *"start a 1 hour and 30 minute timer"*, *"set a timer for 2 hours and 15 minutes"* |
 | Shorthand | *"set a timer for a quarter of an hour"*, *"set a timer for half an hour"*, *"set a timer for an hour and a half"* |
