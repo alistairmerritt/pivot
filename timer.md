@@ -4,7 +4,7 @@ title: Timer
 permalink: /timer/
 ---
 
-Pivot includes an optional timer feature: a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the required automations/scripts are created manually from blueprints included with Pivot.
+Pivot includes an optional timer feature: a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both. The timer entities are included with each configured device but disabled by default, and the required automations/scripts are created manually from blueprints imported via URL.
 
 ---
 
@@ -50,6 +50,20 @@ Bank assignment is optional. Without a bank, the alarm still fires and TTS annou
 
 ## Getting started
 
+### Import the blueprints
+
+Pivot blueprints are hosted on GitHub and imported directly into Home Assistant via URL. Click each link below — HA will open the blueprint import screen automatically. You only need to do this once per Home Assistant instance, not once per device.
+
+| Blueprint | Import link |
+|---|---|
+| **Pivot - Timer Control** *(required)* | [Import](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml) |
+| **Pivot - Timer - Voice** *(optional)* | [Import](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer_voice.yaml) |
+| **Pivot - Timer Toggle Script** *(optional)* | [Import](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) |
+
+To pick up blueprint updates later, just click the import link again and choose **Overwrite**. No integration update needed.
+
+---
+
 ### Step 1. Enable the timer entities
 
 The timer helper entities are provisioned with every Pivot device but disabled by default. All three must be enabled before any timer blueprint will work.
@@ -65,7 +79,7 @@ The timer helper entities are provisioned with every Pivot device but disabled b
 
 ### Step 2. Set up Timer Control
 
-The **Pivot - Timer Control** blueprint is included with Pivot. Set it up now — it is required regardless of how you plan to control the timer.
+The **Pivot - Timer Control** blueprint is required regardless of how you plan to control the timer. Import it first using the link above if you haven't already.
 
 1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot - Timer Control**
 2. Click **Create Automation**
@@ -123,10 +137,11 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 
 **Setup:**
 
-1. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot - Timer - Voice**
-2. Click **Create Automation**
-3. Fill in **Device Suffix** and **Timer Ringing Switch**
-4. Save
+1. Import **Pivot - Timer - Voice** using the link above if you haven't already
+2. Go to **Settings → Automations & Scenes → Blueprints** and find **Pivot - Timer - Voice**
+3. Click **Create Automation**
+4. Fill in **Device Suffix** and **Timer Ringing Switch**
+5. Save
 
 > **Important:** The voice blueprint registers local Assist intents. Open your Assist pipeline settings and ensure **Prefer local intents** is enabled — this ensures spoken timer commands are matched by the blueprint before being passed to an LLM agent.
 
@@ -158,7 +173,7 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 
 #### Step 1. Install the script
 
-The **Pivot - Timer Toggle Script** blueprint is included with Pivot. Go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**.
+Import **Pivot - Timer Toggle Script** using the link above if you haven't already. Then go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**.
 
 > **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` — dashboard cards call `script.pivot_timer_toggle` directly. The script only needs to be created once and works across all your Pivot devices.
 

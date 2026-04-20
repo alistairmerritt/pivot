@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.79 | 2026.4.0+ | 2024.4.0+* |
+| v0.0.21 | v0.0.80 | 2026.4.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,13 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub — see the [Timer page](/timer) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.80</summary>
+
+- **Change:** Blueprints are no longer bundled with the integration. They are now hosted publicly on GitHub and imported via URL — see the [Timer page](/timer#import-the-blueprints) for import links. Re-importing picks up any updates without needing an integration release. A setup notification now appears when a new device is added, linking directly to the import URLs.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.79</summary>
