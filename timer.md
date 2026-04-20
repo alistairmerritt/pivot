@@ -89,9 +89,7 @@ The **Pivot - Timer Control** blueprint is required regardless of how you plan t
 | **Bank Number** | The bank reserved for the timer (`1–4`). Set to `0` if no bank is assigned — the alarm and TTS still work, but the LED gauge and physical button control are not available. |
 | **Button Event Entity** | The button press event entity for your device, e.g. `event.home_assistant_voice_lounge`. Used to detect long press (cancel). Find it under **Settings → Devices & Services → ESPHome → your device**. |
 | **Timer Ringing Switch** | The `timer_ringing` switch for your device. Find it under **Settings → Devices & Services → ESPHome → your device**. |
-| **Timer Silent Mode Switch** | Optional. The `timer_silent_mode` switch for your device. Only present on firmware v0.0.14 or later. Leave blank if not available. |
-| **Finish Message** | Optional TTS message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
-| **Silent Mode** | When enabled, the alarm sound is suppressed — the LED ring still pulses and the "stop" wake word still works. Off by default. |
+| **Finish Message** | Optional. TTS message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 
 4. Save the automation
 
