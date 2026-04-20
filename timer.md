@@ -16,6 +16,7 @@ Pivot includes an optional timer feature: a Pomodoro session, a cooking countdow
 - [Template sensors](#template-sensors)
 - [Controlling the timer alarm](#controlling-the-timer-alarm)
 - [Tips](#tips)
+- [Why not use the built-in HA timer?](#why-not-use-the-built-in-ha-timer)
 
 ---
 
@@ -323,3 +324,15 @@ This is useful for focus sessions, late-night use, or situations where visual fe
 **Pausing and resuming** — Remaining time is stored in `text.{device_suffix}_timer_end` and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the countdown sync will detect this within 30 seconds and trigger the finish sequence normally.
 
 **Paused auto-cancel** — If the timer is left paused for more than 15 minutes, it resets automatically and `timer_state` returns to `idle`. This prevents the timer from being stuck paused indefinitely.
+
+---
+
+## Why not use the built-in HA timer?
+
+Home Assistant has a built-in `timer` domain, and it is a reasonable question why Pivot does not use it.
+
+**ESPHome cannot expose a `timer` entity.** The ESPHome integration supports a defined set of entity platforms — `sensor`, `switch`, `number`, `select`, `text`, `button`, and a few others. The `timer` domain is not one of them. Any HA timer would have to be a standalone helper created separately, with no connection to the Pivot device in the device registry.
+
+**The `alerting` state does not exist in the HA timer.** HA's built-in timer has three states: `idle`, `active`, and `paused`. When it finishes it fires a `timer.finished` event and returns to `idle`. Pivot needs a persistent `alerting` state so the firmware knows to hold the LED ring animation and alarm sound until the user actively dismisses it. Even if an HA timer were used for the countdown, `select.{device_suffix}_timer_state` would still be needed to track the alerting phase.
+
+**The stock VPE timer already uses the `timer` domain.** The Voice Preview Edition handles spoken timer commands through Assist, which targets HA timer entities. Introducing Pivot-owned `timer.` entities would create ambiguity about what Assist is controlling, which is exactly the problem the Pivot - Timer - Voice blueprint is designed to resolve cleanly.
