@@ -360,6 +360,7 @@ button_card_templates:
               - border-radius: 0px 150px 150px 0px
 
   pivot_banks:
+    update_interval: 1000
     variables:
       bank_number: null
       active_bank_entity: '[[[ return `number.${variables.device_suffix}_active_bank`; ]]]'
@@ -561,7 +562,6 @@ button_card_templates:
             pct:
               card:
                 type: custom:button-card
-                update_interval: 1000
                 show_name: true
                 show_state: false
                 show_icon: false
