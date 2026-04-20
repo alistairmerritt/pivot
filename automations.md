@@ -31,6 +31,7 @@ Some examples gently extend Pivot’s native behaviour. Others completely change
 | [Scene scrubbing](#scene-scrubbing) | Uses the dial to browse between scenes and the LED ring to preview the current selection |
 | [Sensor gauge](#sensor-gauge) | Displays a numeric value on the dial without allowing the source entity to be controlled |
 | [Light brightness and toggle](#light-brightness) | Uses automation to provide dial brightness control and press toggle for a light or light group |
+
 ---
 
 ## Colour control — dial adjusts colour temperature or hue, press toggles light
