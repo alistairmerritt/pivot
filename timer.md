@@ -76,7 +76,6 @@ The **Pivot - Timer Control** blueprint is included with Pivot. Set it up now �
 | **Bank Number** | The bank reserved for the timer (`1–4`). Set to `0` if no bank is assigned — the alarm and TTS still work, but the LED gauge and physical button control are not available. |
 | **Pivot Device** | Your Pivot VPE device. The media player and `timer_ringing` switch are derived automatically. |
 | **Button Event Entity** | The button press event entity for your device, e.g. `event.home_assistant_voice_lounge`. Used to detect long press (cancel). Find it under **Settings → Devices & Services → ESPHome → your device**. |
-| **Timer End Entity** | The text helper that tracks the countdown: `text.{device_suffix}_timer_end`, e.g. `text.ha_voice_lounge_timer_end`. Used to fire the alarm at exactly the right moment. |
 | **Finish Message** | Optional TTS message spoken once when the timer finishes, before the alarm begins. Default: `"Timer finished"`. |
 | **Silent Mode** | When enabled, the alarm sound is suppressed — the LED ring still pulses and the "stop" wake word still works. Off by default. |
 

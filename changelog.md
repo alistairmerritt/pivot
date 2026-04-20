@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.85 | 2026.4.0+ | 2024.4.0+* |
+| v0.0.21 | v0.0.84 | 2026.4.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -17,13 +17,6 @@ permalink: /changelog/
 ---
 
 ## Integration
-
-<details markdown="1">
-<summary>v0.0.85</summary>
-
-- **Change (Blueprint):** **Pivot - Timer Control** now fires the alarm at exactly the right time. A new `Timer End Entity` input (`text.{device_suffix}_timer_end`) lets the blueprint register a precise time trigger against the stored countdown end time. Previously the blueprint detected expiry on a 30-second polling loop, which could delay the alarm by up to 30 seconds for very short timers. The 30-second loop is retained as a fallback. Existing automations must be updated to add the new input before saving.
-
-</details>
 
 <details markdown="1">
 <summary>v0.0.84</summary>
