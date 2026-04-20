@@ -21,7 +21,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.84</summary>
 
-- **Change (Blueprint):** Minor voice trigger phrase updates to **Pivot - Timer - Voice**.
+- **Change (Blueprint):** Minor voice trigger phrase refinements to **Pivot - Timer - Voice**. No behaviour changes — phrasing and intent matching only.
 
 </details>
 

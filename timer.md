@@ -40,7 +40,7 @@ Bank assignment is optional. Without a bank, the alarm still fires and TTS annou
 - **Dashboard control** — via the optional **Pivot - Timer Toggle Script** blueprint
 
 **Available when a bank is assigned:**
-- **Knob** — turn to set the duration while idle; announces the chosen time when the knob settles
+- **Knob** — turn to set the duration while idle; announces the chosen time when the knob settles. Knob durations are in whole minutes (minimum 1 minute) — for sub-minute timers, use voice control
 - **Single press** — start if idle, pause if running, resume if paused
 - **Long press** — cancel and reset (only when the timer bank is active; long press on other banks is left free for custom actions)
 - **Gauge LEDs** — fill to 100% on start and drain to 0% as time runs out; the device switches to the timer bank automatically when the alarm fires
@@ -133,7 +133,7 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 | Intent | Example phrases |
 |---|---|
 | Set and start | *"set a 10 minute timer"*, *"start a 25 minute timer"*, *"set a timer for 45 minutes"*, *"set me a timer"*, *"start a timer"* |
-| Seconds | *"set a 30 second timer"*, *"start a 45 second timer"*, *"set a timer for 90 seconds"* |
+| Seconds | *"set a 30 second timer"*, *"start a 45 second timer"*, *"set a timer for 90 seconds"* | 
 | Hours | *"set a 2 hour timer"*, *"start a 1 hour timer"* |
 | Combined | *"start a 1 hour and 30 minute timer"*, *"set a timer for 2 hours and 15 minutes"* |
 | Shorthand | *"set a timer for a quarter of an hour"*, *"set a timer for half an hour"*, *"set a timer for an hour and a half"* |
@@ -143,6 +143,8 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 | Status | *"how much time is left?"*, *"how long is left on the timer?"*, *"what's left on the timer?"* |
 
 > **Note:** The voice blueprint matches common natural phrases, but it is not a full language model. Most everyday timer commands will work, but simpler phrasing is more reliable.
+
+> **Seconds timers:** Second-based durations are supported by voice only. The knob and dashboard controls are constrained to whole minutes (minimum 1 minute). For sub-minute timers, the alarm may fire up to 30 seconds after the set time — this is a side-effect of the 30-second countdown sync interval.
 
 ---
 
@@ -308,7 +310,7 @@ This is useful for focus sessions, late-night use, or situations where visual fe
 
 ## Tips
 
-**Setting the duration** — If a bank is assigned, turn the knob while idle to select a duration. The gauge fills to reflect the selected proportion of the maximum range and announces the time when the knob settles. You can also set `number.{device_suffix}_timer_duration` directly in HA at any time.
+**Setting the duration** — If a bank is assigned, turn the knob while idle to select a duration. The gauge fills to reflect the selected proportion of the maximum range and announces the time when the knob settles. Knob and dashboard durations are in whole minutes — minimum 1 minute. For sub-minute timers, use voice control. You can also set `number.{device_suffix}_timer_duration` directly in HA at any time.
 
 **Gauge sync** — The gauge jumps to 100% the moment the timer starts and syncs every 30 seconds as time runs out. On a typical 25-minute timer this is less than one LED-width per update and looks continuous in practice.
 
