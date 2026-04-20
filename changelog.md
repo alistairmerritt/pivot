@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.83 | 2026.4.0+ | 2024.4.0+* |
+| v0.0.21 | v0.0.84 | 2026.4.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -17,6 +17,13 @@ permalink: /changelog/
 ---
 
 ## Integration
+
+<details markdown="1">
+<summary>v0.0.84</summary>
+
+- **Change (Blueprint):** Minor voice trigger phrase updates to **Pivot - Timer - Voice**.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.83</summary>
