@@ -561,6 +561,7 @@ button_card_templates:
             pct:
               card:
                 type: custom:button-card
+                update_interval: 1000
                 show_name: true
                 show_state: false
                 show_icon: false
@@ -587,20 +588,27 @@ button_card_templates:
                     }
 
                     if (entityId === 'timer') {
+                      const fmtTime = (secs) => {
+                        const h = Math.floor(secs / 3600);
+                        const m = Math.floor((secs % 3600) / 60);
+                        const s = secs % 60;
+                        const mm = String(m).padStart(2, '0');
+                        const ss = String(s).padStart(2, '0');
+                        return h > 0 ? `${h}:${mm}:${ss}` : `${m}:${ss}`;
+                      };
                       const timerState = states[variables.timer_state_entity]?.state;
                       if (timerState === 'alerting') return 'Timer Finished';
                       if (timerState === 'running') {
                         const endVal = states[variables.timer_end_entity]?.state;
                         if (endVal?.match(/^\d{4}-\d{2}-\d{2}T/)) {
-                          const mins = Math.max(0, Math.round((new Date(endVal) - new Date()) / 60000));
-                          return `${mins} ${mins === 1 ? 'min' : 'mins'} remaining`;
+                          const secs = Math.max(0, Math.round((new Date(endVal) - new Date()) / 1000));
+                          return fmtTime(secs);
                         }
                       }
                       if (timerState === 'paused') {
                         const endVal = states[variables.timer_end_entity]?.state;
                         if (endVal?.match(/^P\d+$/)) {
-                          const mins = Math.round(parseInt(endVal.substring(1)) / 60);
-                          return `Paused – ${mins} ${mins === 1 ? 'min' : 'mins'} remaining`;
+                          return `Paused – ${fmtTime(parseInt(endVal.substring(1)))}`;
                         }
                       }
                       const presets = { 24: 15, 50: 30, 75: 45, 100: 60 };
