@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.21 | v0.0.87 | 2026.4.0+ | 2024.4.0+* |
+| v0.0.21 | v0.0.79 | 2026.4.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -18,64 +18,7 @@ permalink: /changelog/
 
 ## Integration
 
-<details markdown="1">
-<summary>v0.0.87</summary>
-
-- **Change (Blueprint):** Simplified blueprint inputs for both **Pivot - Timer Control** and **Pivot - Timer - Voice**. The **Pivot Device** selector has been removed from both blueprints — it was previously needed to derive the media player and button event entities, but these are now derived from the device suffix or taken from the explicit entity inputs already required. **Timer Control** required fields are now: Device Suffix, Bank Number, Button Event Entity, Timer Ringing Switch. **Voice** required fields are now: Device Suffix, Timer Ringing Switch. The device-gating condition in the Voice blueprint now uses `device_id()` on the Timer Ringing Switch rather than comparing against the Pivot Device input. **Action required:** Open and re-save all Timer Control and Voice automations.
-
-</details>
-
-<details markdown="1">
-<summary>v0.0.86</summary>
-
-- **Fix (Blueprint):** **Pivot - Timer - Voice** now only responds to commands from its own Pivot device. When multiple Pivot devices share the same Assist pipeline, spoken timer commands previously fired all Voice blueprint automations simultaneously — starting timers on every device at once and causing all alarms to sound at expiry. A device condition (`trigger.device_id`) now gates each automation so only the device that processed the wake word starts its timer.
-
-</details>
-
-<details markdown="1">
-<summary>v0.0.85</summary>
-
-- **Fix (Blueprint):** **Pivot - Timer Control** and **Pivot - Timer - Voice** now require the `timer_ringing` switch to be selected explicitly as a blueprint input (**Timer Ringing Switch**). Previously both blueprints derived this entity at runtime using `device_entities()`, which could resolve to the wrong device when multiple Pivot devices were configured — causing both devices' alarms to fire when only one timer expired. Timer Control also adds an optional **Timer Silent Mode Switch** input for the same reason. Existing automations must be opened and the new fields filled in before saving.
-
-</details>
-
-<details markdown="1">
-<summary>v0.0.84</summary>
-
-- **Change (Blueprint):** Minor voice trigger phrase refinements to **Pivot - Timer - Voice**. No behaviour changes — phrasing and intent matching only.
-
-</details>
-
-<details markdown="1">
-<summary>v0.0.83</summary>
-
-- **Change (Blueprint):** Minor voice trigger phrase updates to **Pivot - Timer - Voice**.
-
-</details>
-
-<details markdown="1">
-<summary>v0.0.82</summary>
-
-- **Change (Blueprint):** Minor voice trigger phrase updates to **Pivot - Timer - Voice**.
-
-</details>
-
-<details markdown="1">
-<summary>v0.0.81</summary>
-
-- **Change (Blueprint):** **Pivot - Timer - Voice** now supports second-based durations. *"Set a 30 second timer"*, *"Start a timer for 45 seconds"*, and similar phrases are now recognised. For timers under one minute, `timer_duration` is left unchanged and `timer_end` is set directly — the alarm fires correctly, and TTS announcements speak in seconds. If a bank is assigned, the gauge will show under a minute remaining for the duration.
-- **Fix (Blueprint):** Hour-based voice phrases (*"set a 2 hour timer"*) now correctly set a 2-hour timer. Previously, the minute and hour triggers shared the same ID, causing hour values to be treated as minutes.
-
-</details>
-
-<details markdown="1">
-<summary>v0.0.80</summary>
-
-- **New (Blueprint):** Adds the **Pivot - Timer - Voice** blueprint. Lets you control the Pivot timer entirely by voice via Home Assistant Assist — set a duration, start, pause, resume, cancel, dismiss the alarm, and query remaining time. Supports natural language durations including *"set a timer for half an hour"*, *"start a 1 hour and 30 minute timer"*, *"set a timer for a quarter of an hour"*, and more. Requires **Pivot - Timer Control** to be running (for the alarm to fire), but a bank assignment is not required — set Bank Number to `0` in Timer Control to run alarm-only with no gauge or physical button control.
-- **Change (Blueprint):** **Pivot - Timer Control** Bank Number input now accepts `0` (no bank assigned). When set to `0`, the timer alarm and TTS announcements work normally but the LED gauge, physical button control, and bank switching are disabled. This allows Timer Control to run alongside the Voice blueprint without needing a bank reserved.
-- **Change:** All blueprint display names updated to use a hyphen separator for consistency. **Pivot — Timer** is now **Pivot - Timer Control**; **Pivot — Timer Toggle Script** is now **Pivot - Timer Toggle Script**. Existing automations are unaffected — this is a display name change only.
-
-</details>
+> **Blueprints are updated independently of the integration.** Import them directly from GitHub — see the [Timer page](/timer) for links. Re-importing picks up any fixes without needing an integration update.
 
 <details markdown="1">
 <summary>v0.0.79</summary>
