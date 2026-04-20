@@ -61,7 +61,7 @@ The timer helper entities are provisioned with every Pivot device but disabled b
 
 ---
 
-### Step 2. Set up Timer Control
+### Step 2. Set up Timer Control – [Import Blueprint (Open in a new tab)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml)
 
 The **Pivot - Timer Control** blueprint is required regardless of how you plan to control the timer. Import it first using the link above if you haven't already.
 
@@ -102,7 +102,7 @@ Once assigned, turn the knob to set a duration (the gauge shows the selected pro
 
 ---
 
-### Step 4. Optional: add voice control
+### Step 4. Optional: add voice control – [Import Blueprint (Open in a new tab)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer_voice.yaml)
 
 By default, spoken timer commands on the VPE use the stock Home Assistant timer behaviour — they are handled by the Assist pipeline and are completely independent of Pivot. **Installing this blueprint is the only thing that changes that.** If you skip this step, voice timers continue to work exactly as they did before.
 
@@ -149,7 +149,7 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 
 ### Step 5. Optional: add dashboard control
 
-The **Pivot - Timer Toggle Script** blueprint lets a dashboard button card start, pause, resume, and dismiss the timer the same way the physical button does.
+The [**Pivot - Timer Toggle Script**](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) blueprint lets a dashboard button card start, pause, resume, and dismiss the timer the same way the physical button does.
 
 A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must already be running.
 
