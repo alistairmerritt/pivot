@@ -6,18 +6,6 @@ permalink: /timer/
 
 Pivot includes an optional timer feature: a Pomodoro session, a cooking countdown, or a focus block. Timers can be controlled by voice, by the device's knob and button, or both.
 
-## Blueprints
-
-Import these into Home Assistant once — they work across all your Pivot devices. Click a link to open the HA import screen directly.
-
-| Blueprint | Import |
-|---|---|
-| **Pivot - Timer Control** *(required)* | [Import into Home Assistant](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml) |
-| **Pivot - Timer - Voice** *(optional)* | [Import into Home Assistant](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer_voice.yaml) |
-| **Pivot - Timer Toggle Script** *(optional)* | [Import into Home Assistant](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) |
-
-To pick up blueprint updates, re-import from the same link and choose **Overwrite**. No integration update needed.
-
 ---
 
 ## On this page
@@ -36,11 +24,11 @@ To pick up blueprint updates, re-import from the same link and choose **Overwrit
 
 The timer is built around three blueprints. One is required; the others are optional depending on how you want to control the timer.
 
-| Blueprint | Required? | What it does |
-| --- | --- | --- |
-| **Pivot - Timer Control** | Yes | Manages the countdown and fires the alarm. Also handles physical button control and the LED gauge when a bank is assigned. |
-| **Pivot - Timer - Voice** | No | Voice control via Home Assistant Assist. Set, start, pause, resume, cancel, dismiss, and query the timer by speaking to the device. |
-| **Pivot - Timer Toggle Script** | No | Dashboard helper. Lets a button card start, pause, resume, or dismiss the timer the same way the physical button does. |
+| Blueprint | Required? | What it does | Import |
+| --- | --- | --- | --- |
+| **Pivot - Timer Control** | Yes | Manages the countdown and fires the alarm. Also handles physical button control and the LED gauge when a bank is assigned. | [Import Blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml) |
+| **Pivot - Timer - Voice** | Optional | Voice control via Home Assistant Assist. Set, start, pause, resume, cancel, dismiss, and query the timer by speaking to the device. | [Import Blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer_voice.yaml) |
+| **Pivot - Timer Toggle Script** | Optional | Dashboard helper. Lets a button card start, pause, resume, or dismiss the timer the same way the physical button does. | [Import Blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) |
 
 **Pivot - Timer Control is always required**, even if you only plan to use voice control. It manages the countdown and is what sets the alarm state when time runs out. Without it, a running timer simply expires silently.
 
