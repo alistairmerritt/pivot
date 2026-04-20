@@ -319,7 +319,7 @@ This is useful for focus sessions, late-night use, or situations where visual fe
 
 **Changing duration mid-session** — Turning the knob while the timer is running or paused does nothing. To change the duration, long press to cancel, then turn the knob to select a new time.
 
-**Multiple devices** — Create one **Pivot - Timer Control** automation per Pivot device, each with its own suffix. The voice and dashboard blueprints are set up once and work across all devices.
+**Multiple devices** — Create one **Pivot - Timer Control** automation and one **Pivot - Timer - Voice** automation per Pivot device, each with its own suffix and timer ringing switch. The **Pivot - Timer Toggle Script** is the exception — it is set up once and works across all devices.
 
 **Pausing and resuming** — Remaining time is stored in `text.{device_suffix}_timer_end` and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the countdown sync will detect this within 30 seconds and trigger the finish sequence normally.
 
