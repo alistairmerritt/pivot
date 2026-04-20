@@ -127,21 +127,23 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 
 > **Important:** The voice blueprint registers local Assist intents. Open your Assist pipeline settings and ensure **Prefer local intents** is enabled — this ensures spoken timer commands are matched by the blueprint before being passed to an LLM agent.
 
-**Supported phrases include:**
+**Supported phrases:**
 
-| Intent | Example phrases |
+| Intent | Phrases |
 |---|---|
-| Set and start | *"set a 10 minute timer"*, *"start a 25 minute timer"*, *"set a timer for 45 minutes"*, *"set me a timer"*, *"start a timer"* |
-| Seconds | *"set a 30 second timer"*, *"start a 45 second timer"*, *"set a timer for 90 seconds"* | 
-| Hours | *"set a 2 hour timer"*, *"start a 1 hour timer"* |
-| Combined | *"start a 1 hour and 30 minute timer"*, *"set a timer for 2 hours and 15 minutes"* |
-| Shorthand | *"set a timer for a quarter of an hour"*, *"set a timer for half an hour"*, *"set a timer for an hour and a half"* |
-| Pause / Resume | *"pause the timer"*, *"resume the timer"* |
-| Cancel | *"cancel the timer"* |
-| Dismiss alarm | *"dismiss the alarm"*, *"dismiss alarm"* |
-| Status | *"how much time is left?"*, *"how long is left on the timer?"*, *"what's left on the timer?"* |
+| Start (minutes) | *"set a {n} minute timer"*, *"start a {n} minute timer"*, *"set timer for {n} minutes"* |
+| Start (hours) | *"set a {n} hour timer"*, *"start a {n} hour timer"*, *"set timer for {n} hours"* |
+| Start (seconds) | *"set a {n} second timer"*, *"start a {n} second timer"*, *"set a timer for {n} seconds"*, *"start a timer for {n} seconds"* |
+| Start (combined) | *"start a {h} hour and {m} minute timer"*, *"set a {h} hour and {m} minute timer"*, *"set timer for {h} hours and {m} minutes"* |
+| Start (shorthand) | *"set a quarter hour timer"*, *"start a quarter hour timer"*, *"set a timer for a quarter of an hour"*, *"start a timer for a quarter of an hour"*, *"set a half hour timer"*, *"start a half hour timer"*, *"set a timer for half an hour"*, *"start a timer for half an hour"*, *"set a timer for an hour and a half"*, *"start a timer for an hour and a half"*, *"set an hour and a half timer"*, *"set a timer for two and a half hours"*, *"start a timer for two and a half hours"* |
+| Start (current duration) | *"start timer"*, *"set timer"*, *"start a timer"*, *"set a timer"*, *"set me a timer"* |
+| Pause | *"pause timer"*, *"pause the timer"* |
+| Resume | *"resume timer"*, *"resume the timer"*, *"continue timer"*, *"continue the timer"*, *"unpause timer"*, *"unpause the timer"* |
+| Cancel | *"cancel timer"*, *"cancel the timer"*, *"stop timer"*, *"stop the timer"*, *"reset timer"*, *"reset the timer"* |
+| Dismiss alarm | *"dismiss timer"*, *"dismiss the timer"*, *"dismiss alarm"*, *"stop the alarm"* |
+| Status | *"how long is left on the timer"*, *"how much time is left"*, *"how much time is left on the timer"*, *"how much time remains"*, *"how much longer is left"*, *"what's the timer at"*, *"what's left on the timer"*, *"timer status"* |
 
-> **Note:** The voice blueprint matches common natural phrases, but it is not a full language model. Most everyday timer commands will work, but simpler phrasing is more reliable.
+Number values (`{n}`, `{h}`, `{m}`) accept both digits (*"5"*) and words (*"five"*).
 
 > **Seconds timers:** Second-based durations are supported by voice only. The knob and dashboard controls are constrained to whole minutes (minimum 1 minute).
 
