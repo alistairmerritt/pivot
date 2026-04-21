@@ -1043,11 +1043,15 @@ button_card_templates:
                       show_icon: false
                       tap_action:
                         action: perform-action
-                        perform_action: number.set_value
+                        perform_action: script.turn_on
                         target:
-                          entity_id: '[[[ return variables.value_entity; ]]]'
+                          entity_id: script.pivot_timer_toggle
                         data:
-                          value: '24'
+                          variables:
+                            device_suffix: '[[[ return variables.device_suffix; ]]]'
+                            bank: '[[[ return variables.bank_number; ]]]'
+                            set_duration: 15
+                            bank_value: 24
                       state:
                         - operator: template
                           value: |
@@ -1087,11 +1091,15 @@ button_card_templates:
                       show_icon: false
                       tap_action:
                         action: perform-action
-                        perform_action: number.set_value
+                        perform_action: script.turn_on
                         target:
-                          entity_id: '[[[ return variables.value_entity; ]]]'
+                          entity_id: script.pivot_timer_toggle
                         data:
-                          value: '50.0'
+                          variables:
+                            device_suffix: '[[[ return variables.device_suffix; ]]]'
+                            bank: '[[[ return variables.bank_number; ]]]'
+                            set_duration: 30
+                            bank_value: 50
                       state:
                         - operator: template
                           value: |
@@ -1131,11 +1139,15 @@ button_card_templates:
                       show_icon: false
                       tap_action:
                         action: perform-action
-                        perform_action: number.set_value
+                        perform_action: script.turn_on
                         target:
-                          entity_id: '[[[ return variables.value_entity; ]]]'
+                          entity_id: script.pivot_timer_toggle
                         data:
-                          value: '75.0'
+                          variables:
+                            device_suffix: '[[[ return variables.device_suffix; ]]]'
+                            bank: '[[[ return variables.bank_number; ]]]'
+                            set_duration: 45
+                            bank_value: 75
                       state:
                         - operator: template
                           value: |
@@ -1175,11 +1187,15 @@ button_card_templates:
                       show_icon: false
                       tap_action:
                         action: perform-action
-                        perform_action: number.set_value
+                        perform_action: script.turn_on
                         target:
-                          entity_id: '[[[ return variables.value_entity; ]]]'
+                          entity_id: script.pivot_timer_toggle
                         data:
-                          value: '100.0'
+                          variables:
+                            device_suffix: '[[[ return variables.device_suffix; ]]]'
+                            bank: '[[[ return variables.bank_number; ]]]'
+                            set_duration: 60
+                            bank_value: 100
                       state:
                         - operator: template
                           value: |
