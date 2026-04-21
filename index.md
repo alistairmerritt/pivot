@@ -6,7 +6,7 @@ Pivot turns your Home Assistant Voice Preview Edition into a physical control di
 
 Rather than opening apps, navigating dashboards, or relying on voice commands, you can simply reach out and control your home directly. The LED ring shows which bank is active and provides real-time feedback on its current value (e.g. brightness, volume, or temperature) and, where relevant, its RGB colour. It can also be used more creatively, for example, displaying sensor values, scrubbing through scenes, or reflecting changes made elsewhere in your system. 
 
-Pivot also includes an optional timer feature that can be controlled by the knob, by voice, from a dashboard, or through any combination of the three. If a timer bank is assigned, the LED ring provides a live visual countdown, while the timer state can also be exposed to dashboards for full visibility and control.
+Pivot also includes an optional [timer feature](https://alistairmerritt.github.io/pivot/timer/) that can be controlled by the knob, by voice, from a dashboard, or through any combination of the three. If a timer bank is assigned, the LED ring provides a live visual countdown, while the timer state can also be exposed to dashboards for full visibility and control.
 
 Pivot can be enabled or disabled at any time with a double press, allowing you to switch between physical control and the standard Voice Preview Edition behaviour whenever you need.
 
