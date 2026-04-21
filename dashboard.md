@@ -239,11 +239,9 @@ Mix in whichever other components you want alongside them.
 
 ## Notes
 
-**Timer bank — slider requires the bank to be active**
+**Timer bank — the bank must be active for duration changes to take effect**
 
-The duration slider on a timer bank writes directly to the bank's value entity, which the device only converts to a timer duration when that bank is the active bank. If you adjust the slider while on a different bank, the change won't take effect.
-
-The preset duration buttons (15m / 30m / 45m / 60m) don't have this limitation — they update the timer duration directly and work regardless of which bank is active.
+The duration slider and preset buttons on a timer bank only take effect when that bank is the active bank on the device. If you adjust the duration while on a different bank, the change won't be picked up when the timer starts.
 
 ---
 
