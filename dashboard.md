@@ -36,7 +36,15 @@ There are four template components. The bank cards are the most useful — the r
 
 The primary card for Pivot control.
 
-<img width="537" height="738" alt="bank-cards" src="https://github.com/user-attachments/assets/6462366e-ddfd-4320-81bf-b58251415695" />
+<img width="521" height="216" alt="bank-1" src="https://github.com/user-attachments/assets/112332f6-cb71-469a-99a5-f39839ca5016" />
+
+<img width="521" height="262" alt="bank-2" src="https://github.com/user-attachments/assets/b2e77614-18a4-476a-bb38-e96f0d02406b" />
+
+<img width="521" height="216" alt="bank-3" src="https://github.com/user-attachments/assets/a657d202-53ee-4c50-8aa0-4a3485c52078" />
+
+<img width="521" height="282" alt="timer" src="https://github.com/user-attachments/assets/843e9cc5-427c-4ca5-8855-9c001d1b2500" />
+
+
 
 Each bank card shows:
 
