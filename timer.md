@@ -204,6 +204,8 @@ tap_action:
 
 The cards above are intentionally minimal. If you want a fully worked example — timer state display, start/pause/cancel controls, and a progress indicator in a polished device card — the [Dashboard](/pivot/dashboard/) page has complete working examples that include timer support.
 
+<img width="521" height="282" alt="timer" src="https://github.com/user-attachments/assets/b33a96e9-77da-4c18-9cc9-b8be1a103cb3" /> <img width="521" height="282" alt="timer-finished" src="https://github.com/user-attachments/assets/951947ff-4e47-4e7d-9332-8f130b766cfa" />
+
 ---
 
 ## Timer entities
