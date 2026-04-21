@@ -678,9 +678,9 @@ button_card_templates:
               - margin: 10px 0px 0px 0px
               - display: |
                   [[[
-                    return states[variables.passive_entity]?.state === 'on'
-                      ? 'none'
-                      : 'block';
+                    const passive = states[variables.passive_entity]?.state === 'on';
+                    const isTimer = states[variables.name_entity]?.state?.toLowerCase() === 'timer';
+                    return (passive || isTimer) ? 'none' : 'block';
                   ]]]
             container:
               - border-radius: 150px
