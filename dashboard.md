@@ -237,6 +237,16 @@ Mix in whichever other components you want alongside them.
 
 ---
 
+## Notes
+
+**Timer bank — slider requires the bank to be active**
+
+The duration slider on a timer bank writes directly to the bank's value entity, which the device only converts to a timer duration when that bank is the active bank. If you adjust the slider while on a different bank, the change won't take effect.
+
+The preset duration buttons (15m / 30m / 45m / 60m) don't have this limitation — they update the timer duration directly and work regardless of which bank is active.
+
+---
+
 ## Full example
 
 **[dashboard-example.yaml](https://github.com/alistairmerritt/pivot/blob/main/assets/dashboard-example.yaml)**
