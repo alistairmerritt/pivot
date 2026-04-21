@@ -4,7 +4,8 @@ layout: home
 
 Pivot turns your Home Assistant Voice Preview Edition into a physical control dial for Home Assistant while preserving its core voice functionality, including wake word activation. It provides four colour-coded banks, each assigned to a different controllable entity, script, scene, or a [custom automation](https://alistairmerritt.github.io/pivot/automations/). By default, simply turn to adjust the entity assigned to the active bank, or press to toggle or activate it.
 
-Rather than opening apps, navigating dashboards, or relying on voice commands, you can simply reach out and control your home directly. The LED ring shows which bank is active and provides real-time feedback on its current value (e.g. brightness, volume, or temperature) and, where relevant, its RGB colour. It can also be used more creatively, for example, displaying sensor values, scrubbing through scenes, or reflecting changes made elsewhere in your system.  Pivot also includes an optional [timer feature](https://alistairmerritt.github.io/pivot/timer/), controllable via the knob, button, voice, or dashboard. When a timer bank is assigned, the LED ring provides a live visual countdown of the remaining time.
+Rather than opening apps, navigating dashboards, or relying on voice commands, you can simply reach out and control your home directly. The LED ring shows which bank is active and provides real-time feedback on its current value (e.g. brightness, volume, or temperature) and, where relevant, its RGB colour. It can also be used more creatively, for example, displaying sensor values, scrubbing through scenes, or reflecting changes made elsewhere in your system. 
+Pivot also includes an optional [timer feature](https://alistairmerritt.github.io/pivot/timer/), controllable via the knob, button, voice, or dashboard. When a timer bank is assigned, the LED ring provides a live visual countdown of the remaining time.
 
 
 Pivot can be enabled or disabled at any time with a double press, allowing you to switch between physical control and the standard Voice Preview Edition behaviour whenever you need.
@@ -56,11 +57,11 @@ With each bank assigned to something useful, Pivot gives you a faster way to con
 
 ## How it works
 
-Pivot consists of two parts that work together, both of which are required for a seamless experience:
+Pivot consists of two parts that work together, both of which are required for the Pivot experience to work:
 
-**[Pivot firmware](/pivot/firmware/)**: Custom ESPHome firmware you flash to your VPE. It adds four control banks, knob turn handling, LED colour feedback, and sends events to Home Assistant.
+**[Pivot firmware](/pivot/firmware/)**: Custom ESPHome firmware you flash to your VPE. It adds four control banks, knob turn handling, LED colour feedback, and sends events to Home Assistant. It can be removed at any time by reinstalling the stock firmware.
 
-**[Pivot integration](/pivot/integration/)**: A HACS integration for Home Assistant that provisions all the required entities, handles button toggle natively, and installs blueprint files for optional timer automations. See [Architecture](/pivot/architecture/) for a full breakdown of what it does, what it reads, and what it writes.
+**[Pivot integration](/pivot/integration/)**: A HACS integration for Home Assistant that provisions all the required entities, handles button toggle natively, and offers blueprint files for optional timer automations. See [Architecture](/pivot/architecture/) for a full breakdown of what it does, what it reads, and what it writes. See [Timer](/pivot/timer/) for timer blueprints.
 
 ---
 
