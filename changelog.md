@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.22 | v0.0.81 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.22 | v0.0.82 | 2026.5.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,16 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub — see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.82</summary>
+
+- **Fix:** Setup notification is now shown only once. The flag is stored in the config entry after the notification is sent, so it is never recreated on subsequent restarts even if dismissed.
+- **Fix:** Switch states (e.g. Show Control Value, Dim LEDs When Idle) are now re-published to the firmware after Home Assistant finishes starting. The ESPHome device subscribes via WebSocket and may receive `unavailable` during startup before state is restored — the re-publish ensures it receives the correct value once HA is ready.
+- **New (Timer Toggle script blueprint):** Dashboard timer button now switches to the timer bank before firing the press if the device is currently on a different bank. Requires re-importing the Pivot Timer Toggle script blueprint.
+
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.81</summary>
