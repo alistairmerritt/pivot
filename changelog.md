@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.22 | v0.0.82 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.23 | v0.0.82 | 2026.5.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -687,6 +687,15 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.23</summary>
+
+- **Fix:** Migrated HTTP media sources from `platform: http_request` to `platform: audio_http`. The `http_request` external component pin and top-level config key have been removed — this platform is now built into ESPHome 2026.5 under its new name. Builds on 2026.5 would fail without this change.
+- **Fix:** Updated `hey_mycroft` wake word sensitivity probability cutoffs to match the v2 model tuning (253 / 242 / 237 for Slightly / Moderately / Very sensitive). The previous values were carried over from hey_jarvis and were not tuned for hey_mycroft@v2.
+
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.22</summary>
