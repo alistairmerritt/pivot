@@ -144,7 +144,7 @@ When an assigned entity is changed externally — by a voice command, another da
 | `light` | Brightness % | Toggle on/off |
 | `media_player` | Volume (0–100%) | Play/pause |
 | `fan` | Speed % | Toggle on/off |
-| `climate` | Temperature (16–30°C) | Toggle on/off |
+| `climate` | Temperature (entity min–max) | Toggle on/off |
 | `cover` | Position % | Toggle open/close |
 | `input_number` / `number` | Value scaled to entity min–max | — |
 | `switch` / `input_boolean` | — | Toggle |
