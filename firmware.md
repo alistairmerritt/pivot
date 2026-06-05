@@ -101,14 +101,14 @@ substitutions:
 packages:
   pivot:
     url: https://github.com/alistairmerritt/pivot-firmware
-    ref: v0.0.23
+    ref: main
     file: home-assistant-voice.yaml
     refresh: 1d
 ```
 
 A fully annotated template is available at [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml) in the firmware repo.
 
-When a new version of Pivot firmware is released, update the `ref:` value in each device YAML to the new version tag, then click **Install → Wirelessly** in ESPHome Device Builder. Check the [changelog](/pivot/changelog/) to see what's changed between versions.
+When a new version of Pivot firmware is released, open each device in ESPHome and click **Install → Wirelessly** – ESPHome pulls the latest from GitHub and flashes it OTA. No manual YAML changes required.
 
 | Device | `device_suffix` |
 | --- | --- |
@@ -131,12 +131,12 @@ If a VPE is currently running Nabu Casa's stock firmware:
 
 When a new firmware version is released:
 
-1. Check the [changelog](/pivot/changelog/) to see what changed
-2. Open your device YAML in ESPHome Device Builder and update `ref: v0.0.23` to the new version tag
+1. Open **ESPHome Device Builder** in Home Assistant
+2. Find the device you want to update
 3. Click **Install → Wirelessly**
-4. ESPHome fetches the tagged firmware from GitHub, compiles it, and flashes it over WiFi
+4. ESPHome fetches the latest firmware from GitHub, compiles it, and flashes it over WiFi
 
-That's it – no USB, no copying YAML beyond the one-line version bump. Each device takes 2–3 minutes.
+That's it – no USB, no copying YAML, no manual steps. Each device takes 2–3 minutes.
 
 **USB is only ever needed for:**
 - The very first flash on a device that has never had ESPHome on it
@@ -171,11 +171,9 @@ Pivot firmware communicates with Home Assistant over the standard ESPHome API on
 
 ### Updates and pinning
 
-The per-device config uses a version tag (`ref: v0.0.23`) rather than `ref: main`. This means your device always runs a known, specific version of the firmware – you can see exactly what you're running, and nothing changes unless you update the tag yourself.
+The per-device config uses `ref: main`, which means clicking **Install** always gives you the latest firmware from the repository. `refresh: 1d` controls ESPHome's local cache of the downloaded source – it does **not** auto-flash. Your device only ever updates when you click **Install** in ESPHome Device Builder. Nothing happens silently or automatically.
 
-`refresh: 1d` controls ESPHome's local cache of the downloaded source. It does **not** auto-flash – your device only ever updates when you click **Install** in ESPHome Device Builder. Nothing happens silently or automatically.
-
-To update to a new version, change the `ref:` value to the new tag and click **Install**. The available versions and what changed in each are listed on the [changelog](/pivot/changelog/).
+If you want to pin to a specific version, you can replace `ref: main` with a version tag (e.g. `ref: v0.0.23`). Available tags are listed on the [pivot-firmware](https://github.com/alistairmerritt/pivot-firmware) repository on GitHub.
 
 ---
 
