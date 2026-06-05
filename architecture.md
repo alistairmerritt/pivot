@@ -88,35 +88,35 @@ These are normal HA entities using standard platforms. They are not hidden objec
 
 For each of the four banks, Pivot creates:
 
-- `number` — bank value (0–100)
-- `text` — assigned entity ID
-- `text` — live bank LED colour
-- `text` — configured bank colour
-- `binary_sensor` — passive flag
-- `switch` — mirror light enabled
-- `switch` — announce value enabled
-- `light` — virtual bank colour picker
+- `number`—bank value (0–100)
+- `text`—assigned entity ID
+- `text`—live bank LED colour
+- `text`—configured bank colour
+- `binary_sensor`—passive flag
+- `switch`—mirror light enabled
+- `switch`—announce value enabled
+- `light`—virtual bank colour picker
 
 ### Per device, shared
 
 Pivot also creates shared device-level entities:
 
-- `number` — active bank
-- `switch` — control mode
-- `switch` — show control value
-- `switch` — dim when idle
-- `switch` — system announcements
-- `switch` — mute announcements
-- `text` — TTS entity
-- `text` — media player entity
+- `number`—active bank
+- `switch`—control mode
+- `switch`—show control value
+- `switch`—dim when idle
+- `switch`—system announcements
+- `switch`—mute announcements
+- `text`—TTS entity
+- `text`—media player entity
 
 ### Timer entities
 
 Timer entities are created as part of the integration and are disabled by default:
 
-- `number` — timer duration
-- `select` — timer state
-- `text` — timer end time
+- `number`—timer duration
+- `select`—timer state
+- `text`—timer end time
 
 All entity IDs follow a stable pattern:
 

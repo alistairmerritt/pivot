@@ -8,7 +8,7 @@ Pivot firmware is a custom ESPHome configuration for the Home Assistant Voice Pr
 
 The firmware source is at [alistairmerritt/pivot-firmware](https://github.com/alistairmerritt/pivot-firmware).
 
-> **Installing custom firmware is safe and reversible.** Pivot firmware is based on the official Home Assistant Voice PE firmware and has been tested extensively, but as with any custom firmware there is a small element of risk. If anything goes wrong, you can always restore the original stock firmware by visiting [esphome.github.io/home-assistant-voice-pe](https://esphome.github.io/home-assistant-voice-pe/) and flashing it from your browser — no tools required.
+> **Installing custom firmware is safe and reversible.** Pivot firmware is based on the official Home Assistant Voice PE firmware and has been tested extensively, but as with any custom firmware there is a small element of risk. If anything goes wrong, you can always restore the original stock firmware by visiting [esphome.github.io/home-assistant-voice-pe](https://esphome.github.io/home-assistant-voice-pe/) and flashing it from your browser—no tools required.
 
 ---
 
@@ -24,7 +24,7 @@ substitutions:
   # Friendly name shown in HA and ESPHome
   device_friendly_name: Lounge VPE
 
-  # Pivot device suffix — unique per device, no spaces or dashes
+  # Pivot device suffix—unique per device, no spaces or dashes
   # Must match exactly what you enter in the Pivot integration
   device_suffix: ha_voice_lounge
 
@@ -32,11 +32,11 @@ substitutions:
   wifi_ssid: "YourWiFiName"
   wifi_password: "YourWiFiPassword"
 
-  # API encryption key — generate one at:
+  # API encryption key—generate one at:
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "your_generated_key_here"
 
-  # LED orientation — set based on how your device is mounted:
+  # LED orientation—set based on how your device is mounted:
   #   6  = flat on a surface, cable facing away (LEDs start at bottom)
   #   0  = upright on a stand, cable at the bottom (LEDs start at top)
   led_offset: '6'
@@ -55,20 +55,20 @@ This is the most important field. It must be:
 - Lowercase, no spaces, no dashes (underscores are fine)
 - Identical to what you enter in the Pivot HA integration setup
 
-It determines all entity IDs — for example `ha_voice_lounge` produces `number.ha_voice_lounge_active_bank`, `text.ha_voice_lounge_bank_1_entity`, etc.
+It determines all entity IDs—for example `ha_voice_lounge` produces `number.ha_voice_lounge_active_bank`, `text.ha_voice_lounge_bank_1_entity`, etc.
 
 ---
 
 ## Multiple devices
 
-Each VPE needs its own config file in ESPHome with a unique `device_suffix`. The recommended approach uses ESPHome's `packages:` feature — each device has a small per-device file that pulls the full shared firmware from GitHub automatically. You never have to copy or maintain separate full YAML files per device.
+Each VPE needs its own config file in ESPHome with a unique `device_suffix`. The recommended approach uses ESPHome's `packages:` feature—each device has a small per-device file that pulls the full shared firmware from GitHub automatically. You never have to copy or maintain separate full YAML files per device.
 
 **Per-device config (paste into ESPHome as a new device):**
 
 ```yaml
 substitutions:
   # =======================================================================
-  # PIVOT DEVICE CONFIGURATION — fill in these values for each device
+  # PIVOT DEVICE CONFIGURATION—fill in these values for each device
   # =======================================================================
 
   # ESPHome device name (slug, no spaces or dashes)
@@ -77,21 +77,21 @@ substitutions:
   # Friendly name shown in HA and ESPHome
   device_friendly_name: Lounge VPE
 
-  # Pivot device suffix — unique per device, no spaces or dashes
+  # Pivot device suffix—unique per device, no spaces or dashes
   # Must match exactly what you enter in the Pivot integration
   device_suffix: ha_voice_lounge
 
-  # WiFi credentials — add these lines to your ESPHome secrets.yaml:
+  # WiFi credentials—add these lines to your ESPHome secrets.yaml:
   #   wifi_ssid: "Your Network Name"
   #   wifi_password: "Your Password"
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
 
-  # API encryption key — generate a unique one per device at:
+  # API encryption key—generate a unique one per device at:
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "generate-a-unique-key-here"
 
-  # LED orientation — set based on how your device is mounted:
+  # LED orientation—set based on how your device is mounted:
   #   '6'  flat on a surface, cable facing away (LEDs start at bottom)
   #   '0'  upright on a stand, cable at the bottom (LEDs start at top)
   led_offset: '6'
@@ -108,7 +108,7 @@ packages:
 
 A fully annotated template is available at [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml) in the firmware repo.
 
-When a new version of Pivot firmware is released, open each device in ESPHome and click **Install** — ESPHome pulls the latest from GitHub and flashes it OTA. No manual YAML copying required.
+When a new version of Pivot firmware is released, open each device in ESPHome and click **Install**—ESPHome pulls the latest from GitHub and flashes it OTA. No manual YAML copying required.
 
 | Device | `device_suffix` |
 | --- | --- |
@@ -120,14 +120,14 @@ When a new version of Pivot firmware is released, open each device in ESPHome an
 
 If a VPE is currently running Nabu Casa's stock firmware:
 
-- **If it appears in your ESPHome dashboard** (amber or green dot) — its API key and WiFi are already there. Create a new device entry using the per-device config above, then click **Install → Wirelessly**.
-- **If it has never been in ESPHome** (set up via the HA onboarding UI only) — you won't have the API key, so the first flash needs to be done via USB. After that, all future updates are OTA.
+- **If it appears in your ESPHome dashboard** (amber or green dot)—its API key and WiFi are already there. Create a new device entry using the per-device config above, then click **Install → Wirelessly**.
+- **If it has never been in ESPHome** (set up via the HA onboarding UI only)—you won't have the API key, so the first flash needs to be done via USB. After that, all future updates are OTA.
 
 ---
 
 ## Updating the firmware
 
-**HA does not notify you when a new version of Pivot firmware is available.** Updates are always manual — you initiate them from ESPHome Device Builder.
+**HA does not notify you when a new version of Pivot firmware is available.** Updates are always manual—you initiate them from ESPHome Device Builder.
 
 When a new firmware version is released:
 
@@ -136,7 +136,7 @@ When a new firmware version is released:
 3. Click **Install → Wirelessly**
 4. ESPHome fetches the latest firmware from GitHub, compiles it, and flashes it over WiFi
 
-That's it — no USB, no copying YAML, no manual steps. Each device takes 2–3 minutes.
+That's it—no USB, no copying YAML, no manual steps. Each device takes 2–3 minutes.
 
 **USB is only ever needed for:**
 - The very first flash on a device that has never had ESPHome on it
@@ -181,15 +181,15 @@ The easiest way to flash is using the **ESPHome Device Builder application** (fo
 
 Taking control simply imports the device into ESPHome Device Builder so you can manage and flash its configuration. Once again, this can be undone at any time by restoring the original stock firmware at [esphome.github.io/home-assistant-voice-pe](https://esphome.github.io/home-assistant-voice-pe/).
 
-When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices — click **Show** in the top right corner if you don't see it. Click **Take Control**, give it a name, then click **Install**. This may take 3–5 minutes over Wi-Fi.
+When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices—click **Show** in the top right corner if you don't see it. Click **Take Control**, give it a name, then click **Install**. This may take 3–5 minutes over Wi-Fi.
 
-Once you have taken control, replace the stock YAML with your per-device config (from [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml)), then click **Install**. Do not paste the full `home-assistant-voice.yaml` — the per-device config fetches it from GitHub automatically.
+Once you have taken control, replace the stock YAML with your per-device config (from [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml)), then click **Install**. Do not paste the full `home-assistant-voice.yaml`—the per-device config fetches it from GitHub automatically.
 
 **Flashing via USB**
 
-Use a good quality USB cable for the initial flash rather than OTA — it is more reliable. OTA is fine for subsequent updates once the device is running Pivot firmware.
+Use a good quality USB cable for the initial flash rather than OTA—it is more reliable. OTA is fine for subsequent updates once the device is running Pivot firmware.
 
-> **Tip:** There is a small switch inside the VPE case labelled **USB SELECT** with two positions: **ESP32** and **XU316**. It should be in the **ESP32** position by default, and your computer should detect the USB port it's connected to. If your device is not being detected when connected via USB, open the case and check this switch. Follow [Step 1 of the Nabu Casa disassembly guide](https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition) to access it — you do not need to go further than Step 1 unless you have a custom case.
+> **Tip:** There is a small switch inside the VPE case labelled **USB SELECT** with two positions: **ESP32** and **XU316**. It should be in the **ESP32** position by default, and your computer should detect the USB port it's connected to. If your device is not being detected when connected via USB, open the case and check this switch. Follow [Step 1 of the Nabu Casa disassembly guide](https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition) to access it—you do not need to go further than Step 1 unless you have a custom case.
 
 Click **Install** in the top right corner of ESPHome Device Builder. This could take 5–10 minutes. ESPHome will tell you if and why it fails.
 
@@ -202,7 +202,7 @@ esphome run home-assistant-voice.yaml
 
 ---
 
-## Before you flash — note these down
+## Before you flash—note these down
 
 Before flashing, make a note of these two values somewhere safe. You will need them during setup and potentially again later:
 
@@ -224,9 +224,9 @@ Pivot firmware is based on the official Home Assistant Voice PE ESPHome configur
 - Active bank sent as `bank + 1` to HA (1-based) to match the integration's number entity range
 - Triple press retains sound; double press sound removed
 - Control Mode added: hold+turn switches bank, turn adjusts the active bank's assigned entity value
-- Hold+turn in Normal mode retains stock behaviour — changes the LED ring colour (hue cycling)
+- Hold+turn in Normal mode retains stock behaviour—changes the LED ring colour (hue cycling)
 - Secondary scroll behaviour removed
-- Passive banks (scene, script, switch, input_boolean) show no gauge — LEDs turn off rather than showing a misleading full ring. Bank Indicator still fires normally during bank switching.
+- Passive banks (scene, script, switch, input_boolean) show no gauge—LEDs turn off rather than showing a misleading full ring. Bank Indicator still fires normally during bank switching.
 
 All standard VPE functionality (voice assistant, wake word, mute button, LED colour change, etc.) remains intact.
 
