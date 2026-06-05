@@ -142,7 +142,7 @@ packages:
 
 ---
 
-## Step 5. Add your device in Pivot
+## Step 5. Add your device in the Pivot integration
 
 1. Go to **Settings → Devices & Services → Add Integration** and search for **Pivot**
 2. Select your VPE from the dropdown
