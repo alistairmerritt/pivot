@@ -289,7 +289,7 @@ A few things to keep in mind:
 - supported behaviour depends on the assigned entity domain
 - some domains are simple on/off or trigger-style interactions rather than continuous control
 - some behaviour is entity-dependent, because different Home Assistant integrations expose different attributes and capabilities
-- bundled blueprints are optional helpers, not the core of Pivot
+- the timer blueprints are optional and imported separately — they are not required for Pivot to work
 - firmware and integration versions should be kept in sync where recommended
 
 The goal is not to abstract every possible Home Assistant entity perfectly. The goal is to provide a stable, predictable control layer for the supported use cases.
