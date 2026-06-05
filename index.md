@@ -24,7 +24,7 @@ Pivot can be enabled or disabled at any time with a double press, allowing you t
   Make adjustments in seconds, without breaking your flow.
 
 - **Works with (almost) anything**  
-  Works with controllable entities out of the box and can be extended further through custom automations - from adjusting light colour and scrubbing through scenes to displaying sensors or triggering scenes, scripts and other shortcuts. If Home Assistant can control it, Pivot can too.
+  Works with controllable entities out of the box and can be extended further through custom automations - from adjusting light colour to displaying sensors or triggering scenes, scripts and other shortcuts. If Home Assistant can control it, Pivot can too.
 
 - **Fully local and customisable**  
   Built on ESPHome and Home Assistant, with no cloud dependency.
