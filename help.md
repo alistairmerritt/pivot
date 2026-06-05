@@ -374,13 +374,12 @@ To fix: go to **Settings → Devices & Services → Pivot → your device → Co
 
 ### File & config issues
 
-### Blueprints are missing after installing the integration
+### I didn't receive the blueprint import notification
 
-Blueprint files are installed automatically when the integration is set up. If they are missing:
+When you first add a Pivot device, Pivot sends a one-time Home Assistant notification with links to import the optional timer blueprints from GitHub. If you missed it:
 
-1. Go to **Settings → Devices & Services → Pivot → your device** and click the ⋮ menu → **Reload**.
-2. Check `/config/blueprints/automation/pivot/` and `/config/blueprints/script/pivot/` – the files should appear after a reload.
-3. If they still don't appear, remove and re-add the integration.
+1. Go to **Settings → Devices & Services → Pivot → your device** and click the ⋮ menu → **Reload**. This re-sends the notification if it hasn't been dismissed.
+2. If the notification still doesn't appear, you can import the blueprints manually from the [Timer](/pivot/timer/) page – the import links are listed there.
 
 ---
 

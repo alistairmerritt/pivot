@@ -69,7 +69,7 @@ The integration is split into a small set of modules with defined roles.
 | `entity_mappings.py` | Maps a 0–100 Pivot value to the correct HA service call for each supported domain |
 | `announcements.py` | Formats and triggers spoken announcements |
 | `mirror.py` | Watches assigned lights and mirrors their colour into the bank colour entity |
-| `blueprints.py` | Installs bundled blueprints into Home Assistant on first run when needed |
+| `blueprints.py` | Sends a one-time notification on first setup with links to import the optional timer blueprints from GitHub |
 | `config_flow.py` | Setup flow and options flow |
 | `const.py` | Entity definitions, constants, and shared configuration |
 | platform files | Entity platform implementations such as `number`, `text`, `switch`, `binary_sensor`, `light`, and `select` |
@@ -194,14 +194,9 @@ Pivot also writes to its own entities when needed, for example:
 - writing TTS and media player selections from the integration settings
 - writing colour values used by the firmware
 
-### Blueprint installation
+### Blueprint notification
 
-On first run, Pivot may copy bundled blueprint YAML files into:
-
-- `config/blueprints/automation/pivot/`
-- `config/blueprints/script/pivot/`
-
-This only happens when those bundled blueprints are missing or outdated.
+On first setup, Pivot sends a one-time Home Assistant notification with links to import the optional timer blueprints from GitHub. Blueprints are not copied automatically — importing them is optional and user-initiated.
 
 * * *
 
