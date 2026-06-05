@@ -169,6 +169,23 @@ Pivot firmware is based on the official Home Assistant Voice PE ESPHome configur
 
 Pivot firmware communicates with Home Assistant over the standard ESPHome API on your local network. It does not add any new telemetry, cloud services, or outbound network behaviour beyond what is already present in the stock Home Assistant Voice PE ESPHome configuration.
 
+### Updates and pinning
+
+The per-device config uses `ref: main` with `refresh: 1d`. This means ESPHome re-fetches the firmware source from GitHub when it compiles — but it does **not** auto-flash. Your device only ever updates when you click **Install** in ESPHome Device Builder. Nothing happens silently or automatically.
+
+If you prefer to pin your device to a specific commit rather than always tracking the latest, replace `ref: main` with a commit hash in your device YAML:
+
+```yaml
+packages:
+  pivot:
+    url: https://github.com/alistairmerritt/pivot-firmware
+    ref: abc1234  # replace with the full commit hash you want to pin to
+    file: home-assistant-voice.yaml
+    refresh: 0s
+```
+
+The latest commit hash is visible at the top of the [pivot-firmware](https://github.com/alistairmerritt/pivot-firmware) repository on GitHub.
+
 ---
 
 ## Flashing

@@ -46,7 +46,7 @@ While you're in the ESPHome integration, enable this now before flashing the fir
 2. Find your VPE and click **⚙️ Configure**
 3. Enable **Allow the device to perform Home Assistant actions**
 
-This is required for the Pivot firmware to call scripts and send events to Home Assistant.
+This permission allows the ESPHome device to call Home Assistant services and fire events — specifically, it is what lets the knob control entities, the button toggle them, and Pivot fire its `pivot_bank_changed`, `pivot_knob_turn`, and `pivot_button_press` events. Without it, the firmware can connect to Home Assistant but cannot do anything useful. It does not grant access to credentials, configuration files, or anything outside the scope of normal service calls.
 
 
 ---
