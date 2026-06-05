@@ -57,11 +57,9 @@ You can continue using voice as normal — Pivot simply adds a physical control 
 ---
 
 **Does Pivot change how voice is triggered?**
-Yes. In the stock VPE firmware, a single press starts the voice input. In Pivot, that press is used for physical control instead.
+Only while Control Mode is enabled. When Control Mode is on, single press toggles or activates the assigned entity instead of starting the voice assistant. When Control Mode is off (double press to toggle it), single press returns to starting the voice assistant exactly as it does in the stock firmware.
 
-Voice functionality is still preserved, including wake word activation, but the stock press-to-talk shortcut is no longer the default behaviour while Pivot's control mode is enabled.
-
-If you would prefer a manual trigger as well, long press is left open for this purpose. See [Can I use long press to start a voice conversation?](#can-i-use-long-press-to-start-a-voice-conversation) in the Advanced section.
+Wake word activation is always available regardless of Control Mode. If you want a manual voice trigger while staying in Control Mode, long press is left open for this purpose — see [Can I use long press to start a voice conversation?](#can-i-use-long-press-to-start-a-voice-conversation) in the Advanced section.
 
 ---
 

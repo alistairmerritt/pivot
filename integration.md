@@ -205,7 +205,7 @@ Fired on every button press regardless of mode.
 
 | Press type | Built-in behaviour |
 | --- | --- |
-| `single_press` | Toggles or activates the active bank's assigned entity (requires entity assigned; handled natively by the integration) |
+| `single_press` | In Control Mode: toggles or activates the active bank's assigned entity (requires entity assigned; handled natively by the integration). Outside Control Mode: starts the voice assistant (handled by firmware, no integration action) |
 | `double_press` | Toggles Control Mode on/off |
 | `triple_press` | Announces the active bank's assigned entity name via TTS (if announcements configured) |
 | `long_press` | No built-in behaviour |
