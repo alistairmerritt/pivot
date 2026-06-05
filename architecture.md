@@ -39,7 +39,7 @@ Pivot does **not** run a web server, make outbound HTTP requests, connect to a c
 
 ## Trust and security model
 
-Pivot is an independent project and is not affiliated with Nabu Casa or the ESPHome team.
+Pivot is an independent project and is not affiliated with Nabu Casa or the ESPHome team. It is built and maintained by [u/Pivotonian](https://www.reddit.com/user/Pivotonian/), a long-time Home Assistant community contributor.
 
 It is designed to be local-only and intentionally narrow in scope.
 
