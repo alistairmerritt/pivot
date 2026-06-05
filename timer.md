@@ -125,7 +125,7 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 4. Fill in **Device Suffix** and **Timer Ringing Switch**
 5. Save
 
-> **Important:** The voice blueprint registers local Assist intents. Open your Assist pipeline settings and ensure **Prefer local intents** is enabled — this ensures spoken timer commands are matched by the blueprint before being passed to an LLM agent.
+> **Important:** The voice blueprint registers local Assist intents. Go to **Settings → Voice assistants**, click your pipeline, and ensure **Prefer local intents** is enabled — this ensures spoken timer commands are matched by the blueprint before being passed to an LLM agent.
 
 **Supported phrases:**
 

@@ -4,7 +4,9 @@ title: Integration
 permalink: /integration/
 ---
 
-The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle natively, and installs blueprint files for optional timer automations.
+The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle and spoken announcements natively, and shows a one-time notification on first setup with links to import the optional timer blueprints.
+
+> **Requires Home Assistant 2024.4.0 or later.** The integration will install on older versions but the bundled blueprints use syntax introduced in 2024.4 and will silently fail to validate.
 
 Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration). For a full breakdown of what the integration does, what it reads, and what it writes, see the [Architecture](/pivot/architecture/) page.
 
@@ -30,7 +32,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | `switch.{device_suffix}_show_control_value` | Keep gauge LEDs permanently visible in control mode |
 | `switch.{device_suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
 | `switch.{device_suffix}_announcements` | System Announcements — enable/disable bank-change TTS announcements |
-| `switch.{device_suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, and timer) without changing other settings |
+| `switch.{device_suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, triple-press, and timer) without changing other settings |
 | `switch.{device_suffix}_bank_1_mirror_light` | Bank 1 — mirror assigned RGB light colour |
 | `switch.{device_suffix}_bank_2_mirror_light` | Bank 2 — mirror assigned RGB light colour |
 | `switch.{device_suffix}_bank_3_mirror_light` | Bank 3 — mirror assigned RGB light colour |
@@ -71,7 +73,7 @@ These entities are provisioned per device but **disabled by default**. Enable th
 | Entity | Purpose |
 | --- | --- |
 | `number.{device_suffix}_timer_duration` | Timer duration in minutes (1–60, default 25) |
-| `select.{device_suffix}_timer_state` | Timer state — idle, running, or paused |
+| `select.{device_suffix}_timer_state` | Timer state — `idle`, `running`, `paused`, or `alerting` (alarm firing) |
 | `text.{device_suffix}_timer_end` | Internal — stores the countdown end time while the timer is running |
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.

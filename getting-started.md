@@ -151,7 +151,7 @@ packages:
 
 Pivot will now connect to your device and enable control of the entities you assign in Step 6.
 
-> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_0_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
+> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_1_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** — not its **Entity ID**.
 
 ---
 
@@ -173,7 +173,7 @@ Pivot is now set up and ready to use. Turn the knob to control the active bank's
 
 ## Step 7. Optional: Set up a timer
 
-Pivot includes optional timer blueprints. These are not required for normal Pivot control.
+Pivot includes optional timer blueprints. These are not required for normal Pivot control. Blueprints are hosted on GitHub and imported via URL into Home Assistant — when you first add a Pivot device, a notification appears with the import links.
 
 Timers are not enabled by default. Before setting up these blueprints, go to your Pivot device in Home Assistant and enable the required timer entities. See the [Timer page](/pivot/timer/) for full setup instructions.
 
