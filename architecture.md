@@ -55,7 +55,9 @@ In practical terms:
 
 Everything it does happens inside Home Assistant using standard entity platforms, standard service calls, and normal event listeners.
 
-Both the integration and the firmware source are public and can be inspected before installing. For the integration, the modules listed below show exactly what each file does. For the firmware, the full YAML is at [alistairmerritt/pivot-firmware](https://github.com/alistairmerritt/pivot-firmware) — specifically `home-assistant-voice.yaml`. Things to check for if you want to verify the telemetry claim: no `mqtt:` block. The only network activity beyond the standard ESPHome API connection to Home Assistant is `audio_http`, which is used to stream TTS and media audio — the same mechanism used by the stock VPE firmware.
+Both the integration and the firmware source are public and can be inspected before installing. For the integration, the modules listed below show exactly what each file does. For the firmware, the full YAML is at [alistairmerritt/pivot-firmware](https://github.com/alistairmerritt/pivot-firmware) — specifically `home-assistant-voice.yaml`.
+
+To verify the telemetry claim yourself: there is no `mqtt:` block, and the only outbound network activity beyond the standard ESPHome API connection to Home Assistant is `audio_http`, which streams TTS and media audio — the same mechanism used by the stock VPE firmware.
 
 * * *
 
