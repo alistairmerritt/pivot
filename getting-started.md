@@ -105,7 +105,7 @@ Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmwar
 packages:
   pivot:
     url: https://github.com/alistairmerritt/pivot-firmware
-    ref: main
+    ref: v0.0.23
     file: home-assistant-voice.yaml
     refresh: 1d
 </code></pre>
