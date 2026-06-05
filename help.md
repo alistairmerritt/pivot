@@ -342,8 +342,8 @@ Work through these in order:
 
 1. **Check bank assignment** — go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
 2. **Check Control Mode is on** — the button only toggles entities in Control Mode. Double press to toggle it on.
-3. **Check the integration is up to date** — button toggle is handled natively by the integration (v0.0.59+). If you are on an older version, update via HACS and restart Home Assistant.
-4. **Check firmware is up to date** — the integration handles the toggle from the `button_press_event` entity. If your firmware predates v0.0.15, reflash via ESPHome → Install → Wirelessly.
+3. **Check the integration is up to date** — button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
+4. **Check firmware is up to date** — open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
 
 ---
 
@@ -422,8 +422,8 @@ Is the VPE showing a revolving blue LED pattern?
             │
             Does pressing the button toggle the entity?
             ├── No
-            │   ├── Check integration is v0.0.59 or later
-            │   └── Check firmware is v0.0.15 or later
+            │   ├── Update integration via HACS
+            │   └── Update firmware via ESPHome Device Builder
             │
             └── Yes — everything is working
 ```

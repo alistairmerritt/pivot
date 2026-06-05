@@ -53,7 +53,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | `text.{device_suffix}_tts_entity` | TTS service used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
 | `text.{device_suffix}_media_player_entity` | Speaker used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
 
-> **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). The knob has no effect on a timer bank — the LED gauge is managed entirely by the blueprint. Any other value is treated as a Home Assistant entity ID.
+> **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). When the timer is idle, the knob sets the duration — turning it adjusts the countdown length and announces the selected time when the knob settles. While running, the LED gauge shows the remaining time as a live countdown managed by the blueprint. Any other value is treated as a Home Assistant entity ID.
 
 > **TTS and media player entities** are written automatically from the values you configure in the integration settings (**Settings → Devices & Services → Pivot → your device → Configure**). The announcement logic and Timer blueprint read from these entities at runtime — you only need to set TTS and speaker once, in the configure dialog.
 

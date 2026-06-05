@@ -55,7 +55,7 @@ This is the most important field. It must be:
 - Lowercase, no spaces, no dashes (underscores are fine)
 - Identical to what you enter in the Pivot HA integration setup
 
-It determines all entity IDs — for example `ha_voice_lounge` produces `number.ha_voice_lounge_active_bank`, `text.ha_voice_lounge_bank_0_entity`, etc.
+It determines all entity IDs — for example `ha_voice_lounge` produces `number.ha_voice_lounge_active_bank`, `text.ha_voice_lounge_bank_1_entity`, etc.
 
 ---
 
