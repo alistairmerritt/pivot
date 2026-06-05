@@ -53,26 +53,26 @@ This is required for the Pivot firmware to call scripts and send events to Home 
 
 ## Step 3. Flash the Pivot firmware
 
-> **Installing custom firmware is safe and reversible.** Pivot firmware is based on the official Home Assistant Voice PE firmware and has been tested extensively, but as with any custom firmware there is a small element of risk. If anything goes wrong, you can always restore the original stock firmware by visiting [esphome.github.io/home-assistant-voice-pe](https://esphome.github.io/home-assistant-voice-pe/) and flashing it from your browser—no tools required.
+> **Installing custom firmware is safe and reversible.** Pivot firmware is based on the official Home Assistant Voice PE firmware and has been tested extensively, but as with any custom firmware there is a small element of risk. If anything goes wrong, you can always restore the original stock firmware by visiting [esphome.github.io/home-assistant-voice-pe](https://esphome.github.io/home-assistant-voice-pe/) and flashing it from your browser–no tools required.
 
 <ol>
 <li><p><strong>Take control of your VPE in ESPHome Device Builder.</strong><br>
 If you don't already have ESPHome Device Builder installed, install it via <strong>Settings → Applications → Add Application</strong>.</p>
 
-<p>When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices—click <strong>Show</strong> in the top right corner if you don't see it.</p>
+<p>When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices–click <strong>Show</strong> in the top right corner if you don't see it.</p>
 
 <blockquote><strong>Not sure which device is yours?</strong> If you have multiple VPEs, ESPHome names them by the last 6 characters of their MAC address (e.g. <code>Home-Assistant-Voice-052B5D</code>). To find the MAC address of a specific device, go to <strong>Settings → Devices &amp; Services → ESPHome</strong>, select the device, and look in the left column.</blockquote>
 
-<p>Click <strong>Take Control</strong> and give it a name. ESPHome will offer to install its own firmware—you can skip this as it will be replaced by Pivot firmware in the next step.</p>
+<p>Click <strong>Take Control</strong> and give it a name. ESPHome will offer to install its own firmware–you can skip this as it will be replaced by Pivot firmware in the next step.</p>
 
-<blockquote><strong>Save your encryption key.</strong> When you take control, ESPHome shows the device's API encryption key. Copy this and keep it somewhere safe—you'll need it in the next step. Alternatively, generate a fresh one at <a href="https://esphome.io/components/api.html#configuration-variables">esphome.io</a>.</blockquote></li>
+<blockquote><strong>Save your encryption key.</strong> When you take control, ESPHome shows the device's API encryption key. Copy this and keep it somewhere safe–you'll need it in the next step. Alternatively, generate a fresh one at <a href="https://esphome.io/components/api.html#configuration-variables">esphome.io</a>.</blockquote></li>
 
 <li><p><strong>Create your per-device config.</strong><br>
 Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml"><code>devices/example.yaml</code></a> in the firmware repo (or the code block below) and paste it into ESPHome, replacing the stock YAML. Fill in your device-specific values:</p>
 
 <pre><code>substitutions:
   # =======================================================================
-  # PIVOT DEVICE CONFIGURATION—fill in these values for each device
+  # PIVOT DEVICE CONFIGURATION–fill in these values for each device
   # =======================================================================
 
   # ESPHome device name (slug, no spaces or dashes)
@@ -81,17 +81,17 @@ Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmwar
   # Friendly name shown in HA and ESPHome
   device_friendly_name: Lounge VPE
 
-  # Pivot device suffix—unique per device, no spaces or dashes
+  # Pivot device suffix–unique per device, no spaces or dashes
   # Must match exactly what you enter in the Pivot integration
   device_suffix: ha_voice_lounge
 
-  # WiFi credentials—add these lines to your ESPHome secrets.yaml:
+  # WiFi credentials–add these lines to your ESPHome secrets.yaml:
   #   wifi_ssid: "Your Network Name"
   #   wifi_password: "Your Password"
   wifi_ssid: !secret wifi_ssid
   wifi_password: !secret wifi_password
 
-  # API encryption key—use the one from Take Control, or generate one at:
+  # API encryption key–use the one from Take Control, or generate one at:
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "your-key-here"
 
@@ -110,24 +110,24 @@ packages:
     refresh: 1d
 </code></pre>
 
-<p>The <code>packages:</code> block at the bottom tells ESPHome to fetch the full firmware from GitHub automatically—do not paste the contents of <code>home-assistant-voice.yaml</code> directly.</p>
+<p>The <code>packages:</code> block at the bottom tells ESPHome to fetch the full firmware from GitHub automatically–do not paste the contents of <code>home-assistant-voice.yaml</code> directly.</p>
 
 <p>The <code>device_suffix</code> must be unique per device with no spaces or dashes. You will enter this exact value when setting up the Pivot integration.</p>
 
 <blockquote><strong>WiFi credentials:</strong> The config uses <code>!secret</code> to keep credentials out of the YAML. Add <code>wifi_ssid</code> and <code>wifi_password</code> to your ESPHome <strong>Secrets</strong> file (the key icon in ESPHome Device Builder). If you prefer, you can paste the values directly as plain text instead.</blockquote>
 
-<blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code> and <code>api_encryption_key</code> somewhere safe. You will need both—the suffix when adding the Pivot integration, and the key if Home Assistant ever asks for it.</blockquote></li>
+<blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code> and <code>api_encryption_key</code> somewhere safe. You will need both–the suffix when adding the Pivot integration, and the key if Home Assistant ever asks for it.</blockquote></li>
 
-<li><p><strong>Connect your VPE via USB</strong> for the initial flash—use a good quality cable. OTA (wireless) is used for all future updates once the device is running Pivot firmware.</p>
+<li><p><strong>Connect your VPE via USB</strong> for the initial flash–use a good quality cable. OTA (wireless) is used for all future updates once the device is running Pivot firmware.</p>
 
 <blockquote><strong>Tip:</strong> There is a small switch inside the VPE case labelled <strong>USB SELECT</strong> with two positions: <strong>ESP32</strong> and <strong>XU316</strong>. It should be in the <strong>ESP32</strong> position by default. If your device is not detected when connected via USB, open the case and check this switch. Follow <a href="https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition">Step 1 of the Nabu Casa disassembly guide</a> to access it.</blockquote></li>
 
 <li>Click <strong>Install → Plug into this computer</strong>. ESPHome will fetch the firmware from GitHub, compile it, and flash it. This may take 5–10 minutes the first time.</li>
 
-<li>Once flashed, <strong>fully power cycle your VPE</strong>—disconnect from power, wait a few seconds, then reconnect. The device will reconnect to Home Assistant automatically.</li>
+<li>Once flashed, <strong>fully power cycle your VPE</strong>–disconnect from power, wait a few seconds, then reconnect. The device will reconnect to Home Assistant automatically.</li>
 </ol>
 
-> **Future updates**—once your device is running Pivot firmware and is online, all future updates are wireless. When a new firmware version is released, just open the device in ESPHome Device Builder and click **Install → Wirelessly**. 
+> **Future updates**–once your device is running Pivot firmware and is online, all future updates are wireless. When a new firmware version is released, just open the device in ESPHome Device Builder and click **Install → Wirelessly**. 
 
 
 ---
@@ -147,11 +147,11 @@ packages:
 1. Go to **Settings → Devices & Services → Add Integration** and search for **Pivot**
 2. Select your VPE from the dropdown
 3. Confirm the firmware and enter the `device_suffix` you used in the firmware YAML
-4. Optionally configure announcements—enable **spoken announcements**, then select a text-to-speech service (TTS) and speaker. This allows Pivot to speak feedback such as bank changes. These settings are also used by the Timer blueprint.
+4. Optionally configure announcements–enable **spoken announcements**, then select a text-to-speech service (TTS) and speaker. This allows Pivot to speak feedback such as bank changes. These settings are also used by the Timer blueprint.
 
 Pivot will now connect to your device and enable control of the entities you assign in Step 6.
 
-> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_1_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name**—not its **Entity ID**.
+> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs (e.g. `number.{device_suffix}_bank_1_value`). Renaming these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name**–not its **Entity ID**.
 
 ---
 
@@ -163,7 +163,7 @@ Pivot will now connect to your device and enable control of the entities you ass
 
 The knob will now control each bank's assigned entity value. Button presses will toggle or activate the assigned entity.
 
-> **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default—you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
+> **Optional timer support:** A timer can be set up per device using the **Timer banks** selector on the bank assignment screen. See the [Timer page](/pivot/timer/) for full setup instructions. Timers are not enabled by default–you’ll need to enable them manually. If this is your first time setting up Pivot, you can come back to timer support later. Configuration can be changed at any time.
 
 > **Skipped the entity assignment screen?** You can still assign entities at any time by either setting the `text.{device_suffix}_bank_N_entity` entities directly from your Pivot device page or in your device configuration settings.
 
@@ -173,26 +173,26 @@ Pivot is now set up and ready to use. Turn the knob to control the active bank's
 
 ## Step 7. Optional: Set up a timer
 
-Pivot includes optional timer blueprints. These are not required for normal Pivot control. Blueprints are hosted on GitHub and imported via URL into Home Assistant—when you first add a Pivot device, a notification appears with the import links.
+Pivot includes optional timer blueprints. These are not required for normal Pivot control. Blueprints are hosted on GitHub and imported via URL into Home Assistant–when you first add a Pivot device, a notification appears with the import links.
 
 Timers are not enabled by default. Before setting up these blueprints, go to your Pivot device in Home Assistant and enable the required timer entities. See the [Timer page](/pivot/timer/) for full setup instructions.
 
 | Blueprint | Type | Required? | What it does |
 | --- | --- | --- | --- |
 | **Pivot - Timer Control** | Automation | Yes | Required for the timer alarm to fire. Also handles start, pause, resume, LED countdown gauge, and physical button control when a bank is assigned. Set Bank Number to `0` for voice-only use with no bank assigned. |
-| **Pivot - Timer - Voice** | Automation | Optional | Voice control for the timer via Home Assistant Assist—set, pause, resume, cancel, and query remaining time by voice. Requires Timer Control. Bank assignment not required. |
+| **Pivot - Timer - Voice** | Automation | Optional | Voice control for the timer via Home Assistant Assist–set, pause, resume, cancel, and query remaining time by voice. Requires Timer Control. Bank assignment not required. |
 | **Pivot - Timer Toggle Script** | Script | Optional | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
 
-**Pivot - Timer Control** is required for the timer alarm to fire. Set Bank Number to `0` if you have no bank assigned—the alarm and TTS still work, but the LED gauge and physical button control are not available.  
-**Pivot - Timer - Voice** is optional—install it if you want to control the timer by voice. Requires Timer Control to be running (for the alarm to fire), but does not require a bank to be assigned.  
-**Pivot - Timer Toggle Script** is optional—install it if you want to control the timer from a dashboard card.
+**Pivot - Timer Control** is required for the timer alarm to fire. Set Bank Number to `0` if you have no bank assigned–the alarm and TTS still work, but the LED gauge and physical button control are not available.  
+**Pivot - Timer - Voice** is optional–install it if you want to control the timer by voice. Requires Timer Control to be running (for the alarm to fire), but does not require a bank to be assigned.  
+**Pivot - Timer Toggle Script** is optional–install it if you want to control the timer from a dashboard card.
 
 ---
 
 ## Next steps
 
-- [Firmware reference](/pivot/firmware/)—full substitutions reference and multi-device setup
-- [Integration reference](/pivot/integration/)—full entity reference and events
-- [Custom Automations](/pivot/automations/)—blueprints and examples for extending Pivot's functionality
-- [Troubleshooting](/pivot/troubleshooting/)—common issues and fixes
-- [Timer setup](/pivot/timer/)—how to set up a countdown timer in Pivot
+- [Firmware reference](/pivot/firmware/)–full substitutions reference and multi-device setup
+- [Integration reference](/pivot/integration/)–full entity reference and events
+- [Custom Automations](/pivot/automations/)–blueprints and examples for extending Pivot's functionality
+- [Troubleshooting](/pivot/troubleshooting/)–common issues and fixes
+- [Timer setup](/pivot/timer/)–how to set up a countdown timer in Pivot
