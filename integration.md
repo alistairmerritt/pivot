@@ -31,7 +31,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | `switch.{device_suffix}_control_mode` | Control Mode vs Normal (voice) Mode |
 | `switch.{device_suffix}_show_control_value` | Keep gauge LEDs permanently visible in control mode |
 | `switch.{device_suffix}_dim_when_idle` | Dim gauge LEDs to 50% after 2 s of inactivity (requires Show Control Value) |
-| `switch.{device_suffix}_announcements` | System Announcements–enable/disable bank-change TTS announcements |
+| `switch.{device_suffix}_announcements` | System Announcements – enable/disable bank-change TTS announcements |
 | `switch.{device_suffix}_mute_announcements` | Temporarily mute all spoken announcements (bank-change, value, triple-press, and timer) without changing other settings |
 | `switch.{device_suffix}_bank_1_mirror_light` | Bank 1–mirror assigned RGB light colour |
 | `switch.{device_suffix}_bank_2_mirror_light` | Bank 2–mirror assigned RGB light colour |
@@ -53,9 +53,9 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | `text.{device_suffix}_tts_entity` | TTS service used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
 | `text.{device_suffix}_media_player_entity` | Speaker used by announcements and the Timer blueprint (diagnostic, written from integration settings) |
 
-> **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). When the timer is idle, the knob sets the duration–turning it adjusts the countdown length and announces the selected time when the knob settles. While running, the LED gauge shows the remaining time as a live countdown managed by the blueprint. Any other value is treated as a Home Assistant entity ID.
+> **Reserved value:** Setting a bank entity to `timer` (lowercase) marks that bank as a timer bank for use with the [Pivot Timer blueprint](/pivot/timer/). When the timer is idle, the knob sets the duration – turning it adjusts the countdown length and announces the selected time when the knob settles. While running, the LED gauge shows the remaining time as a live countdown managed by the blueprint. Any other value is treated as a Home Assistant entity ID.
 
-> **TTS and media player entities** are written automatically from the values you configure in the integration settings (**Settings → Devices & Services → Pivot → your device → Configure**). The announcement logic and Timer blueprint read from these entities at runtime–you only need to set TTS and speaker once, in the configure dialog.
+> **TTS and media player entities** are written automatically from the values you configure in the integration settings (**Settings → Devices & Services → Pivot → your device → Configure**). The announcement logic and Timer blueprint read from these entities at runtime – you only need to set TTS and speaker once, in the configure dialog.
 
 ### Binary sensor entities
 
@@ -73,10 +73,10 @@ These entities are provisioned per device but **disabled by default**. Enable th
 | Entity | Purpose |
 | --- | --- |
 | `number.{device_suffix}_timer_duration` | Timer duration in minutes (1–60, default 25) |
-| `select.{device_suffix}_timer_state` | Timer state–`idle`, `running`, `paused`, or `alerting` (alarm firing) |
-| `text.{device_suffix}_timer_end` | Internal–stores the countdown end time while the timer is running |
+| `select.{device_suffix}_timer_state` | Timer state – `idle`, `running`, `paused`, or `alerting` (alarm firing) |
+| `text.{device_suffix}_timer_end` | Internal – stores the countdown end time while the timer is running |
 
-> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name**–not its **Entity ID**.
+> **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** – not its **Entity ID**.
 
 ---
 
@@ -84,13 +84,13 @@ These entities are provisioned per device but **disabled by default**. Enable th
 
 Each bank has an optional **Mirror light colour** switch (`switch.{device_suffix}_bank_N_mirror_light`). When enabled for a bank that is assigned to an RGB light, the bank's LED ring colour will match the current colour of that light instead of the fixed default bank colour.
 
-- **Mirror on, knob idle**–LED ring uses the light's current RGB colour, updating whenever the light changes.
-- **Mirror on, knob turning (value change)**–the gauge arc shows the light's current colour as it updates the brightness or volume, just as at idle.
-- **Mirror on, bank switching (press + turn)**–the Bank Indicator quadrant shows the bank's configured colour (Blue/Orange/Green/Purple or your custom colour from the picker), not the light colour, so you can tell which bank you are on even when all your lights are the same colour (e.g. white).
-- **Mirror on, light off**–LED ring stays at the last mirrored colour until the light comes back on.
-- **Mirror off**–LED ring shows the colour set in the bank's colour picker. If you haven't changed it, this will be the default bank colour (Blue, Orange, Green, or Purple).
+- **Mirror on, knob idle** – LED ring uses the light's current RGB colour, updating whenever the light changes.
+- **Mirror on, knob turning (value change)** – the gauge arc shows the light's current colour as it updates the brightness or volume, just as at idle.
+- **Mirror on, bank switching (press + turn)** – the Bank Indicator quadrant shows the bank's configured colour (Blue/Orange/Green/Purple or your custom colour from the picker), not the light colour, so you can tell which bank you are on even when all your lights are the same colour (e.g. white).
+- **Mirror on, light off** – LED ring stays at the last mirrored colour until the light comes back on.
+- **Mirror off** – LED ring shows the colour set in the bank's colour picker. If you haven't changed it, this will be the default bank colour (Blue, Orange, Green, or Purple).
 
-This is a persistent per-bank setting, not a temporary effect. It only applies to RGB lights–if the assigned entity is not a compatible RGB light, the bank falls back to its default colour automatically.
+This is a persistent per-bank setting, not a temporary effect. It only applies to RGB lights – if the assigned entity is not a compatible RGB light, the bank falls back to its default colour automatically.
 
 
 ---
@@ -100,9 +100,9 @@ This is a persistent per-bank setting, not a temporary effect. It only applies t
 When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brightness after 2 seconds of no interaction and returns to full brightness the moment you touch the device again.
 
 - **Idle** means no knob turns, button presses, or bank switches for 2 seconds.
-- **Waking** is instant–LEDs snap back to full brightness on the first interaction.
-- **Fading** to dim is smooth–a 1.5 second transition so there is no sudden flicker.
-- This is a **pure brightness modifier**–it does not change colours, values, or any other behaviour.
+- **Waking** is instant – LEDs snap back to full brightness on the first interaction.
+- **Fading** to dim is smooth – a 1.5 second transition so there is no sudden flicker.
+- This is a **pure brightness modifier** – it does not change colours, values, or any other behaviour.
 
 > **Requires Show Control Value to be on.** Dim when idle has no effect if the gauge is not permanently visible. Enable **Show Control Value** first, then enable **Dim LEDs When Idle**.
 
@@ -110,13 +110,13 @@ When **Dim LEDs When Idle** is enabled, the control mode gauge dims to 50% brigh
 
 ## Announcements
 
-Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Announcements are configured directly in the integration–go to **Settings → Devices & Services → Pivot → your device → Configure**, select a text-to-speech service and speaker, and tick **Enable spoken announcements**.
+Pivot can speak the name of the active bank and the current value of a bank's entity via TTS. Announcements are configured directly in the integration – go to **Settings → Devices & Services → Pivot → your device → Configure**, select a text-to-speech service and speaker, and tick **Enable spoken announcements**.
 
 Three announcement types are supported:
 
-- **Bank change**–speaks the assigned entity's name whenever you switch banks (Control Mode only). Requires the **System Announcements** switch to be on.
-- **Triple press**–re-announces the current bank's entity name. Works regardless of the System Announcements switch–only **Mute Announcements** silences it.
-- **Value announcement**–speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{device_suffix}_bank_N_announce_value`)–only banks with this switch on will announce.
+- **Bank change** – speaks the assigned entity's name whenever you switch banks (Control Mode only). Requires the **System Announcements** switch to be on.
+- **Triple press** – re-announces the current bank's entity name. Works regardless of the System Announcements switch – only **Mute Announcements** silences it.
+- **Value announcement** – speaks the entity's current value after the knob settles (~600 ms debounce). Each bank has a dedicated **Announce Value** switch (`switch.{device_suffix}_bank_N_announce_value`) – only banks with this switch on will announce.
 
 Supported domains and what is spoken for value announcements:
 
@@ -129,7 +129,7 @@ Supported domains and what is spoken for value announcements:
 | `fan` | *"Speed 60 percent"* (knob value) |
 | `number` | *"Set to 25 watts"* (entity state + unit) |
 
-Value announcements only fire when the knob is physically turned–changes made by external automations, dashboards, or voice commands are not announced.
+Value announcements only fire when the knob is physically turned – changes made by external automations, dashboards, or voice commands are not announced.
 
 ### Muting announcements
 
@@ -139,21 +139,21 @@ Value announcements only fire when the knob is physically turned–changes made 
 
 ## Supported entity domains
 
-When an assigned entity is changed externally–by a voice command, another dashboard, an automation, or a physical switch–Pivot automatically syncs the new state back into the bank value. The LED gauge will update to reflect the change without any additional configuration.
+When an assigned entity is changed externally – by a voice command, another dashboard, an automation, or a physical switch – Pivot automatically syncs the new state back into the bank value. The LED gauge will update to reflect the change without any additional configuration.
 
 | Domain | Knob (Control Mode) | Button press |
 | --- | --- | --- |
 | `light` | Brightness % | Toggle on/off |
 | `media_player` | Volume (0–100%) | Play/pause |
 | `fan` | Speed % | Toggle on/off |
-| `climate` | Temperature (entity min–max) | Toggle on/off |
+| `climate` | Temperature (entity min – max) | Toggle on/off |
 | `cover` | Position % | Toggle open/close |
-| `input_number` / `number` | Value scaled to entity min–max |–|
-| `switch` / `input_boolean` |–| Toggle |
-| `scene` |–| Activate |
-| `script` |–| Run |
+| `input_number` / `number` | Value scaled to entity min – max | – |
+| `switch` / `input_boolean` | – | Toggle |
+| `scene` | – | Activate |
+| `script` | – | Run |
 
-> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LEDs turn off–there is no value for the knob to control, so nothing is shown. The bank colour ring still appears briefly while pressing and turning to switch banks as normal.
+> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LEDs turn off – there is no value for the knob to control, so nothing is shown. The bank colour ring still appears briefly while pressing and turning to switch banks as normal.
 
 ---
 
@@ -210,9 +210,9 @@ Fired on every button press regardless of mode.
 | `triple_press` | Announces the active bank's assigned entity name via TTS (if announcements configured) |
 | `long_press` | No built-in behaviour |
 
-Automations triggered by these events always stack on top of built-in behaviour–they do not replace it. If you want a press that only runs your automation:
+Automations triggered by these events always stack on top of built-in behaviour – they do not replace it. If you want a press that only runs your automation:
 
-- Use `long_press`–no built-in behaviour regardless of entity assignment
-- Leave the bank entity field empty and use `single_press`–with no entity assigned, Pivot has nothing to toggle
+- Use `long_press` – no built-in behaviour regardless of entity assignment
+- Leave the bank entity field empty and use `single_press` – with no entity assigned, Pivot has nothing to toggle
 
-→ [Custom Automations](/pivot/automations/)–examples and patterns for building your own.
+→ [Custom Automations](/pivot/automations/) – examples and patterns for building your own.

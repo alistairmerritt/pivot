@@ -7,10 +7,10 @@ permalink: /help/
 ## On this page
 
 **[FAQ](#faq)**
-– [General](#general) · [Setup & Installation](#setup--installation) · [Behaviour & Controls](#behaviour--controls) · [Firmware & Updates](#firmware--updates) · [Advanced](#advanced) · [Timer](#timer)
+ –  [General](#general) · [Setup & Installation](#setup--installation) · [Behaviour & Controls](#behaviour--controls) · [Firmware & Updates](#firmware--updates) · [Advanced](#advanced) · [Timer](#timer)
 
 **[Troubleshooting](#troubleshooting)**
-– [Device & flashing](#device--flashing) · [Connection](#connection) · [Integration & entities](#integration--entities) · [Controls](#controls) · [Announcements & timer](#announcements--timer) · [File & config issues](#file--config-issues)
+ –  [Device & flashing](#device--flashing) · [Connection](#connection) · [Integration & entities](#integration--entities) · [Controls](#controls) · [Announcements & timer](#announcements--timer) · [File & config issues](#file--config-issues)
 
 ---
 
@@ -52,14 +52,14 @@ It can also be extended further through automations.
 **Does Pivot replace voice control?**
 No. Pivot preserves the core voice functionality of the Voice Preview Edition, including wake word activation.
 
-You can continue using voice as normal–Pivot simply adds a physical control layer alongside it.
+You can continue using voice as normal – Pivot simply adds a physical control layer alongside it.
 
 ---
 
 **Does Pivot change how voice is triggered?**
 Only while Control Mode is enabled. When Control Mode is on, single press toggles or activates the assigned entity instead of starting the voice assistant. When Control Mode is off (double press to toggle it), single press returns to starting the voice assistant exactly as it does in the stock firmware.
 
-Wake word activation is always available regardless of Control Mode. If you want a manual voice trigger while staying in Control Mode, long press is left open for this purpose–see [Can I use long press to start a voice conversation?](#can-i-use-long-press-to-start-a-voice-conversation) in the Advanced section.
+Wake word activation is always available regardless of Control Mode. If you want a manual voice trigger while staying in Control Mode, long press is left open for this purpose – see [Can I use long press to start a voice conversation?](#can-i-use-long-press-to-start-a-voice-conversation) in the Advanced section.
 
 ---
 
@@ -151,14 +151,14 @@ In Home Assistant:
 ### Advanced
 
 **How can I trigger voice from a button press in Control Mode?**
-Long press is intentionally left open–it is the one press type Pivot does not consume natively, so you can wire it up however you like.
+Long press is intentionally left open – it is the one press type Pivot does not consume natively, so you can wire it up however you like.
 
 A common use is starting a voice conversation on the device without speaking a wake word. To do this, create a Home Assistant automation using the example below, substituting your own device entity IDs.
 
-> **Note:** There is a short pause between the long press and the microphone opening. This is because `assist_satellite.start_conversation` requires a `start_message`–the device speaks it before it starts listening. Even a very short message adds a small TTS round-trip delay. If you leave `start_message` blank, HA will reject the service call. The delay is typically less than a second but is noticeable.
+> **Note:** There is a short pause between the long press and the microphone opening. This is because `assist_satellite.start_conversation` requires a `start_message` – the device speaks it before it starts listening. Even a very short message adds a small TTS round-trip delay. If you leave `start_message` blank, HA will reject the service call. The delay is typically less than a second but is noticeable.
 
 ```yaml
-alias: Pivot–Long Press Start Conversation
+alias: Pivot – Long Press Start Conversation
 description: Long press on any Pivot device starts a voice conversation on that device.
 mode: parallel
 max: 10
@@ -187,7 +187,7 @@ action:
       start_message: " "
 ```
 
-The trigger uses a plain state change (not filtered by `attribute`/`to`) because ESPHome event entities update their timestamp on every press–if you filter by `to: long_press`, the trigger only fires the first time and ignores all subsequent long presses.
+The trigger uses a plain state change (not filtered by `attribute`/`to`) because ESPHome event entities update their timestamp on every press – if you filter by `to: long_press`, the trigger only fires the first time and ignores all subsequent long presses.
 
 > **Tip:** If you use the Timer feature, long press already cancels a running or paused timer via the Timer blueprint. Both automations will fire simultaneously on a long press while a timer is active. To avoid this, add a condition to the conversation automation checking that the timer is not running or paused.
 
@@ -221,7 +221,7 @@ See the [Timer](/pivot/timer/) page for setup instructions.
 ---
 
 **Is the timer built-in?**
-The timer feature is optional and uses additional entities and automations provided by Pivot. It requires a small amount of setup–see the [Timer](/pivot/timer/) page.
+The timer feature is optional and uses additional entities and automations provided by Pivot. It requires a small amount of setup – see the [Timer](/pivot/timer/) page.
 
 ---
 
@@ -231,13 +231,13 @@ The timer feature is optional and uses additional entities and automations provi
 
 ### The device won't appear when connected via USB for flashing
 
-First make sure you are using a good quality USB cable–some cables are charge-only and do not support data transfer. Try a different cable if you have one.
+First make sure you are using a good quality USB cable – some cables are charge-only and do not support data transfer. Try a different cable if you have one.
 
-> **Tip:** There is a small switch inside the VPE case labelled **USB SELECT** with two positions: **ESP32** and **XU316**. It should be in the **ESP32** position by default. If your device is still not being detected, open the case and check this switch. Follow [Step 1 of the Nabu Casa disassembly guide](https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition) to access it–you do not need to go further than Step 1 unless you have a custom case.
+> **Tip:** There is a small switch inside the VPE case labelled **USB SELECT** with two positions: **ESP32** and **XU316**. It should be in the **ESP32** position by default. If your device is still not being detected, open the case and check this switch. Follow [Step 1 of the Nabu Casa disassembly guide](https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition) to access it – you do not need to go further than Step 1 unless you have a custom case.
 
 ---
 
-### Something went wrong with the firmware–how do I recover?
+### Something went wrong with the firmware – how do I recover?
 
 You can always restore the original stock Home Assistant Voice PE firmware by visiting [esphome.github.io/home-assistant-voice-pe](https://esphome.github.io/home-assistant-voice-pe/) in your browser and following the on-screen instructions. No tools or ESPHome installation required.
 
@@ -247,7 +247,7 @@ You can always restore the original stock Home Assistant Voice PE firmware by vi
 
 This happens when the `device_name` substitution in your device YAML includes the `.yaml` file extension. ESPHome device names cannot contain dots.
 
-Open your device YAML in ESPHome and find the `substitutions:` block. The `device_name` value should be the name only–no extension, lowercase, using hyphens or underscores:
+Open your device YAML in ESPHome and find the `substitutions:` block. The `device_name` value should be the name only – no extension, lowercase, using hyphens or underscores:
 
 ```yaml
 substitutions:
@@ -265,15 +265,15 @@ Remove the `.yaml` suffix, save, and retry the build.
 
 The revolving blue light pattern means the device is trying to connect but hasn't succeeded yet. There are two likely causes:
 
-**Encryption key mismatch**–check **Settings → Notifications** in Home Assistant. If there is an alert asking you to reconfigure a device, open it and enter the `api_encryption_key` from your firmware YAML's substitutions block.
+**Encryption key mismatch** – check **Settings → Notifications** in Home Assistant. If there is an alert asking you to reconfigure a device, open it and enter the `api_encryption_key` from your firmware YAML's substitutions block.
 
-**WiFi credentials issue**–if there is no notification in Home Assistant, the device may not be reaching your network at all. Open your firmware YAML in ESPHome and double-check that your `wifi_ssid` and `wifi_password` are correct, then reflash.
+**WiFi credentials issue** – if there is no notification in Home Assistant, the device may not be reaching your network at all. Open your firmware YAML in ESPHome and double-check that your `wifi_ssid` and `wifi_password` are correct, then reflash.
 
 ---
 
 ### The device won't connect to Home Assistant after flashing
 
-After flashing the Pivot firmware for the first time, **fully power cycle your VPE**–disconnect it from power completely, wait a few seconds, then reconnect. A simple restart is not always enough. The device should then reconnect and appear in Home Assistant automatically.
+After flashing the Pivot firmware for the first time, **fully power cycle your VPE** – disconnect it from power completely, wait a few seconds, then reconnect. A simple restart is not always enough. The device should then reconnect and appear in Home Assistant automatically.
 
 ---
 
@@ -285,11 +285,11 @@ If your device isn't showing up in ESPHome, you may need to take control of it f
 
 ### Home Assistant asks for an encryption key
 
-When Home Assistant asks for an encryption key, open your firmware YAML file and copy the `api_encryption_key` value from the substitutions block–paste that directly into the box Home Assistant is showing you.
+When Home Assistant asks for an encryption key, open your firmware YAML file and copy the `api_encryption_key` value from the substitutions block – paste that directly into the box Home Assistant is showing you.
 
 ---
 
-### The device suffix mismatch–entities have wrong IDs
+### The device suffix mismatch – entities have wrong IDs
 
 The `device_suffix` in your firmware YAML must match exactly what you entered in the integration setup. If they don't match, the firmware and integration will use mismatched entity IDs and won't communicate.
 
@@ -320,7 +320,7 @@ Start here before anything else:
 
 1. Go to **Settings → Devices & Services → ESPHome → your VPE → ⚙️ Configure** and confirm **Allow the device to perform Home Assistant actions** is ticked. Without this, the firmware cannot call scripts or send events to Home Assistant.
 2. Go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm at least one bank has an entity assigned.
-3. Make sure you are in **Control Mode**–double press the button to toggle it on. The LED ring should change to show the active bank colour.
+3. Make sure you are in **Control Mode** – double press the button to toggle it on. The LED ring should change to show the active bank colour.
 
 ---
 
@@ -330,18 +330,18 @@ Start here before anything else:
 
 Work through these in order:
 
-1. **Check bank assignment**–go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check the entity domain**–the entity must be a supported type: light, fan, media player, climate, or cover. Scenes and scripts are passive (knob does nothing, button only).
-3. **Check Control Mode is on**–go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
+1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
+2. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, or cover. Scenes and scripts are passive (knob does nothing, button only).
+3. **Check Control Mode is on** – go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
 
 ---
 
 ### The button press does nothing
 
-1. **Check bank assignment**–go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check Control Mode is on**–the button only toggles entities in Control Mode. Double press to toggle it on.
-3. **Check the integration is up to date**–button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
-4. **Check firmware is up to date**–open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
+1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
+2. **Check Control Mode is on** – the button only toggles entities in Control Mode. Double press to toggle it on.
+3. **Check the integration is up to date** – button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
+4. **Check firmware is up to date** – open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
 
 ---
 
@@ -351,13 +351,13 @@ Work through these in order:
 
 1. Go to **Settings → Devices & Services → Pivot → your device** and check that the **Announcements** switch is on.
 2. Go to **Configure** on the integration and confirm a text-to-speech service and speaker are selected, and that **Enable spoken announcements** is ticked.
-3. Test your TTS service independently–go to **Developer Tools → Actions**, find `tts.speak`, select your TTS entity and media player, and send a test message. If this doesn't work, the issue is with your TTS setup rather than Pivot.
+3. Test your TTS service independently – go to **Developer Tools → Actions**, find `tts.speak`, select your TTS entity and media player, and send a test message. If this doesn't work, the issue is with your TTS setup rather than Pivot.
 
 ---
 
 ### The timer blueprint triggers when I turn the knob on a bank with a real entity
 
-This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint requires the bank to be set as a timer bank before it will respond–this prevents it from interfering with normally-assigned banks.
+This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint requires the bank to be set as a timer bank before it will respond – this prevents it from interfering with normally-assigned banks.
 
 To fix: go to **Settings → Devices & Services → Pivot → your device → Configure**, step through to the **Bank Entity Assignment** screen, select the correct bank under **Timer bank (optional)**, and save. This clears the entity assignment for that bank automatically.
 
@@ -367,7 +367,7 @@ To fix: go to **Settings → Devices & Services → Pivot → your device → Co
 
 1. Make sure all three timer entities are enabled: `number.{device_suffix}_timer_duration`, `select.{device_suffix}_timer_state`, and `text.{device_suffix}_timer_end`. All three must be enabled for the blueprint to work.
 2. Check the bank entity for the timer bank is set to `timer` (not left blank or set to a real entity).
-3. Confirm the timer automation is enabled–go to **Settings → Automations** and check it is toggled on.
+3. Confirm the timer automation is enabled – go to **Settings → Automations** and check it is toggled on.
 4. The gauge updates every 30 seconds, not continuously. A brief delay before the first update is normal.
 
 ---
@@ -379,14 +379,14 @@ To fix: go to **Settings → Devices & Services → Pivot → your device → Co
 Blueprint files are installed automatically when the integration is set up. If they are missing:
 
 1. Go to **Settings → Devices & Services → Pivot → your device** and click the ⋮ menu → **Reload**.
-2. Check `/config/blueprints/automation/pivot/` and `/config/blueprints/script/pivot/`–the files should appear after a reload.
+2. Check `/config/blueprints/automation/pivot/` and `/config/blueprints/script/pivot/` – the files should appear after a reload.
 3. If they still don't appear, remove and re-add the integration.
 
 ---
 
 ### The `device_suffix` field is greyed out or pre-filled with the wrong value
 
-The config flow pre-fills `device_suffix` based on the ESPHome device name. If the pre-filled value does not match your firmware's actual suffix, clear the field and type the suffix manually–it must match the `device_suffix` substitution in your ESPHome YAML exactly.
+The config flow pre-fills `device_suffix` based on the ESPHome device name. If the pre-filled value does not match your firmware's actual suffix, clear the field and type the suffix manually – it must match the `device_suffix` substitution in your ESPHome YAML exactly.
 
 ---
 
@@ -416,12 +416,12 @@ Is the VPE showing a revolving blue LED pattern?
         │   ├── Check the entity type is supported (light, fan, media player, climate, cover)
         │   └── Check "Allow device to perform HA actions" is enabled in ESPHome integration
         │
-        └── Yes–knob works
+        └── Yes – knob works
             │
             Does pressing the button toggle the entity?
             ├── No
             │   ├── Update integration via HACS
             │   └── Update firmware via ESPHome Device Builder
             │
-            └── Yes–everything is working
+            └── Yes – everything is working
 ```

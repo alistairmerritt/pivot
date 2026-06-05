@@ -18,13 +18,13 @@ permalink: /changelog/
 
 ## Integration
 
-> **Blueprints are updated independently of the integration.** Import them directly from GitHub–see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+> **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
 
 <details markdown="1">
 <summary>v0.0.82</summary>
 
 - **Fix:** Setup notification is now shown only once. The flag is stored in the config entry after the notification is sent, so it is never recreated on subsequent restarts even if dismissed.
-- **Fix:** Switch states (e.g. Show Control Value, Dim LEDs When Idle) are now re-published to the firmware after Home Assistant finishes starting. The ESPHome device subscribes via WebSocket and may receive `unavailable` during startup before state is restored–the re-publish ensures it receives the correct value once HA is ready.
+- **Fix:** Switch states (e.g. Show Control Value, Dim LEDs When Idle) are now re-published to the firmware after Home Assistant finishes starting. The ESPHome device subscribes via WebSocket and may receive `unavailable` during startup before state is restored – the re-publish ensures it receives the correct value once HA is ready.
 - **New (Timer Toggle script blueprint):** Dashboard timer button now switches to the timer bank before firing the press if the device is currently on a different bank. Requires re-importing the Pivot Timer Toggle script blueprint.
 
 
@@ -33,14 +33,14 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.81</summary>
 
-- **New (Timer blueprint):** Display Persistent Value (`show_control_value`) is now automatically turned on when the timer starts or resumes, and restored to its previous state when the timer ends, is cancelled, or auto-cancels after 15 minutes of being paused. If it was already on before the timer started, it stays on afterwards. Requires re-importing the Pivot–Timer Control blueprint.
+- **New (Timer blueprint):** Display Persistent Value (`show_control_value`) is now automatically turned on when the timer starts or resumes, and restored to its previous state when the timer ends, is cancelled, or auto-cancels after 15 minutes of being paused. If it was already on before the timer started, it stays on afterwards. Requires re-importing the Pivot – Timer Control blueprint.
 
 </details>
 
 <details markdown="1">
 <summary>v0.0.80</summary>
 
-- **Change:** Blueprints are no longer bundled with the integration. They are now hosted publicly on GitHub and imported via URL–see the [Timer page](/timer#import-the-blueprints) for import links. Re-importing picks up any updates without needing an integration release. A setup notification now appears when a new device is added, linking directly to the import URLs.
+- **Change:** Blueprints are no longer bundled with the integration. They are now hosted publicly on GitHub and imported via URL – see the [Timer page](/timer#import-the-blueprints) for import links. Re-importing picks up any updates without needing an integration release. A setup notification now appears when a new device is added, linking directly to the import URLs.
 
 </details>
 
@@ -54,7 +54,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.78</summary>
 
-- **Fix:** Climate and cover value announcements now speak the commanded value rather than reading from the entity attribute. Previously the announcement fired ~200 ms after the debounced service call, which was not enough time for cloud devices to confirm the new state–so the spoken temperature or position was always the previous value. Climate now computes the target temperature from the knob position using the entity's min/max range; cover announces the commanded position directly.
+- **Fix:** Climate and cover value announcements now speak the commanded value rather than reading from the entity attribute. Previously the announcement fired ~200 ms after the debounced service call, which was not enough time for cloud devices to confirm the new state – so the spoken temperature or position was always the previous value. Climate now computes the target temperature from the knob position using the entity's min/max range; cover announces the commanded position directly.
 
 </details>
 
@@ -100,9 +100,9 @@ permalink: /changelog/
 - **Fix:** ESPHome device hostname is now URL-encoded when building the device configuration link. Devices with hyphens, dots, or other special characters in their name no longer produce a malformed link in the device page.
 - **Fix:** Config flow now fails clearly if the ESPHome device name cannot be read from the config entry, instead of silently falling back to a wrong suffix and misconfiguring the device.
 - **Change:** Config flow suffix field now pre-fills with the suffix detected from the selected ESPHome device, so it does not need to be re-typed.
-- **Internal:** Translations file (`translations/en.json`) added–config flow steps, field labels, error messages, and abort reasons now appear correctly in the HA UI.
+- **Internal:** Translations file (`translations/en.json`) added – config flow steps, field labels, error messages, and abort reasons now appear correctly in the HA UI.
 - **Internal:** `__init__.py` split into focused modules (`bank_control`, `button`, `mirror`, `blueprints`, `announcements`, `entity_mappings`). No change in behaviour.
-- **Internal:** `PASSIVE_DOMAINS` consolidated into a single definition in `const.py`–previously duplicated in four places.
+- **Internal:** `PASSIVE_DOMAINS` consolidated into a single definition in `const.py` – previously duplicated in four places.
 
 
 </details>
@@ -110,7 +110,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.72</summary>
 
-- **Fix:** Climate temperature mapping now reads `min_temp`, `max_temp`, and `target_temp_step` directly from the thermostat entity's attributes instead of assuming a hardcoded 16–30 °C range. Works correctly with Fahrenheit thermostats, non-standard ranges, and any step size–no configuration required.
+- **Fix:** Climate temperature mapping now reads `min_temp`, `max_temp`, and `target_temp_step` directly from the thermostat entity's attributes instead of assuming a hardcoded 16–30 °C range. Works correctly with Fahrenheit thermostats, non-standard ranges, and any step size – no configuration required.
 - **Change:** All legacy migration code that read and wrote `scripts.yaml` and `automations.yaml` has been removed. This eliminates a category of fragile file-mutation behaviour that was a holdover from the removed Automatic (managed) mode.
 
 
@@ -119,7 +119,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.71</summary>
 
-- **Fix:** Turning off **System Announcements** no longer silences value announcements (knob turn). System Announcements and Value Announcements are independent–System Announcements controls bank change and control mode spoken announcements only; per-bank Announce Value switches control value announcements. These were incorrectly coupled.
+- **Fix:** Turning off **System Announcements** no longer silences value announcements (knob turn). System Announcements and Value Announcements are independent – System Announcements controls bank change and control mode spoken announcements only; per-bank Announce Value switches control value announcements. These were incorrectly coupled.
 - **Fix:** `input_number` entities now correctly trigger value announcements and speak their value with unit after the knob settles. They were inadvertently excluded from the announcement domain list despite being a fully supported active domain.
 - **Fix:** Switching to a timer bank while the timer is idle no longer causes a spurious write back to the timer duration. A missing sync context meant the bank value update was treated as a physical knob turn, producing a rounding-affected duration write and a false `pivot_timer_duration_set` event.
 - **Fix:** Minimum required Home Assistant version corrected to 2024.4.0 in HACS metadata (was incorrectly listed as 2024.1.0, which could lead to a confusing install failure on older versions).
@@ -130,7 +130,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.70</summary>
 
-- **Fix:** Switching to a timer bank now announces "Timer" correctly. The bank change announcement was skipped for timer banks because the bank entity value `timer` contains no dot–which was the guard used to detect a real entity. Timer banks are now handled separately and announce "Timer" explicitly.
+- **Fix:** Switching to a timer bank now announces "Timer" correctly. The bank change announcement was skipped for timer banks because the bank entity value `timer` contains no dot – which was the guard used to detect a real entity. Timer banks are now handled separately and announce "Timer" explicitly.
 
 
 </details>
@@ -138,7 +138,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.69</summary>
 
-- **Fix:** Value announcements (knob turn) now fire correctly. `hass.async_call_later` is not a valid method on the `hass` object–the debounce call threw an exception on every knob turn, silently preventing announcements. Replaced with `async_call_later(hass, delay, callback)` from `homeassistant.helpers.event`.
+- **Fix:** Value announcements (knob turn) now fire correctly. `hass.async_call_later` is not a valid method on the `hass` object – the debounce call threw an exception on every knob turn, silently preventing announcements. Replaced with `async_call_later(hass, delay, callback)` from `homeassistant.helpers.event`.
 
 
 </details>
@@ -146,7 +146,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.68</summary>
 
-- **Change:** Announcements are now handled natively by the integration. The **Pivot–Announce** blueprint has been removed. To enable announcements, go to **Settings → Devices & Services → Pivot → your device → Configure**, pick a TTS service and speaker, and tick **Enable spoken announcements**. The integration announces bank names on bank change and triple press, and speaks entity values after the knob settles (gated per-bank by the Announce Value switches). The same TTS and speaker settings are shared with the Timer blueprint.
+- **Change:** Announcements are now handled natively by the integration. The **Pivot – Announce** blueprint has been removed. To enable announcements, go to **Settings → Devices & Services → Pivot → your device → Configure**, pick a TTS service and speaker, and tick **Enable spoken announcements**. The integration announces bank names on bank change and triple press, and speaks entity values after the knob settles (gated per-bank by the Announce Value switches). The same TTS and speaker settings are shared with the Timer blueprint.
 
 
 </details>
@@ -170,7 +170,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.64</summary>
 
-- **Fix:** **Pivot–Timer** blueprint no longer triggers start/pause on button presses from non-timer banks. The single press condition now checks that the pressed bank matches the timer bank number.
+- **Fix:** **Pivot – Timer** blueprint no longer triggers start/pause on button presses from non-timer banks. The single press condition now checks that the pressed bank matches the timer bank number.
 
 
 </details>
@@ -178,7 +178,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.63</summary>
 
-- **Debug:** Added detailed debug logging to the button press listener–logs which entity is being watched, skipped reconnect transitions, and the resolved press type, control mode, and bank entity on every press.
+- **Debug:** Added detailed debug logging to the button press listener – logs which entity is being watched, skipped reconnect transitions, and the resolved press type, control mode, and bank entity on every press.
 
 
 </details>
@@ -195,7 +195,7 @@ permalink: /changelog/
 <summary>v0.0.61</summary>
 
 - **Fix:** Button event entity lookup now uses `device_class: button` instead of a string match on the entity ID, making it reliable regardless of how the ESPHome device is named in HA. Falls back to any `event`-domain entity on the device if device class is absent.
-- **Fix:** Added fallback device_id lookup for config entries set up before `device_id` was stored–resolves via the ESPHome device name. Failures are now logged at WARNING level instead of being silently dropped.
+- **Fix:** Added fallback device_id lookup for config entries set up before `device_id` was stored – resolves via the ESPHome device name. Failures are now logged at WARNING level instead of being silently dropped.
 
 
 </details>
@@ -211,7 +211,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.59</summary>
 
-- **Change:** Button toggle is now handled natively by the integration–the **Pivot–Bank Toggle** script blueprint is no longer needed. Requires a firmware reflash (v0.0.15+). Existing users: delete the `{suffix}_bank_toggle` script from Home Assistant after reflashing.
+- **Change:** Button toggle is now handled natively by the integration – the **Pivot – Bank Toggle** script blueprint is no longer needed. Requires a firmware reflash (v0.0.15+). Existing users: delete the `{suffix}_bank_toggle` script from Home Assistant after reflashing.
 
 
 </details>
@@ -219,7 +219,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.58</summary>
 
-- **Change:** **Pivot–Timer** blueprint no longer requires a Bank Number input. The blueprint automatically detects which bank is reserved as a timer by reading the bank entity text entities at runtime. If no timer bank is reserved when the automation is created, the blueprint is inert and activates automatically once one is assigned–no changes to the blueprint needed.
+- **Change:** **Pivot – Timer** blueprint no longer requires a Bank Number input. The blueprint automatically detects which bank is reserved as a timer by reading the bank entity text entities at runtime. If no timer bank is reserved when the automation is created, the blueprint is inert and activates automatically once one is assigned – no changes to the blueprint needed.
 
 
 </details>
@@ -228,8 +228,8 @@ permalink: /changelog/
 <summary>v0.0.57</summary>
 
 - **New:** TTS service and media player are now configured once in the integration settings and shared automatically across all blueprints. Two new diagnostic text entities (`text.{device_suffix}_tts_entity`, `text.{device_suffix}_media_player_entity`) are written from the config entry on every setup and reload.
-- **Change:** **Pivot–Timer** blueprint no longer has a TTS Entity input–TTS is read automatically from the integration settings.
-- **Change:** "Speak bank and mode changes" toggle removed from the configure dialog. The System Announcements switch (`switch.{device_suffix}_announcements`) now uses normal restore behaviour–defaults on at first creation, then user-controlled from the device page.
+- **Change:** **Pivot – Timer** blueprint no longer has a TTS Entity input – TTS is read automatically from the integration settings.
+- **Change:** "Speak bank and mode changes" toggle removed from the configure dialog. The System Announcements switch (`switch.{device_suffix}_announcements`) now uses normal restore behaviour – defaults on at first creation, then user-controlled from the device page.
 
 
 </details>
@@ -237,7 +237,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.54</summary>
 
-- **Fix:** Blueprint files are now bundled inside `custom_components/pivot/blueprints/` so HACS ships them correctly. Previously they lived at the repo root (`blueprints/`) which HACS does not install–`_install_blueprints` was silently copying nothing.
+- **Fix:** Blueprint files are now bundled inside `custom_components/pivot/blueprints/` so HACS ships them correctly. Previously they lived at the repo root (`blueprints/`) which HACS does not install – `_install_blueprints` was silently copying nothing.
 - **Change:** Legacy per-device blueprint files (e.g. `pivot_ha_voice_orange_announcements.yaml`) and backup files (`automations.yaml.pivot_backup`, `scripts.yaml.pivot_backup`) left by a previous Automatic mode installation are now removed automatically on startup.
 
 
@@ -256,7 +256,7 @@ permalink: /changelog/
 
 - **Change:** Automatic (managed) mode removed. The integration no longer writes to `scripts.yaml`, `automations.yaml`, or `/config/pivot/`. Any device previously configured in Automatic mode is migrated to Blueprint mode automatically on next restart, and the files Pivot wrote are cleaned up.
 - **New:** `pivot_bank_changed` event added. Fired whenever the active bank changes, with `suffix`, `bank`, and `bank_entity` fields.
-- **Fix:** Value announcements no longer fire when an entity is changed externally (motion, dashboard, automation). The `pivot_knob_turn` event now only fires when the change originates from a physical knob turn–detected via `context.parent_id`.
+- **Fix:** Value announcements no longer fire when an entity is changed externally (motion, dashboard, automation). The `pivot_knob_turn` event now only fires when the change originates from a physical knob turn – detected via `context.parent_id`.
 
 
 </details>
@@ -264,7 +264,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.51</summary>
 
-- **Fix:** Bank entity text fields no longer revert to the configured default on every Home Assistant restart. Previously, `async_setup_entry` would overwrite whatever value the entity had restored from state storage with the value stored in the config entry–so any direct edits made outside the configuration flow would be lost on restart. The startup write loop has been removed; entities now restore correctly via Home Assistant's built-in state persistence, and the configure flow continues to write values immediately when the user reconfigures.
+- **Fix:** Bank entity text fields no longer revert to the configured default on every Home Assistant restart. Previously, `async_setup_entry` would overwrite whatever value the entity had restored from state storage with the value stored in the config entry – so any direct edits made outside the configuration flow would be lost on restart. The startup write loop has been removed; entities now restore correctly via Home Assistant's built-in state persistence, and the configure flow continues to write values immediately when the user reconfigures.
 
 
 </details>
@@ -272,7 +272,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.50</summary>
 
-- **Fix:** Fixes a 500 error in the Home Assistant automation editor when opening automations created from the `pivot_announce_bank.yaml` or `pivot_timer.yaml` blueprints after the `mute_entity` input was added. The `entity` selector with `default: ""` was invalid–changed to a `text` selector so an empty value is accepted. Also tightens the mute condition to handle `null` as well as empty string (`not mute_entity or ...`).
+- **Fix:** Fixes a 500 error in the Home Assistant automation editor when opening automations created from the `pivot_announce_bank.yaml` or `pivot_timer.yaml` blueprints after the `mute_entity` input was added. The `entity` selector with `default: ""` was invalid – changed to a `text` selector so an empty value is accepted. Also tightens the mute condition to handle `null` as well as empty string (`not mute_entity or ...`).
 
 
 </details>
@@ -281,7 +281,7 @@ permalink: /changelog/
 <summary>v0.0.49</summary>
 
 - **New:** Per-bank **Announce Value** switches (`switch.{suffix}_bank_N_announce_value`, one per bank). When enabled, the value of the bank's assigned entity is announced via TTS after the knob settles (~600 ms debounce). Supports `climate` (speaks temperature), `cover` (speaks position), `light`, `media_player`, and `fan` (speak knob value as percent), and `number` (speaks entity state with unit). Off by default.
-- **New:** Global **Mute Announcements** switch (`switch.{suffix}_mute_announcements`). When on, all spoken announcements are suppressed–no other behaviour changes. Off by default.
+- **New:** Global **Mute Announcements** switch (`switch.{suffix}_mute_announcements`). When on, all spoken announcements are suppressed – no other behaviour changes. Off by default.
 
 
 </details>
@@ -289,7 +289,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.48</summary>
 
-- **New (Script blueprint):** Adds the **Pivot Timer Toggle** script blueprint. Install once–the script is shared across all Pivot devices, with `device_suffix` and `bank` passed as runtime variables by each dashboard card.
+- **New (Script blueprint):** Adds the **Pivot Timer Toggle** script blueprint. Install once – the script is shared across all Pivot devices, with `device_suffix` and `bank` passed as runtime variables by each dashboard card.
 
 
 </details>
@@ -297,7 +297,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.47</summary>
 
-- **Fix (Timer blueprint):** Duration announcement now plays reliably when the knob is turned slowly. The debounce condition was comparing `states(duration_entity)` against `trigger.event.data.duration`–if the HA entity state hadn't updated within the 150 ms debounce window, the comparison silently failed and no announcement played. Duration is now read directly from the original trigger event data, which is always available immediately.
+- **Fix (Timer blueprint):** Duration announcement now plays reliably when the knob is turned slowly. The debounce condition was comparing `states(duration_entity)` against `trigger.event.data.duration` – if the HA entity state hadn't updated within the 150 ms debounce window, the comparison silently failed and no announcement played. Duration is now read directly from the original trigger event data, which is always available immediately.
 
 
 </details>
@@ -329,7 +329,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.43</summary>
 
-- **Change (Timer blueprint):** Long press cancel is now restricted to the timer bank. Previously, a long press on any bank would cancel the timer–this conflicted with long press being reserved for custom actions on other banks. The cancel now only fires when `number.{suffix}_active_bank` matches the configured timer bank number.
+- **Change (Timer blueprint):** Long press cancel is now restricted to the timer bank. Previously, a long press on any bank would cancel the timer – this conflicted with long press being reserved for custom actions on other banks. The cancel now only fires when `number.{suffix}_active_bank` matches the configured timer bank number.
 
 
 </details>
@@ -337,7 +337,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.42</summary>
 
-- **New (Timer blueprint):** Adds a **Silent Mode** boolean input (off by default). When enabled, the blueprint sets the `timer_silent_mode` switch on the device before triggering the alarm–suppressing the alarm sound while leaving the LED ring pulse and "stop" wake word intact. Requires firmware v0.0.14 or later; gracefully ignored on older firmware.
+- **New (Timer blueprint):** Adds a **Silent Mode** boolean input (off by default). When enabled, the blueprint sets the `timer_silent_mode` switch on the device before triggering the alarm – suppressing the alarm sound while leaving the LED ring pulse and "stop" wake word intact. Requires firmware v0.0.14 or later; gracefully ignored on older firmware.
 
 
 </details>
@@ -345,7 +345,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.41</summary>
 
-- **New (Timer blueprint):** A dedicated cancel button can now be added to the dashboard. The blueprint accepts `pivot_button_press` with `press_type: long_press` as a secondary cancel trigger alongside the physical long press–enabling a dashboard script to cancel in the same way the physical button does, including the *"Timer cancelled"* TTS announcement. See the [Timer page](/timer#cancel-button) for setup.
+- **New (Timer blueprint):** A dedicated cancel button can now be added to the dashboard. The blueprint accepts `pivot_button_press` with `press_type: long_press` as a secondary cancel trigger alongside the physical long press – enabling a dashboard script to cancel in the same way the physical button does, including the *"Timer cancelled"* TTS announcement. See the [Timer page](/timer#cancel-button) for setup.
 
 
 </details>
@@ -369,7 +369,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.38</summary>
 
-- **Fix (Timer blueprint):** Long press cancel now reliably triggers the automation. The previous blueprint used a single unfiltered `pivot_button_press` trigger and relied on conditions to match the right device and press type–causing long press traces to be silently displaced from the 5-entry history by gauge sync and other events before they could be inspected.
+- **Fix (Timer blueprint):** Long press cancel now reliably triggers the automation. The previous blueprint used a single unfiltered `pivot_button_press` trigger and relied on conditions to match the right device and press type – causing long press traces to be silently displaced from the 5-entry history by gauge sync and other events before they could be inspected.
 
 
 </details>
@@ -395,7 +395,7 @@ permalink: /changelog/
 
 - **Change:** Pivot-owned YAML files are now written to a `/config/pivot/` subfolder instead of the `/config/` root.
 - **Fix:** Automation filenames had a double `pivot_` prefix (`pivot_pivot_{suffix}_announcements.yaml`). Files are now named `pivot_{suffix}_announcements.yaml` as intended.
-- **Fix:** The duplicate include-line check was comparing exact strings–a format change between versions could bypass it and append a second entry. The check now uses a filename-based marker.
+- **Fix:** The duplicate include-line check was comparing exact strings – a format change between versions could bypass it and append a second entry. The check now uses a filename-based marker.
 - **Fix:** The write order for `scripts.yaml`/`automations.yaml` was not atomic. Each write now creates the new file first, then rewrites the parent YAML in one pass, then deletes any legacy files.
 - **Change:** The include-line write is now self-healing. On every load, Pivot strips all existing entries for its keys and writes the correct single line.
 
@@ -425,7 +425,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.31</summary>
 
-- **Fix (Timer blueprint):** Finish alert dismiss is now more reliable. The dismiss branch no longer requires the button press to match the configured bank number–any press on the device dismisses the alarm.
+- **Fix (Timer blueprint):** Finish alert dismiss is now more reliable. The dismiss branch no longer requires the button press to match the configured bank number – any press on the device dismisses the alarm.
 
 
 </details>
@@ -434,7 +434,7 @@ permalink: /changelog/
 <summary>v0.0.30</summary>
 
 - **Fix (Timer blueprint):** Finish alert now dismisses immediately on any press. The blueprint now uses `mode: parallel` so a button press runs the dismiss branch immediately, regardless of what the alert loop is doing.
-- **Fix (Timer blueprint):** The "1 minute timer–press to start" announcement no longer plays after dismissing the finish alert.
+- **Fix (Timer blueprint):** The "1 minute timer – press to start" announcement no longer plays after dismissing the finish alert.
 - **Fix (Timer blueprint):** A press during the optional TTS finish announcement now also dismisses immediately.
 - **Fix (Timer blueprint):** TTS Entity input is now an entity picker (dropdown) instead of a plain text field.
 - **New:** Added `alerting` as a valid `timer_state` select option.
@@ -445,7 +445,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.29</summary>
 
-- **Fix:** Passive banks (scene, script, switch, input_boolean) now show no gauge–when switching to a passive bank the LED gauge immediately goes to 0.
+- **Fix:** Passive banks (scene, script, switch, input_boolean) now show no gauge – when switching to a passive bank the LED gauge immediately goes to 0.
 
 
 </details>
@@ -556,7 +556,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.15</summary>
 
-- **New:** Timer finish now repeats–gauge flashes 3 times and the finish sound plays in a loop (up to 10 times) until dismissed.
+- **New:** Timer finish now repeats – gauge flashes 3 times and the finish sound plays in a loop (up to 10 times) until dismissed.
 - **Change:** Finish sound is now hardcoded to the VPE built-in `timer_finished.flac`.
 - **New:** Optional TTS message now plays once before the alert loop begins.
 
@@ -624,7 +624,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.7</summary>
 
-- **New:** Timer helper feature–three new per-device entities provisioned per device, disabled by default.
+- **New:** Timer helper feature – three new per-device entities provisioned per device, disabled by default.
 - **New:** Pivot Timer blueprint.
 - **New:** Timer docs page.
 
@@ -691,7 +691,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.23</summary>
 
-- **Fix:** Migrated HTTP media sources from `platform: http_request` to `platform: audio_http`. The `http_request` external component pin and top-level config key have been removed–this platform is now built into ESPHome 2026.5 under its new name. Builds on 2026.5 would fail without this change.
+- **Fix:** Migrated HTTP media sources from `platform: http_request` to `platform: audio_http`. The `http_request` external component pin and top-level config key have been removed – this platform is now built into ESPHome 2026.5 under its new name. Builds on 2026.5 would fail without this change.
 - **Fix:** Updated `hey_mycroft` wake word sensitivity probability cutoffs to match the v2 model tuning (253 / 242 / 237 for Slightly / Moderately / Very sensitive). The previous values were carried over from hey_jarvis and were not tuned for hey_mycroft@v2.
 
 
@@ -708,7 +708,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.21</summary>
 
-- **New:** In control mode, turning the knob while the voice assistant is speaking adjusts the device volume instead of the active bank value. The LED ring switches to the voice mode volume display for the duration. Triggered only by VA TTS replies–integration announcements (bank values, bank changes) are unaffected.
+- **New:** In control mode, turning the knob while the voice assistant is speaking adjusts the device volume instead of the active bank value. The LED ring switches to the voice mode volume display for the duration. Triggered only by VA TTS replies – integration announcements (bank values, bank changes) are unaffected.
 
 
 </details>
@@ -724,7 +724,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.19</summary>
 
-- **Breaking change:** Bank entity ID subscriptions updated from 0-based (`bank_0_*`) to 1-based (`bank_1_*` through `bank_4_*`) to match integration v0.0.75. Must be updated together with the integration–the two are not compatible across this change.
+- **Breaking change:** Bank entity ID subscriptions updated from 0-based (`bank_0_*`) to 1-based (`bank_1_*` through `bank_4_*`) to match integration v0.0.75. Must be updated together with the integration – the two are not compatible across this change.
 
 
 </details>
@@ -733,7 +733,7 @@ permalink: /changelog/
 <summary>v0.0.15</summary>
 
 - **Change:** Single press in control mode no longer calls `script.{suffix}_bank_toggle` directly. Toggle is now handled by the integration natively on the `button_press_event` trigger. Requires integration v0.0.59+.
-- **Fix:** `button_press_event` now only fires after media checks–if the press was used to stop an announcement or pause media, HA is no longer notified (preventing a spurious entity toggle).
+- **Fix:** `button_press_event` now only fires after media checks – if the press was used to stop an announcement or pause media, HA is no longer notified (preventing a spurious entity toggle).
 
 
 </details>
@@ -741,7 +741,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.14</summary>
 
-- **New:** Adds a `Timer Silent Mode` switch. When on, the alarm sound is suppressed at the end of a Pivot timer–the LED ring still pulses and the "stop" wake word still activates, only the sound is silenced. Off by default. Requires a reflash.
+- **New:** Adds a `Timer Silent Mode` switch. When on, the alarm sound is suppressed at the end of a Pivot timer – the LED ring still pulses and the "stop" wake word still activates, only the sound is silenced. Off by default. Requires a reflash.
 
 
 </details>
@@ -825,7 +825,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.4</summary>
 
-- **Fix:** `single_press` added to `button_press_event` entity–the firmware now fires this event on every valid single press. Requires a firmware reflash.
+- **Fix:** `single_press` added to `button_press_event` entity – the firmware now fires this event on every valid single press. Requires a firmware reflash.
 
 
 </details>
@@ -833,7 +833,7 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.3</summary>
 
-- Removed secondary scroll (hold+turn in Normal mode)–restored to stock behaviour.
+- Removed secondary scroll (hold+turn in Normal mode) – restored to stock behaviour.
 - Removed unused mirror firmware globals.
 
 
