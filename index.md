@@ -47,14 +47,6 @@ With each bank assigned to something useful, Pivot gives you a faster way to con
 
 ---
 
-## Simple interaction
-
-- Turn → adjust the current bank  
-- Press → activate / toggle  
-- Press + turn → switch banks
-
----
-
 ## How it works
 
 Pivot consists of two parts that work together, both of which are required for the Pivot experience to work:
