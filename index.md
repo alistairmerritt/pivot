@@ -2,7 +2,7 @@
 layout: home
 ---
 
-> **Note:** This site covers the technical setup for Pivot software. For a broader overview, demonstrations, and hardware extension (Pivot Dial), visit the [Pivot project page](https://madewithmerritt.com/pivot/).
+> **Note:** This documentation covers the firmware, integration and setup process for Pivot. For the broader project overview, demonstrations and Pivot Dial enclosure, visit the [Pivot project page](https://madewithmerritt.com/pivot/).
 
 Pivot turns your Home Assistant Voice Preview Edition into a physical control dial for Home Assistant while preserving its core voice functionality, including wake word activation. It provides four colour-coded banks, each assigned to a different controllable entity, script, scene, or a [custom automation](https://alistairmerritt.github.io/pivot/automations/). By default, simply turn to adjust the entity assigned to the active bank, or press to toggle or activate it.
 
