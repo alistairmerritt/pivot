@@ -77,8 +77,8 @@ Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmwar
   # PIVOT DEVICE CONFIGURATION – fill in these values for each device
   # =======================================================================
 
-  # ESPHome device name (slug, no spaces or dashes)
-  device_name: home_assistant_voice_lounge
+  # ESPHome device name (use dashes not underscores)
+  device_name: home-assistant-voice-lounge
 
   # Friendly name shown in HA and ESPHome
   device_friendly_name: Lounge VPE
@@ -196,5 +196,5 @@ Timers are not enabled by default. Before setting up these blueprints, go to you
 - [Firmware reference](/pivot/firmware/) – full substitutions reference and multi-device setup
 - [Integration reference](/pivot/integration/) – full entity reference and events
 - [Custom Automations](/pivot/automations/) – blueprints and examples for extending Pivot's functionality
-- [Troubleshooting](/pivot/troubleshooting/) – common issues and fixes
+- [Help](/pivot/help/) – common issues and fixes
 - [Timer setup](/pivot/timer/) – how to set up a countdown timer in Pivot

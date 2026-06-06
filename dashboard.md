@@ -157,10 +157,11 @@ A minimal section label with an optional subheading. This is just a styled `cust
 3. Once all cards are downloaded, restart Home Assistant once
 4. Do a full browser refresh (Ctrl+Shift+R / Cmd+Shift+R)
 
-| Card | Search term | Author |
-| --- | --- | --- |
-| custom:button-card | Button Card | RomRider |
-| custom:my-slider-v2 | My Slider v2 | AnthonMS |
+| Card | Search term | Author | Required? |
+| --- | --- | --- | --- |
+| custom:button-card | Button Card | RomRider | Yes |
+| custom:my-slider-v2 | My Slider v2 | AnthonMS | For value and volume sliders |
+| custom:layout-card | Layout Card | thomasloven | For the column layout in the full example |
 
 ---
 

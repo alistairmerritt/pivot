@@ -298,7 +298,7 @@ The goal is not to abstract every possible Home Assistant entity perfectly. The 
 
 ## Source
 
-The integration source is public and MIT licensed at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
+The integration source is public and Apache 2.0 licensed at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
 If you want to inspect the code before installing it, this page is intended to help you understand what to look for and where.
 

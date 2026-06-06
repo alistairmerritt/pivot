@@ -18,8 +18,8 @@ All device-specific configuration lives in the substitutions block at the top of
 
 ```yaml
 substitutions:
-  # ESPHome device name (slug, no spaces or dashes)
-  device_name: home_assistant_voice_lounge
+  # ESPHome device name (use dashes not underscores)
+  device_name: home-assistant-voice-lounge
 
   # Friendly name shown in HA and ESPHome
   device_friendly_name: Lounge VPE
@@ -71,8 +71,8 @@ substitutions:
   # PIVOT DEVICE CONFIGURATION – fill in these values for each device
   # =======================================================================
 
-  # ESPHome device name (slug, no spaces or dashes)
-  device_name: home_assistant_voice_lounge
+  # ESPHome device name (use dashes not underscores)
+  device_name: home-assistant-voice-lounge
 
   # Friendly name shown in HA and ESPHome
   device_friendly_name: Lounge VPE
@@ -203,8 +203,9 @@ Click **Install** in the top right corner of ESPHome Device Builder. This could 
 
 Via CLI (if you have ESPHome installed locally):
 ```bash
-esphome run home-assistant-voice.yaml
+esphome run your-device.yaml
 ```
+Replace `your-device.yaml` with your per-device config file — not `home-assistant-voice.yaml`, which contains unfilled substitutions and will fail to compile directly.
 
 ---
 
