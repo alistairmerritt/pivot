@@ -1,8 +1,7 @@
 ---
 layout: home
+title: What is Pivot?
 ---
-
-## What is Pivot?
 
 Pivot turns your Home Assistant Voice Preview Edition into a physical control dial for Home Assistant while preserving its core voice functionality, including wake word activation. It provides four colour-coded banks, each assigned to a different controllable entity, script, scene, or a [custom automation](https://alistairmerritt.github.io/pivot/automations/). By default, simply turn to adjust the entity assigned to the active bank, or press to toggle or activate it.
 
