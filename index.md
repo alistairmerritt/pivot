@@ -4,6 +4,8 @@ layout: home
 
 > **Note:** This documentation covers the firmware, integration and setup process for Pivot. For the broader project overview, demonstrations and Pivot Dial enclosure, visit the [Pivot project page](https://madewithmerritt.com/pivot/).
 
+## What is Pivot?
+
 Pivot turns your Home Assistant Voice Preview Edition into a physical control dial for Home Assistant while preserving its core voice functionality, including wake word activation. It provides four colour-coded banks, each assigned to a different controllable entity, script, scene, or a [custom automation](https://alistairmerritt.github.io/pivot/automations/). By default, simply turn to adjust the entity assigned to the active bank, or press to toggle or activate it.
 
 Rather than opening apps, navigating dashboards, or relying on voice commands, you can simply reach out and control your home directly. The LED ring shows which bank is active and provides real-time feedback on its current value (e.g. brightness, volume, or temperature) and, where relevant, its RGB colour. It can also be used more creatively, for example, displaying sensor values, scrubbing through scenes, or reflecting changes made elsewhere in your system. 
