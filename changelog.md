@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.23 | v0.0.82 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.23 | v0.0.83 | 2026.5.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,14 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.83</summary>
+
+- **Fix:** Knob value changes triggered by user automations are no longer silently ignored. Previously, any `number.set_value` call made inside an automation (which carries a parent context) was incorrectly treated as an internal sync write and dropped.
+- **Fix:** Timer duration knob scaling now uses the correct fallback maximum of 60 minutes, matching the timer duration entity definition.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.82</summary>
