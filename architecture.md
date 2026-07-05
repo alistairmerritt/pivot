@@ -130,6 +130,14 @@ All entity IDs follow a stable pattern:
 
 They are pinned explicitly so they stay stable across Home Assistant restarts and device renames.
 
+### Why so many entities?
+
+Around thirty entities per device is a fair thing to question, so here is the reason: the entities **are** the interface between the integration and the firmware.
+
+ESPHome firmware has no private side channel into Home Assistant. For the device to read a value that lives in Home Assistant — which bank is active, what colour a bank should be, whether control mode is on — that value must exist as a real entity the firmware can subscribe to. So every bank value, assignment, colour, and setting is a normal Home Assistant entity, effectively a shared variable between the two halves of the system.
+
+This is a deliberate design choice with a useful consequence: there is no hidden state. Every value the firmware acts on is visible and inspectable in Home Assistant — in Developer Tools, in automations, on dashboards. If Pivot does something, you can see exactly which entity told it to.
+
 * * *
 
 ## What it reads
