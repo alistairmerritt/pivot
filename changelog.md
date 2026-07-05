@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.24 | v0.0.86 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.24 | v0.0.87 | 2026.5.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,13 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.87</summary>
+
+- **Fix:** Restored the integration's brand icons, removed in error in v0.0.86. On Home Assistant 2026.3 and later, the `brand/` folder inside the integration is the official local brand image mechanism, so the Pivot icon shows on the integrations page again. No functional changes.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.86</summary>
