@@ -26,6 +26,7 @@ permalink: /changelog/
 - **Fix:** Bank entities selected during initial setup are now applied. They were stored during the config flow but never read, so fresh installs silently ignored the bank assignments chosen in the setup wizard (changing them later via the options flow was unaffected). They are now seeded into the bank text entities on first setup.
 - **Fix:** Passive bank flags could permanently stop updating after a restart depending on platform setup order – the sensor looked its sibling text entity up in the entity registry before it was guaranteed to exist. Sensors now track the pinned text entity ID directly, making startup order irrelevant.
 - **New:** Automated test suite (25 tests) covering setup and entity provisioning, value mapping, bank control and loop prevention, the config flow, and restart regression scenarios for the v0.0.84 fixes. Runs in CI on every change alongside hassfest, HACS validation and ruff.
+- **Fix (Timer Control blueprint):** Added a stuck-alert backstop. If the alarm-dismiss callback from the device is lost (e.g. the device rebooted mid-alarm while Home Assistant was also restarting), the timer state could remain stuck on `alerting`, blocking any new timer. Since the firmware hard-stops every alarm after 15 minutes, an `alerting` state older than 16 minutes is now automatically reset to idle. Requires re-importing the Pivot – Timer Control blueprint.
 
 </details>
 
