@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.23 | v0.0.83 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.24 | v0.0.84 | 2026.5.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,16 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.84</summary>
+
+- **Fix:** Mirror Light colour is no longer lost when Home Assistant restarts. The bank colour picker previously pushed its restored (configured) colour over the mirrored colour on every startup – an active mirror now survives restarts without needing a knob turn to recover.
+- **Fix:** Device settings (Control Mode, Show Control Value, Dim LEDs When Idle, per-bank Mirror Light and passive flags) are now pushed directly to the device via the new `pivot_sync_settings` firmware action once Home Assistant has finished starting. The previous re-publish approach (v0.0.82) could not reach the device: Home Assistant's ESPHome integration only forwards genuine state changes, so a device that subscribed before the Pivot entities were restored never received their values. **Requires firmware v0.0.24** – with older firmware the push is skipped silently and behaviour is unchanged.
+- **Change:** Internal modernisation – per-entry state moved to `entry.runtime_data`, internal sync writes now use tracked contexts instead of a sentinel parent context, and startup colour handling keys off Home Assistant's started signal instead of a fixed delay. No behaviour change intended.
+- **Change:** Removed the invalid `min_version` key from the manifest (the minimum Home Assistant version is declared in `hacs.json`). Added automated repository validation (hassfest, HACS validation, ruff) that runs on every change.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.83</summary>
@@ -695,6 +705,15 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.24</summary>
+
+- **New:** `pivot_sync_settings` API action. The Pivot integration (v0.0.84+) calls this once Home Assistant has finished starting, pushing Control Mode, Show Control Value, Dim LEDs When Idle and the per-bank mirror/passive flags directly into the firmware. This guarantees correct settings after a Home Assistant restart regardless of connection and restore ordering.
+- **Fix:** The post-connect settings re-sync now also covers Dim LEDs When Idle and the per-bank Mirror Light flags – previously these could remain stale after a restart until toggled in Home Assistant.
+- **Fix:** All post-connect re-sync reads are now guarded with `has_state()` so values Home Assistant has not yet delivered can no longer overwrite restored settings with defaults.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.23</summary>
