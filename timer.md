@@ -61,6 +61,8 @@ The timer helper entities are provisioned with every Pivot device but disabled b
    - `text.{device_suffix}_timer_restore_show_value` – internal, restores Display Persistent Value after the timer ends (only used when a bank is assigned)
 3. Click each entity, go to **Settings**, and toggle **Enable**
 
+> **Can't find `timer_restore_show_value`?** It's categorised as a diagnostic entity, so it appears in a separate "Diagnostic" section on the device page – not grouped with the other three. If it's not showing up there, go to **Settings → Devices & Services → Entities**, enable **Show disabled entities**, and search for `timer_restore_show_value` directly – that list isn't split by category.
+
 ---
 
 ### Step 2. Set up Timer Control  –  [Import Blueprint (Open in a new tab)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml)
@@ -219,7 +221,7 @@ The cards above are intentionally minimal. If you want a fully worked example �
 | `text.{device_suffix}_timer_end` | Internal – stores an ISO end timestamp while running, and a `P{seconds}` remaining-time value while paused |
 | `text.{device_suffix}_timer_restore_show_value` | Internal – snapshots the previous Display Persistent Value state so it can be restored when the timer ends (only used when a bank is assigned) |
 
-All four entities are **disabled by default** and live under the Pivot device in the HA device registry. `text.{device_suffix}_timer_end` and `text.{device_suffix}_timer_restore_show_value` are managed entirely by the blueprint; you do not need to interact with either directly.
+All four entities are **disabled by default** and live under the Pivot device in the HA device registry. `text.{device_suffix}_timer_end` and `text.{device_suffix}_timer_restore_show_value` are managed entirely by the blueprint; you do not need to interact with either directly. `timer_restore_show_value` is additionally marked as a diagnostic entity, so it appears in the device page's separate Diagnostic section rather than alongside the other three – see the note in [Getting started](#getting-started) if you can't find it.
 
 ---
 
