@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.24 | v0.0.85 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.24 | v0.0.86 | 2026.5.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,15 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.86</summary>
+
+- **Fix:** Upgrading to v0.0.85 could reset bank assignments to the values chosen during initial setup. Seeding now only fills banks whose text entity is empty – the bank entity text inputs remain the source of truth, and editing them directly (or from an automation) is fully supported and persists across restarts.
+- **Change:** All internal fire-and-forget tasks are now config-entry-tracked background tasks – visible in diagnostics, cancelled on unload, exceptions surfaced.
+- **Change:** Removed unused logo/icon files from inside the component directory – they were never read by Home Assistant or HACS.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.85</summary>
