@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.24 | v0.0.84 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.24 | v0.0.85 | 2026.5.0+ | 2024.4.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,15 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.85</summary>
+
+- **Fix:** Bank entities selected during initial setup are now applied. They were stored during the config flow but never read, so fresh installs silently ignored the bank assignments chosen in the setup wizard (changing them later via the options flow was unaffected). They are now seeded into the bank text entities on first setup.
+- **Fix:** Passive bank flags could permanently stop updating after a restart depending on platform setup order – the sensor looked its sibling text entity up in the entity registry before it was guaranteed to exist. Sensors now track the pinned text entity ID directly, making startup order irrelevant.
+- **New:** Automated test suite (25 tests) covering setup and entity provisioning, value mapping, bank control and loop prevention, the config flow, and restart regression scenarios for the v0.0.84 fixes. Runs in CI on every change alongside hassfest, HACS validation and ruff.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.84</summary>
