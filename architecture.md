@@ -73,6 +73,7 @@ The integration is split into a small set of modules with defined roles.
 | `entity_mappings.py` | Maps a 0–100 Pivot value to the correct HA service call for each supported domain |
 | `announcements.py` | Formats and triggers spoken announcements |
 | `mirror.py` | Watches assigned lights and mirrors their colour into the bank colour entity |
+| `device_sync.py` | Pushes Control Mode, display, and per-bank settings to the device via the `pivot_sync_settings` action once Home Assistant has started |
 | `blueprints.py` | Sends a one-time notification on first setup with links to import the optional timer blueprints from GitHub |
 | `config_flow.py` | Setup flow and options flow |
 | `const.py` | Entity definitions, constants, and shared configuration |
@@ -121,6 +122,7 @@ Timer entities are created as part of the integration and are disabled by defaul
 - `number` – timer duration
 - `select` – timer state
 - `text` – timer end time
+- `text` – restore value for Display Persistent Value (diagnostic)
 
 All entity IDs follow a stable pattern:
 
@@ -197,6 +199,12 @@ Pivot also writes to its own entities when needed, for example:
 - updating bank value entities so the gauge reflects an external change
 - writing TTS and media player selections from the integration settings
 - writing colour values used by the firmware
+
+### Settings push to the device
+
+Once Home Assistant has fully started, Pivot calls a dedicated action on the ESPHome device – `pivot_sync_settings`, exposed to Home Assistant as `esphome.{device_name}_pivot_sync_settings` – to push Control Mode, Show Control Value, Dim LEDs When Idle, and the per-bank Mirror Light and passive flags directly into the firmware. This is a standard Home Assistant service call, the same as any other action Pivot performs – it does not bypass Home Assistant.
+
+This exists because Home Assistant's ESPHome integration only forwards genuine state *changes* to a subscribed device – a device that connects and subscribes before Pivot's entities are restored (typical during a Home Assistant restart) would otherwise never receive their values. The push guarantees the firmware has correct settings after a restart regardless of connection or restore ordering. It requires firmware v0.0.24 or later; on older firmware the action does not exist and the push is skipped silently.
 
 ### Blueprint notification
 
