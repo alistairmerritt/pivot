@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.25 | v0.0.88 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.26 | v0.0.89 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,16 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.89</summary>
+
+- **Fix:** A successful reduced sync was reported as a total failure. When a bank colour entity is unavailable, Pivot falls back to repairing the boolean settings only – but that fallback was then mistaken for "the device just gained full support mid-push", retried against the same unavailable entity, and logged a delivery failure for a push that had in fact succeeded. Startup sync was also never marked complete in that case.
+- **Fix:** Cover, climate and media player commands are briefly delayed to avoid flooding a device while the knob is turning. A delayed command is now cancelled if the integration is unloaded or the bank is reassigned in the meantime – previously it could still fire at whichever entity the bank used to point to.
+- **Fix:** Bank colours are now validated properly. Any seven-character value starting with `#` was accepted, so a malformed colour reached the firmware and was applied as black instead of being rejected.
+- **Change:** Automated tests expanded to 45, adding coverage for reduced-sync completion state, delayed-command cancellation on unload and on reassignment, and colour validation.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.88</summary>
@@ -747,6 +757,13 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.26</summary>
+
+- **Fix:** A knob adjustment could be sent to the wrong bank. Outbound writes are briefly delayed so a fast spin does not flood Home Assistant, but the destination was decided after that delay rather than when you turned the knob. Switching bank during the delay (hold and turn) meant the original adjustment was silently dropped and the newly selected bank could receive a command you never made. The destination is now fixed at the moment the knob is turned. **Introduced in v0.0.25 – updating is recommended.**
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.25</summary>
