@@ -232,7 +232,7 @@ Before flashing, make a note of these three values somewhere safe. You will need
 
 Required, unique per device, minimum 12 characters. Generate with `openssl rand -hex 16`.
 
-Once a device is running Pivot firmware, updates can arrive over the air (a USB cable still works too). Without a password that endpoint accepts firmware from anyone who can reach the device on your network — and the device has a microphone on it. The API encryption key covers the Home Assistant connection only; it does not protect OTA.
+Once a device is running Pivot firmware, updates can arrive over the air (a USB cable still works too). Without a password that endpoint accepts firmware from anyone who can reach the device on your network. The API encryption key covers the Home Assistant connection only; it does not protect OTA.
 
 Because a missing OTA password cannot be detected once the device is running, Pivot checks at **build time**. Omitting it, leaving it empty, or using fewer than 12 characters stops the build:
 
