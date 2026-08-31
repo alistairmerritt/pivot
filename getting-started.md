@@ -97,6 +97,12 @@ Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmwar
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "your-key-here"
 
+  # OTA update password – REQUIRED, and unique per device.
+  # Generate one with:  openssl rand -hex 16
+  # Then add it to your ESPHome secrets.yaml, e.g.:
+  #   pivot_ota_lounge: "a1b2c3d4e5f6a7b8c9d0e1f2"
+  ota_password: !secret pivot_ota_lounge
+
   # LED orientation:
   #   '6'  flat on a surface, cable facing away (default)
   #   '0'  upright on a stand, cable at the bottom
@@ -118,7 +124,11 @@ packages:
 
 <blockquote><strong>WiFi credentials:</strong> The config uses <code>!secret</code> to keep credentials out of the YAML. Add <code>wifi_ssid</code> and <code>wifi_password</code> to your ESPHome <strong>Secrets</strong> file (the key icon in ESPHome Device Builder). If you prefer, you can paste the values directly as plain text instead.</blockquote>
 
-<blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code> and <code>api_encryption_key</code> somewhere safe. You will need both – the suffix when adding the Pivot integration, and the key if Home Assistant ever asks for it.</blockquote></li>
+<blockquote><strong>OTA password – required.</strong> Once your device runs Pivot firmware, all future updates happen wirelessly. Without a password, anyone who can reach the device on your network could install their own firmware onto it – and this device has a microphone. The API encryption key does not protect against this; it is a separate mechanism.<br><br>
+Generate a unique value per device with <code>openssl rand -hex 16</code>, add it to your ESPHome <strong>Secrets</strong> file as <code>pivot_ota_lounge</code> (any name you like, one per device), and reference it as shown above. Only the length is checked at build time (12+ characters) – content is not validated. But the value is embedded in a C++ string literal during the build, so a quote or backslash in it could break the build or silently produce a different password than you typed. Sticking to the hexadecimal output above avoids that risk entirely.<br><br>
+<strong>If you leave it out, the build stops with an error.</strong> That is deliberate: a missing OTA password cannot be detected once the device is running, so Pivot refuses to build firmware without one rather than quietly producing an unprotected device.</blockquote>
+
+<blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code>, <code>api_encryption_key</code> and <code>ota_password</code> somewhere safe. You will need the suffix when adding the Pivot integration, the key if Home Assistant ever asks for it, and the OTA password for every future wireless update. If you lose the OTA password, the only way back in is a USB reflash.</blockquote></li>
 
 <li><p><strong>Connect your VPE via USB</strong> for the initial flash – use a good quality cable. OTA (wireless) is used for all future updates once the device is running Pivot firmware.</p>
 

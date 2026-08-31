@@ -259,6 +259,34 @@ Remove the `.yaml` suffix, save, and retry the build.
 
 ---
 
+### ESPHome build fails with "ota_password must be at least 12 characters"
+
+Or `Set a unique ota_password in your device YAML`. Both mean the same thing: your device YAML has no usable `ota_password`.
+
+This is intentional, not a bug. Once a device runs Pivot firmware, updates arrive wirelessly, and an OTA endpoint without a password accepts firmware from anyone who can reach the device on your network. A missing password cannot be detected after the device is running, so Pivot checks while building instead.
+
+Generate one and add it to your device YAML:
+
+```bash
+openssl rand -hex 16
+```
+
+```yaml
+substitutions:
+  ota_password: !secret pivot_ota_lounge   # ✓ from your ESPHome secrets file
+  ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2" # ✓ or inline
+  ota_password: ""                         # ✗ empty is rejected
+  ota_password: "hunter2"                  # ✗ under 12 characters
+```
+
+If using `!secret`, add the matching entry to your ESPHome **Secrets** file (the key icon in ESPHome Device Builder), using a different name for each device.
+
+Only the length is checked (12+ characters) — the build does not inspect content, so a value with quotes or a backslash will not necessarily be caught here. It is embedded in a C++ string literal during the build though, so such a character could break the build or silently produce a different password than you typed. Stick to the hexadecimal output above, or letters/digits/hyphens/underscores, to avoid that risk.
+
+**Updating a device that never had one:** this first upload still works without authentication, because the firmware currently on the device has no password to check. Enforcement begins with the next update. Save the password somewhere safe — if you lose it, the only way back in is a USB reflash.
+
+---
+
 ### Connection
 
 ### My VPE just has revolving blue lights after installing the firmware
