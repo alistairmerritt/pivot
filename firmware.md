@@ -240,7 +240,7 @@ Because a missing OTA password cannot be detected once the device is running, Pi
 error: static assertion failed: ota_password must be at least 12 characters - see SECURITY.md
 ```
 
-Use the hexadecimal output from the command above. The value is embedded in a C++ string literal during the build, so quotes and backslashes are not supported.
+Only the length is checked (12+ characters) — the build does not inspect content. But the value is embedded in a C++ string literal during the build, so a quote or backslash could break the build or silently produce a different password than you typed, with no warning either way. Sticking to the hexadecimal output above (or letters, digits, hyphens and underscores if you want something memorable) avoids that risk entirely.
 
 **Upgrading a device that has no OTA password yet:** the first upload still works without authentication, because the firmware currently on the device has no password to check against. Enforcement starts from the following update.
 

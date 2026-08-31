@@ -281,7 +281,7 @@ substitutions:
 
 If using `!secret`, add the matching entry to your ESPHome **Secrets** file (the key icon in ESPHome Device Builder), using a different name for each device.
 
-Use the hexadecimal output from the command above — the value is embedded in a C++ string literal during the build, so quotes and backslashes are not supported.
+Only the length is checked (12+ characters) — the build does not inspect content, so a value with quotes or a backslash will not necessarily be caught here. It is embedded in a C++ string literal during the build though, so such a character could break the build or silently produce a different password than you typed. Stick to the hexadecimal output above, or letters/digits/hyphens/underscores, to avoid that risk.
 
 **Updating a device that never had one:** this first upload still works without authentication, because the firmware currently on the device has no password to check. Enforcement begins with the next update. Save the password somewhere safe — if you lose it, the only way back in is a USB reflash.
 
