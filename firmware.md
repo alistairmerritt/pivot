@@ -230,7 +230,7 @@ Before flashing, make a note of these three values somewhere safe. You will need
 
 ### `ota_password`
 
-Required, unique per device, minimum 12 characters. Generate with `openssl rand -hex 16`.
+Required, unique per device, minimum 12 characters. Make one up yourself, or generate one by running `openssl rand -hex 16` in a terminal.
 
 Once a device is running Pivot firmware, updates can arrive over the air (a USB cable still works too). Without a password that endpoint accepts firmware from anyone who can reach the device on your network. The API encryption key covers the Home Assistant connection only; it does not protect OTA.
 
@@ -240,7 +240,7 @@ Because a missing OTA password cannot be detected once the device is running, Pi
 error: static assertion failed: ota_password must be at least 12 characters - see SECURITY.md
 ```
 
-Only the length is checked (12+ characters) — the build does not inspect content. But the value is embedded in a C++ string literal during the build, so a quote or backslash could break the build or silently produce a different password than you typed, with no warning either way. Sticking to the hexadecimal output above (or letters, digits, hyphens and underscores if you want something memorable) avoids that risk entirely.
+You're free to make up your own password rather than generate one – just keep it at least 12 characters and stick to letters, digits, hyphens and underscores. Only the length is actually checked at build time; the value is embedded in a C++ string literal during the build, so a quote or backslash could break the build or silently produce a different password than you typed, with no warning either way.
 
 **Upgrading a device that has no OTA password yet:** the first upload still works without authentication, because the firmware currently on the device has no password to check against. Enforcement starts from the following update.
 

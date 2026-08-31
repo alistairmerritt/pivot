@@ -265,7 +265,7 @@ Or `Set a unique ota_password in your device YAML`. Both mean the same thing: yo
 
 This is intentional, not a bug. Once a device runs Pivot firmware, updates can arrive wirelessly, and an OTA endpoint without a password accepts firmware from anyone who can reach the device on your network. A missing password cannot be detected after the device is running, so Pivot checks while building instead.
 
-Generate one and add it to your device YAML:
+Run this in a terminal to generate one, or make up your own following the same length and character rules below:
 
 ```bash
 openssl rand -hex 16
