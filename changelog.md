@@ -8,17 +8,33 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.24 | v0.0.87 | 2026.5.0+ | 2024.4.0+* |
+| v0.0.25 | v0.0.88 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
-> ***Home Assistant 2024.4.0 or later is required for full Pivot functionality.** The integration's bundled blueprints use the `action:` key and `trigger:` shorthand syntax introduced in that release. The integration itself will install (and work) on older versions of Home Assistant, but the blueprints will silently fail to validate.
+> ***Home Assistant 2025.8.0 or later is required.** This is a hard requirement, not a recommendation: the integration's options flow uses `OptionsFlowWithReload`, which does not exist before 2025.8.0, so on older releases Pivot fails while loading or configuring. (Earlier versions of this page advertised 2024.4.0, which was wrong.) The bundled blueprints additionally need the `action:` key and `trigger:` shorthand introduced in 2024.4.0.
 
 ---
 
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.88</summary>
+
+- **Fix:** Device settings could silently fail to reach the device after a Home Assistant restart, staying stale until each switch was toggled off and on again. Home Assistant's ESPHome integration only delivers a subscribed entity's value as an initial state at subscribe time or as a genuine change – if Pivot's entities are not restored when the device subscribes, nothing is sent, and the later entity-addition event is discarded. The `pivot_sync_settings` push added in v0.0.84 targeted this exactly, but ran only once at startup and gave up permanently if the device had not connected or an entity was not yet readable, so it lost the same race it was built to fix. The push now also fires when the device registers its action, retries on a backoff schedule until an attempt actually succeeds, and logs a warning if it never does.
+- **Fix:** The settings push now confirms delivery instead of assuming it. Home Assistant registers ESPHome device actions from cached metadata during setup, so the action existing does not mean the device is reachable; a push to a powered-off device was previously recorded as successful and cancelled the retries.
+- **New:** Startup repair now covers the active bank, per-bank values, displayed bank colours and the configured identity colours used by the Bank Indicator. Previously only the boolean settings were repaired, so these could remain stale after a restart.
+- **Fix:** **The declared minimum Home Assistant version was wrong.** Pivot advertised 2024.4.0 but uses `OptionsFlowWithReload`, which was introduced in 2025.8.0 – installations on the advertised minimum could fail while loading or configuring the integration. The minimum is now 2025.8.0.
+- **Fix:** The ESPHome device name is now read from `device_name`, the key current Home Assistant actually writes. Pivot checked a legacy `name` key first and always fell through to the connection host, so a device added by IP address produced a corrupted entity suffix (`192168142_…`) that silently broke every entity ID. An IP-derived name is now rejected with a clear warning instead.
+- **Fix:** Debug logging no longer includes the whole ESPHome config entry, which contains the API password and noise PSK.
+- **Fix:** Clearing the Text-to-Speech or media player option now sticks. An emptied field was treated as "not set" and fell back to the previously saved value, so it could never be cleared.
+- **Change:** Removed the device configuration link, which pointed at a web server the firmware does not run.
+- **Change:** Requires firmware v0.0.25 for the full startup repair. With older firmware the integration automatically falls back to the original boolean-only sync, so mixed versions keep working in both directions.
+- **Change:** Automated tests expanded from 26 to 40, covering the sync payload, version fallback and its race orderings, offline retry, device-name discovery, IP rejection, secret-safe logging and cleared options. Lint tooling is now pinned so CI results cannot change without a deliberate edit.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.87</summary>
@@ -731,6 +747,19 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.25</summary>
+
+- **Security:** **Over-the-air updates now require a password.** Previously the OTA endpoint had none, so anyone able to reach the device on your network could replace its firmware – API encryption does not protect OTA. Each device now needs a unique `ota_password` of at least 12 characters. See the firmware repository's `SECURITY.md` for generation, the safe upgrade path for existing devices, and the rotation procedure. **This is a breaking change:** add `ota_password` to each device's YAML before updating.
+- **Fix:** Turning the dial on a scene or script bank could leave the device unresponsive to its centre button – including starting the voice assistant – until the dial was used elsewhere or the device restarted. The passive-bank path skipped the cleanup that clears the "dial in use" flag.
+- **Fix:** The first knob turn immediately after switching mode or bank was often ignored. The device applied the change locally but only told Home Assistant 1.2 seconds later, and the integration rejects knob events that do not match Home Assistant's view. The change is now reported immediately.
+- **Fix:** Rapid dial rotation sent one Home Assistant service call per detent. Outbound writes are debounced while local LED feedback stays immediate.
+- **New:** `pivot_sync_settings_v2` API action, adding the active bank, per-bank values and both sets of bank colours to the settings push. The original `pivot_sync_settings` is unchanged so older integration versions keep working.
+- **Change:** `on_boot` is now a list of automations rather than a single one, so automations added in your own device YAML run independently of Pivot's. Previously they were appended to the end of Pivot's boot sequence, behind a ten-minute delay.
+- **Change:** Upstream sound assets are pinned to a fixed upstream commit instead of tracking a moving branch, so a given device configuration builds the same firmware every time.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.24</summary>
