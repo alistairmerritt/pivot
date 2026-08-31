@@ -36,6 +36,10 @@ substitutions:
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "your_generated_key_here"
 
+  # OTA update password – REQUIRED, unique per device, min 12 characters.
+  # Generate with:  openssl rand -hex 16
+  ota_password: "your_generated_ota_password"
+
   # LED orientation – set based on how your device is mounted:
   #   6  = flat on a surface, cable facing away (LEDs start at bottom)
   #   0  = upright on a stand, cable at the bottom (LEDs start at top)
@@ -90,6 +94,11 @@ substitutions:
   # API encryption key – generate a unique one per device at:
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "generate-a-unique-key-here"
+
+  # OTA update password – REQUIRED, unique per device, min 12 characters.
+  # Generate with `openssl rand -hex 16` and add it to secrets.yaml:
+  #   pivot_ota_lounge: "a1b2c3d4e5f6a7b8c9d0e1f2"
+  ota_password: !secret pivot_ota_lounge
 
   # LED orientation – set based on how your device is mounted:
   #   '6'  flat on a surface, cable facing away (LEDs start at bottom)
@@ -211,12 +220,31 @@ Replace `your-device.yaml` with your per-device config file — not `home-assist
 
 ## Before you flash – note these down
 
-Before flashing, make a note of these two values somewhere safe. You will need them during setup and potentially again later:
+Before flashing, make a note of these three values somewhere safe. You will need them during setup and potentially again later:
 
 | Value | Where it's used |
 | --- | --- |
 | `device_suffix` | Required when adding your device in the Pivot integration |
 | `api_encryption_key` | Required if you ever need to re-add the device to Home Assistant |
+| `ota_password` | Required for **every** future wireless update. Lose it and the only way back in is a USB reflash |
+
+### `ota_password`
+
+Required, unique per device, minimum 12 characters. Generate with `openssl rand -hex 16`.
+
+Once a device is running Pivot firmware, updates arrive over the air. Without a password that endpoint accepts firmware from anyone who can reach the device on your network — and the device has a microphone on it. The API encryption key covers the Home Assistant connection only; it does not protect OTA.
+
+Because a missing OTA password cannot be detected once the device is running, Pivot checks at **build time**. Omitting it, leaving it empty, or using fewer than 12 characters stops the build:
+
+```
+error: static assertion failed: ota_password must be at least 12 characters - see SECURITY.md
+```
+
+Use the hexadecimal output from the command above. The value is embedded in a C++ string literal during the build, so quotes and backslashes are not supported.
+
+**Upgrading a device that has no OTA password yet:** the first upload still works without authentication, because the firmware currently on the device has no password to check against. Enforcement starts from the following update.
+
+**Changing an existing password** is a two-stage process — the configured password both authenticates the upload and sets the new firmware's password, so you cannot simply swap the value. See [`SECURITY.md`](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md) in the firmware repository.
 
 ---
 
