@@ -124,13 +124,13 @@ packages:
 
 <blockquote><strong>WiFi credentials:</strong> The config uses <code>!secret</code> to keep credentials out of the YAML. Add <code>wifi_ssid</code> and <code>wifi_password</code> to your ESPHome <strong>Secrets</strong> file (the key icon in ESPHome Device Builder). If you prefer, you can paste the values directly as plain text instead.</blockquote>
 
-<blockquote><strong>OTA password – required.</strong> Once your device runs Pivot firmware, all future updates happen wirelessly. Without a password, anyone who can reach the device on your network could install their own firmware onto it – and this device has a microphone. The API encryption key does not protect against this; it is a separate mechanism.<br><br>
-Generate a unique value per device with <code>openssl rand -hex 16</code>, add it to your ESPHome <strong>Secrets</strong> file as <code>pivot_ota_lounge</code> (any name you like, one per device), and reference it as shown above. Only the length is checked at build time (12+ characters) – content is not validated. But the value is embedded in a C++ string literal during the build, so a quote or backslash in it could break the build or silently produce a different password than you typed. Sticking to the hexadecimal output above avoids that risk entirely.<br><br>
+<blockquote><strong>OTA password – required.</strong> Once your device runs Pivot firmware, all future updates can happen wirelessly (though USB is still fine too). Without a password, anyone who can reach the device on your network could install their own firmware onto it. The API encryption key does not protect against this; it is a separate mechanism.<br><br>
+Generate a unique value per device with <code>openssl rand -hex 16</code> (or come up with your own), add it to your ESPHome <strong>Secrets</strong> file as <code>pivot_ota_lounge</code> (any name you like, one per device), and reference it as shown above. Only the length is checked – stick to hex, letters, digits, hyphens or underscores and you won't have to think about it further.<br><br>
 <strong>If you leave it out, the build stops with an error.</strong> That is deliberate: a missing OTA password cannot be detected once the device is running, so Pivot refuses to build firmware without one rather than quietly producing an unprotected device.</blockquote>
 
 <blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code>, <code>api_encryption_key</code> and <code>ota_password</code> somewhere safe. You will need the suffix when adding the Pivot integration, the key if Home Assistant ever asks for it, and the OTA password for every future wireless update. If you lose the OTA password, the only way back in is a USB reflash.</blockquote></li>
 
-<li><p><strong>Connect your VPE via USB</strong> for the initial flash – use a good quality cable. OTA (wireless) is used for all future updates once the device is running Pivot firmware.</p>
+<li><p><strong>Connect your VPE via USB</strong> for the initial flash – use a good quality cable. OTA (wireless) can be used for all future updates once the device is running Pivot firmware.</p>
 
 <blockquote><strong>Tip:</strong> There is a small switch inside the VPE case labelled <strong>USB SELECT</strong> with two positions: <strong>ESP32</strong> and <strong>XU316</strong>. It should be in the <strong>ESP32</strong> position by default. If your device is not detected when connected via USB, open the case and check this switch. Follow <a href="https://support.nabucasa.com/hc/en-us/articles/25938306296605-Disassembling-the-enclosure-of-Home-Assistant-Voice-Preview-Edition">Step 1 of the Nabu Casa disassembly guide</a> to access it.</blockquote></li>
 
@@ -139,7 +139,7 @@ Generate a unique value per device with <code>openssl rand -hex 16</code>, add i
 <li>Once flashed, <strong>fully power cycle your VPE</strong> – disconnect from power, wait a few seconds, then reconnect. The device will reconnect to Home Assistant automatically.</li>
 </ol>
 
-> **Future updates** – once your device is running Pivot firmware and is online, all future updates are wireless. When a new firmware version is released, just open the device in ESPHome Device Builder and click **Install → Wirelessly**. 
+> **Future updates** – once your device is running Pivot firmware and is online, future updates can be wireless. When a new firmware version is released, just open the device in ESPHome Device Builder and click **Install → Wirelessly** (or connect via USB, as before).
 
 
 ---
