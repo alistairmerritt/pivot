@@ -12,7 +12,7 @@ permalink: /changelog/
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
-> ***Home Assistant 2025.8.0 or later is required.** This is a hard requirement, not a recommendation: the integration's options flow uses `OptionsFlowWithReload`, which does not exist before 2025.8.0, so on older releases Pivot fails while loading or configuring. (Earlier versions of this page advertised 2024.4.0, which was wrong.) The bundled blueprints additionally need the `action:` key and `trigger:` shorthand introduced in 2024.4.0.
+> ***Home Assistant 2025.8.0 or later is required.** This is a hard requirement, not a recommendation: the integration's options flow uses `OptionsFlowWithReload`, which does not exist before 2025.8.0, so on older releases Pivot fails while loading or configuring. The bundled blueprints additionally need the `action:` key and `trigger:` shorthand introduced in 2024.4.0.
 
 ---
 
