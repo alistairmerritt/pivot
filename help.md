@@ -364,7 +364,7 @@ Start here before anything else:
 Work through these in order:
 
 1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, or a cover that accepts a position. Scenes, scripts, switches and open/close-only covers such as most garage doors are passive (knob does nothing, button only).
+2. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, number, input_number, or a cover that accepts a position. Scenes, scripts, switches and open/close-only covers such as most garage doors are passive (knob does nothing, button only).
 3. **Check Control Mode is on** – go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
 4. **If the button works but the knob doesn't** – the `device_suffix` in your firmware YAML probably doesn't match the integration. See [The device suffix mismatch](#the-device-suffix-mismatch--entities-have-wrong-ids).
 
@@ -451,7 +451,7 @@ Is the VPE showing a revolving blue LED pattern?
         Does turning the knob change the entity value?
         ├── No
         │   ├── Check bank has an entity assigned (Settings → Pivot → Configure)
-        │   ├── Check the entity type is supported (light, fan, media player, climate, positionable cover)
+        │   ├── Check the entity type is supported (light, fan, media player, climate, positionable cover, number, input_number)
         │   ├── Check "Allow device to perform HA actions" is enabled in ESPHome integration
         │   └── Button still works? → device_suffix mismatch (see Connection)
         │
