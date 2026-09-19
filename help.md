@@ -60,7 +60,7 @@ You can continue using voice as normal – Pivot simply adds a physical control 
 **Does Pivot change how voice is triggered?**
 Only while Control Mode is enabled. When Control Mode is on, single press toggles or activates the assigned entity instead of starting the voice assistant. When Control Mode is off (double press to toggle it), single press returns to starting the voice assistant exactly as it does in the stock firmware.
 
-Wake word activation is always available regardless of Control Mode. If you want a manual voice trigger while staying in Control Mode, long press is left open for this purpose – see [Can I use long press to start a voice conversation?](#can-i-use-long-press-to-start-a-voice-conversation) in the Advanced section.
+Wake word activation is always available regardless of Control Mode. If you want a manual voice trigger while staying in Control Mode, long press is left open for this purpose – see **How can I trigger voice from a button press in Control Mode?** in the [Advanced](#advanced) section.
 
 ---
 
