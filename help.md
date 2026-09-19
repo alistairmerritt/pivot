@@ -202,6 +202,16 @@ Yes. Each device uses a unique identifier, allowing multiple VPE devices to run 
 
 ---
 
+**Can I rename my VPE?**
+Mostly, yes – it depends on what you rename:
+
+- **The device's name in Home Assistant** (the name shown on its device page) – always safe.
+- **The device's name in ESPHome** (`device_name` in your YAML) – safe from integration v0.0.91. Older versions kept using the old name when pushing settings to the device after a Home Assistant restart, so the push silently stopped reaching it. If you renamed a device on an older version, update the integration.
+- **Removing the VPE and adding it to Home Assistant again** – this makes it a new device, and the Pivot entry stays linked to the old one: the knob keeps working but the button doesn't. Use **Reconfigure** on the Pivot entry to re-link it (see [The button press does nothing](#the-button-press-does-nothing)).
+- **Pivot's entity IDs** – never rename these. The firmware finds them by your `device_suffix`, so a renamed entity ID breaks the connection. Change an entity's **Name** instead if you want a clearer label.
+
+---
+
 **Does Pivot work without internet?**
 Yes. Pivot runs entirely locally within Home Assistant and ESPHome.
 
@@ -375,11 +385,15 @@ Work through these in order:
 
 1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
 2. **Check Control Mode is on** – the button only toggles entities in Control Mode. Double press to toggle it on.
-3. **If the knob works but the button doesn't** – the Pivot entry is probably linked to an old copy of your VPE. This happens when the VPE is added to Home Assistant again: re-adopting it in ESPHome, re-adding it after a reset, or first adding it by IP address and later by name. The knob keeps working because it finds Pivot's entities by suffix, but button presses are matched to the specific device the Pivot entry was set up with – and that device no longer exists. Triple-press announcements go quiet for the same reason. Nothing warns you.
+3. **If the knob works but the button doesn't** – the Pivot entry is probably linked to an old copy of your VPE. This happens when the VPE is added to Home Assistant again: re-adopting it in ESPHome, re-adding it after a reset, or first adding it by IP address and later by name. The knob keeps working because it finds Pivot's entities by suffix, but button presses are matched to the specific device the Pivot entry was set up with – and that device no longer exists. Triple-press announcements go quiet for the same reason. From integration v0.0.91, Home Assistant tells you: a notice appears in **Settings → Repairs** saying Pivot can't hear the button.
 
    **To check:** go to **Settings → Devices & Services → ESPHome**. If your VPE appears twice, the copy whose entities are all unavailable is the old one. You can also open **Developer Tools → States**, find your VPE's `event.…_button_press` entity and press the button: if its time updates but nothing toggles, this is the cause.
 
-   **To fix:** make a note of your bank assignments, then delete your device's entry from the Pivot integration and add it again, choosing the copy of the VPE whose entities are available. At the suffix step, enter the same `device_suffix` as your firmware YAML – the field is pre-filled from the ESPHome name, which may be different. If you're sure the unavailable copy is old, delete it from ESPHome first so it can't be picked by mistake.
+   **To fix (integration v0.0.91 and later):** go to **Settings → Devices & Services → Pivot**, open the menu (⋮) on your device's entry, choose **Reconfigure**, and pick the copy of the VPE whose button is available – unavailable copies are marked. Only the link changes: your suffix, bank assignments and settings are kept. Afterwards, update the **Button event entity** input of your Pivot Timer automation, and any automation of your own that triggers on the old button entity, to the new device.
+
+   **To fix (older versions):** make a note of your bank assignments, then delete your device's entry from the Pivot integration and add it again, choosing the copy of the VPE whose entities are available. At the suffix step, enter the same `device_suffix` as your firmware YAML – the field is pre-filled from the ESPHome name, which may be different.
+
+   Either way, if you're sure the unavailable copy is old, delete it from ESPHome first so it can't be picked by mistake.
 4. **Check the integration is up to date** – button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
 5. **Check firmware is up to date** – open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
 

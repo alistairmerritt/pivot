@@ -240,3 +240,17 @@ Automations triggered by these events always stack on top of built-in behaviour 
 - Leave the bank entity field empty and use `single_press` – with no entity assigned, Pivot has nothing to toggle
 
 → [Custom Automations](/pivot/automations/) – examples and patterns for building your own.
+
+---
+
+## Re-linking the device (Reconfigure)
+
+Each Pivot entry is linked to one ESPHome device – the one it takes button presses from. If the VPE is added to Home Assistant again (re-adopted in ESPHome, reset, or first added by IP address and later by name), it becomes a new device and the entry stays linked to the old one: the knob keeps working, but button presses and triple-press announcements stop.
+
+To re-link it (integration v0.0.91 and later), go to **Settings → Devices & Services → Pivot**, open the menu (⋮) on the entry, choose **Reconfigure**, and pick the device whose button is available – copies whose button is unavailable are marked. Only the link changes: the suffix, bank assignments and all settings are kept. The firmware on the device you pick must use the same `device_suffix`.
+
+**Pivot warns you when this happens.** A notice appears in **Settings → Repairs** when the linked device or its button no longer exists, or when the device is clearly online – it just sent a knob turn or bank switch – but the button Pivot is listening to has been unavailable for over a minute. A VPE that is simply switched off never triggers it. The notice clears itself once the button can be heard again.
+
+After re-linking, update anything that points at the old device's button entity directly: the **Button event entity** input of your Pivot Timer automation, and any automation of your own that triggers on that entity. Automations built on the `pivot_button_press` event keep working, because it is addressed by suffix.
+
+Renaming the device in ESPHome does not need a re-link: Pivot looks up the device's current ESPHome name each time it pushes settings.

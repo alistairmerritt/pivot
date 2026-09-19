@@ -173,6 +173,8 @@ Pivot also reads its own entities to determine things like:
 
 During setup, Pivot performs a read-only lookup in Home Assistant’s registry so it can locate the relevant event entity for the ESPHome device.
 
+When it pushes settings, it also reads the device's current name from its ESPHome configuration entry – only the name, never the stored password or encryption key – so the push keeps working after the device is renamed in ESPHome.
+
 It does not modify device registry data.
 
 * * *
@@ -210,9 +212,13 @@ Pivot also writes to its own entities when needed, for example:
 - writing TTS and media player selections from the integration settings
 - writing colour values used by the firmware
 
+### Repairs notices
+
+If the entry is linked to a device whose button it cannot hear, Pivot raises a notice in Home Assistant's **Repairs** (**Settings → Repairs**), and removes it again once the button can be heard or the entry is deleted.
+
 ### Settings push to the device
 
-Once Home Assistant has fully started, Pivot calls a dedicated action on the ESPHome device – `pivot_sync_settings_v2`, exposed to Home Assistant as `esphome.{device_name}_pivot_sync_settings_v2` – to push Control Mode, Show Control Value, Dim LEDs When Idle, the per-bank Mirror Light and passive flags, the active bank, each bank's value, and both sets of bank colours directly into the firmware. This is a standard Home Assistant service call, the same as any other action Pivot performs – it does not bypass Home Assistant.
+Once Home Assistant has fully started, Pivot calls a dedicated action on the ESPHome device – `pivot_sync_settings_v2`, exposed to Home Assistant as `esphome.{device_name}_pivot_sync_settings_v2`, where `{device_name}` is the device's current ESPHome name, looked up at each attempt – to push Control Mode, Show Control Value, Dim LEDs When Idle, the per-bank Mirror Light and passive flags, the active bank, each bank's value, and both sets of bank colours directly into the firmware. This is a standard Home Assistant service call, the same as any other action Pivot performs – it does not bypass Home Assistant.
 
 This exists because Home Assistant's ESPHome integration only forwards genuine state *changes* to a subscribed device – a device that connects and subscribes before Pivot's entities are restored (typical during a Home Assistant restart) would otherwise never receive their values. The push guarantees the firmware has correct settings after a restart regardless of connection or restore ordering. It also runs when the device connects later, and retries on a backoff schedule until an attempt is confirmed – a warning is logged if it never succeeds.
 

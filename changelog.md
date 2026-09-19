@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.27 | v0.0.90 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.27 | v0.0.91 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,20 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.91</summary>
+
+- **Fix:** **Renaming a device in ESPHome silently stopped Pivot pushing settings to it.** The settings push after a Home Assistant restart calls an action named after the device's ESPHome name, and Pivot used the name recorded when the entry was set up – so after a rename the push never reached the device, and settings could stay stale until changed. Pivot now looks up the device's current name at every attempt. Existing entries are fixed by updating; no re-setup needed.
+- **New:** **Reconfigure.** If the VPE is added to Home Assistant again – re-adopted in ESPHome, reset, or first added by IP address – it becomes a new device and the Pivot entry stayed linked to the old one: the knob kept working, but button presses and triple-press announcements silently stopped. Choose **Reconfigure** from the entry's menu to pick the right device; your suffix, bank assignments and settings are kept. Previously the only fix was deleting and re-adding the entry. Automations that point at the device's button entity directly – the Pivot Timer blueprint's **Button event entity** input, or your own – still need updating by hand; those built on the `pivot_button_press` event do not.
+- **New:** **A Repairs notice when Pivot can't hear the button.** Raised when the linked device or its button no longer exists, or when the device is clearly online (it just sent a knob turn or bank switch) while the button Pivot listens to has been unavailable for over a minute. A device that is simply switched off never triggers it, and the notice clears itself once the button can be heard.
+- **Change:** When the settings push fails, the log now names the exact action it looked for and mentions Reconfigure, instead of only suggesting the device is offline or on old firmware.
+- **Fix:** The bank assignment screen said only scenes and scripts ignore the knob. It now covers switches, input_booleans and open/close-only covers such as garage doors, and mentions their status ring.
+- **Fix:** `input_boolean` entities can now be chosen in the bank entity picker. They were supported, but could only be assigned by editing the bank's text entity directly.
+- **Fix:** Re-linking an entry no longer replaces its Pivot device. The device is identified by the ESPHome device it is linked to, so a re-link would have built a second one and moved every entity to it — losing the device's area, its name, and any automation targeting it.
+- **Change:** Automated tests expanded from 71 to 96.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.90</summary>
