@@ -114,14 +114,17 @@ Pivot uses the LED ring to communicate both identity and value:
 - **Value display** → shows the current value of adjustable entities
 - **RGB lights** → reflect the light's colour
 - **Non-RGB entities** → use the bank colour as the value indicator
-- **Passive entities** → briefly show the bank colour, then turn off
+- **Switches and garage doors** → a full ring when on or open, off when off or closed
+- **Scenes and scripts** → briefly show the bank colour, then turn off
 
 Each bank's colour can be customised from within Home Assistant, so you can choose colours that make sense for your setup.
 
 ---
 
 **Why do the LEDs turn off on some banks?**
-If a bank is assigned to a passive entity (such as a switch, scene, or script), there is no adjustable value to display. In this case, the LED ring will briefly show the bank colour when selected, then turn off.
+If a bank is assigned to a scene or script, there is no value or state to display, so the LED ring briefly shows the bank colour when selected, then turns off.
+
+Switches, input_booleans and open/close-only covers (such as most garage doors) are different: the ring shows their state – a full circle in the bank colour when on or open, and off when off or closed. So on those banks, a dark ring means the entity is off or closed. This needs integration v0.0.90 and firmware v0.0.27 – with older firmware, these banks also turn the LEDs off.
 
 ---
 
@@ -359,7 +362,7 @@ Start here before anything else:
 Work through these in order:
 
 1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, or cover. Scenes and scripts are passive (knob does nothing, button only).
+2. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, or a cover that accepts a position. Scenes, scripts, switches and open/close-only covers such as most garage doors are passive (knob does nothing, button only).
 3. **Check Control Mode is on** – go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
 
 ---
@@ -440,7 +443,7 @@ Is the VPE showing a revolving blue LED pattern?
         Does turning the knob change the entity value?
         ├── No
         │   ├── Check bank has an entity assigned (Settings → Pivot → Configure)
-        │   ├── Check the entity type is supported (light, fan, media player, climate, cover)
+        │   ├── Check the entity type is supported (light, fan, media player, climate, positionable cover)
         │   └── Check "Allow device to perform HA actions" is enabled in ESPHome integration
         │
         └── Yes – knob works

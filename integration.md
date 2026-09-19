@@ -63,10 +63,10 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 | Entity | Purpose |
 | --- | --- |
-| `binary_sensor.{device_suffix}_bank_1_passive` | On when Bank 1 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{device_suffix}_bank_2_passive` | On when Bank 2 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{device_suffix}_bank_3_passive` | On when Bank 3 entity is a scene, script, switch, or input_boolean (knob disabled) |
-| `binary_sensor.{device_suffix}_bank_4_passive` | On when Bank 4 entity is a scene, script, switch, or input_boolean (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_1_passive` | On when Bank 1 entity is a scene, script, switch, input_boolean or open/close-only cover (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_2_passive` | On when Bank 2 entity is a scene, script, switch, input_boolean or open/close-only cover (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_3_passive` | On when Bank 3 entity is a scene, script, switch, input_boolean or open/close-only cover (knob disabled) |
+| `binary_sensor.{device_suffix}_bank_4_passive` | On when Bank 4 entity is a scene, script, switch, input_boolean or open/close-only cover (knob disabled) |
 
 ### Timer entities
 
@@ -126,7 +126,7 @@ Supported domains and what is spoken for value announcements:
 | Domain | Announcement |
 | --- | --- |
 | `climate` | *"Temperature 22 degrees"* (reads `temperature` attribute) |
-| `cover` | *"50 percent open"* (reads `current_position` attribute) |
+| `cover` | *"50 percent open"* (reads `current_position` attribute). Not announced for open/close-only covers such as garage doors, where the knob does nothing |
 | `light` | *"Brightness 60 percent"* (knob value) |
 | `media_player` | *"Volume 40 percent"* (knob value) |
 | `fan` | *"Speed 60 percent"* (knob value) |
@@ -150,13 +150,16 @@ When an assigned entity is changed externally – by a voice command, another da
 | `media_player` | Volume (0–100%) | Play/pause |
 | `fan` | Speed % | Toggle on/off |
 | `climate` | Temperature (entity min – max) | Toggle on/off |
-| `cover` | Position % | Toggle open/close |
+| `cover` (accepts a position – blinds, shutters) | Position % | Toggle open/close |
+| `cover` (open/close only – most garage doors) | – | Toggle open/close |
 | `input_number` / `number` | Value scaled to entity min – max | – |
 | `switch` / `input_boolean` | – | Toggle |
 | `scene` | – | Activate |
 | `script` | – | Run |
 
-> **Passive banks show no gauge.** When a bank is assigned to a passive domain (switch, input_boolean, scene, or script), the LEDs turn off – there is no value for the knob to control, so nothing is shown. The bank colour ring still appears briefly while pressing and turning to switch banks as normal.
+> **Passive banks.** Switches, input_booleans, scenes, scripts and open/close-only covers are passive: there is no value for the knob to control, so the knob does nothing and the button does the work. Whether a cover is open/close-only is decided by whether it accepts a position (its `SET_POSITION` feature), not by whether it reports one.
+>
+> **Passive banks with an on/off state show it on the ring.** For a switch, input_boolean or open/close-only cover, the ring is a full circle in the bank colour when the entity is on or open, and off when it is off or closed. It updates live, however the entity changes. Scene and script banks have no state, so their LEDs stay off. The bank colour ring still appears briefly while pressing and turning to switch banks as normal. The status ring needs integration v0.0.90 and firmware v0.0.27; with older firmware, passive banks show no LEDs.
 
 ---
 

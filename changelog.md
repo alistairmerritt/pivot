@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.26 | v0.0.89 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.27 | v0.0.90 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,17 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.90</summary>
+
+- **New:** **Switch and input_boolean banks show their state on the LED ring** – a full ring in the bank colour when on, off when off. It updates live however the entity changes: the button, a dashboard, an automation or voice. The bank's value now mirrors the entity's state (100 on, 0 off) instead of being held at zero. Requires firmware v0.0.27 to display; with older firmware these banks behave exactly as before.
+- **New:** **Garage doors and other open/close-only covers are now passive banks.** The knob does nothing, the button toggles the door, and with firmware v0.0.27 the ring is full when the door is open and off when it is closed. Previously the knob sent a set-position command that Home Assistant rejected, so it silently did nothing; the bank value never followed a door that does not report a position; and value announcements could say *"50 percent open"* about a garage door. Covers that accept a position – blinds, shutters – are unchanged.
+- **Fix:** Whether a cover is open/close-only is decided by its `SET_POSITION` feature, not by whether it reports a position – some garage doors report 0 and 100 but cannot be sent one. A cover whose state has not loaded yet keeps the original behaviour until it does, then becomes passive automatically, so a Home Assistant restart cannot misclassify a blind.
+- **Fix:** Reassigning a bank that is not currently active to a passive entity now sets its value straight away. Previously only the active bank was updated, so the previous entity's value (a light's 60%, say) stayed in the device's cache until you next switched to that bank.
+- **Change:** Automated tests expanded from 45 to 71, adding end-to-end coverage of the status ring: live state changes, restarts, entities that load after Pivot, unavailable entities, reassignment, and confirmation that the knob never commands a passive bank.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.89</summary>
@@ -757,6 +768,13 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.27</summary>
+
+- **New:** Passive banks with an on/off state show it on the LED ring: a full ring in the bank colour when the entity is on or open, nothing when it is off or closed. Applies to switches, input_booleans and open/close-only covers such as garage doors. Scene and script banks still show nothing. Follows the existing Show Control Value and Dim When Idle settings. Requires integration v0.0.90 to take effect – with older integration versions nothing changes, so the two can be updated in either order.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.26</summary>
