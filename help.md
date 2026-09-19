@@ -324,6 +324,8 @@ When Home Assistant asks for an encryption key, open your firmware YAML file and
 
 The `device_suffix` in your firmware YAML must match exactly what you entered in the integration setup. If they don't match, the firmware and integration will use mismatched entity IDs and won't communicate.
 
+**How it shows up:** the button still works – a press toggles the assigned entity – but turning the knob does nothing, and settings you change on the Pivot device page don't reach the device. The knob and settings find Pivot's entities by suffix, while button presses are matched to the device itself, which is why one works without the other. (The opposite – knob works, button doesn't – has a different cause: see [The button press does nothing](#the-button-press-does-nothing).)
+
 To check: go to **Settings → Devices & Services → Pivot → your device** and look at the entity IDs. They should all start with your `device_suffix`. If they don't match what the firmware expects, the easiest fix is to remove and re-add the Pivot integration using the correct suffix.
 
 ---
@@ -364,6 +366,7 @@ Work through these in order:
 1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
 2. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, or a cover that accepts a position. Scenes, scripts, switches and open/close-only covers such as most garage doors are passive (knob does nothing, button only).
 3. **Check Control Mode is on** – go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
+4. **If the button works but the knob doesn't** – the `device_suffix` in your firmware YAML probably doesn't match the integration. See [The device suffix mismatch](#the-device-suffix-mismatch--entities-have-wrong-ids).
 
 ---
 
@@ -371,8 +374,13 @@ Work through these in order:
 
 1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
 2. **Check Control Mode is on** – the button only toggles entities in Control Mode. Double press to toggle it on.
-3. **Check the integration is up to date** – button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
-4. **Check firmware is up to date** – open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
+3. **If the knob works but the button doesn't** – the Pivot entry is probably linked to an old copy of your VPE. This happens when the VPE is added to Home Assistant again: re-adopting it in ESPHome, re-adding it after a reset, or first adding it by IP address and later by name. The knob keeps working because it finds Pivot's entities by suffix, but button presses are matched to the specific device the Pivot entry was set up with – and that device no longer exists. Triple-press announcements go quiet for the same reason. Nothing warns you.
+
+   **To check:** go to **Settings → Devices & Services → ESPHome**. If your VPE appears twice, the copy whose entities are all unavailable is the old one. You can also open **Developer Tools → States**, find your VPE's `event.…_button_press` entity and press the button: if its time updates but nothing toggles, this is the cause.
+
+   **To fix:** make a note of your bank assignments, then delete your device's entry from the Pivot integration and add it again, choosing the copy of the VPE whose entities are available. At the suffix step, enter the same `device_suffix` as your firmware YAML – the field is pre-filled from the ESPHome name, which may be different. If you're sure the unavailable copy is old, delete it from ESPHome first so it can't be picked by mistake.
+4. **Check the integration is up to date** – button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
+5. **Check firmware is up to date** – open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
 
 ---
 
@@ -444,12 +452,14 @@ Is the VPE showing a revolving blue LED pattern?
         ├── No
         │   ├── Check bank has an entity assigned (Settings → Pivot → Configure)
         │   ├── Check the entity type is supported (light, fan, media player, climate, positionable cover)
-        │   └── Check "Allow device to perform HA actions" is enabled in ESPHome integration
+        │   ├── Check "Allow device to perform HA actions" is enabled in ESPHome integration
+        │   └── Button still works? → device_suffix mismatch (see Connection)
         │
         └── Yes – knob works
             │
             Does pressing the button toggle the entity?
             ├── No
+            │   ├── Pivot entry linked to an old copy of the VPE (see "The button press does nothing", step 3)
             │   ├── Update integration via HACS
             │   └── Update firmware via ESPHome Device Builder
             │
