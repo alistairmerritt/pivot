@@ -42,6 +42,7 @@ Common examples include:
 - Covers
 - Climate entities
 - Input numbers
+- Switches
 - Scripts
 - Scenes
 

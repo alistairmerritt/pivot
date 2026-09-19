@@ -55,7 +55,7 @@ Each bank card shows:
 - A `Mirror Light Colour` toggle (visible only when a light entity is assigned)
 - `Timer controls` – play/pause, reset, and preset duration buttons (15m / 30m / 45m / 60m), shown automatically when the bank entity is set to `timer`
 - A `Silent Timer` toggle (shown on timer banks)
-- An `Announce Value` toggle (shown for supported entity types: light, media player, fan, climate, cover, number) – enables spoken value announcements after the knob settles
+- An `Announce Value` toggle (shown for supported entity types: light, media player, fan, climate, cover, number, input_number – but not for open/close-only covers such as garage doors, where the knob does nothing) – enables spoken value announcements after the knob settles
 
 Tapping the card switches the physical device to that bank.
 

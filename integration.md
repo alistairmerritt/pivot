@@ -6,7 +6,7 @@ permalink: /integration/
 
 The Pivot HA integration provisions all required entities for a Pivot device, handles button toggle and spoken announcements natively, and shows a one-time notification on first setup with links to import the optional timer blueprints.
 
-> **Requires Home Assistant 2024.4.0 or later.** The integration will install on older versions but the bundled blueprints use syntax introduced in 2024.4 and will silently fail to validate.
+> **Requires Home Assistant 2025.8.0 or later.** This is a hard requirement: the integration's options flow uses `OptionsFlowWithReload`, which does not exist before 2025.8.0, so on older releases Pivot fails while loading or configuring.
 
 Install via HACS from [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration). For a full breakdown of what the integration does, what it reads, and what it writes, see the [Architecture](/pivot/architecture/) page.
 
@@ -68,6 +68,14 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 | `binary_sensor.{device_suffix}_bank_3_passive` | On when Bank 3 entity is a scene, script, switch, input_boolean or open/close-only cover (knob disabled) |
 | `binary_sensor.{device_suffix}_bank_4_passive` | On when Bank 4 entity is a scene, script, switch, input_boolean or open/close-only cover (knob disabled) |
 
+### Colour entities
+
+| Entity | Purpose |
+| --- | --- |
+| `light.{device_suffix}_bank_1_color_light` … `bank_4_color_light` | Colour picker for each bank – set the bank's ring colour from any light control |
+| `text.{device_suffix}_bank_1_color` … `bank_4_color` | The colour each bank's ring currently shows, as `#RRGGBB` (the mirrored light colour when Mirror Light is on) |
+| `text.{device_suffix}_bank_1_configured_color` … `bank_4_configured_color` | The bank's own chosen colour, used by the Bank Indicator when switching banks and restored when Mirror Light is turned off |
+
 ### Timer entities
 
 These entities are provisioned per device but **disabled by default**. Enable them individually in the HA entity registry if you want to use the [Pivot Timer](/pivot/timer/) feature.
@@ -77,7 +85,7 @@ These entities are provisioned per device but **disabled by default**. Enable th
 | `number.{device_suffix}_timer_duration` | Timer duration in minutes (1–60, default 25) |
 | `select.{device_suffix}_timer_state` | Timer state – `idle`, `running`, `paused`, or `alerting` (alarm firing) |
 | `text.{device_suffix}_timer_end` | Internal – stores the countdown end time while the timer is running |
-| `text.{device_suffix}_timer_restore_show_value` | Internal – snapshots Display Persistent Value so it can be restored after the timer ends (used only if a bank is assigned). Categorised as diagnostic, so it appears in a separate section from the other timer entities on the device page |
+| `text.{device_suffix}_timer_restore_show_value` | Internal – snapshots Show Control Value so it can be restored after the timer ends (used only if a bank is assigned). Categorised as diagnostic, so it appears in a separate section from the other timer entities on the device page |
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** – not its **Entity ID**.
 
@@ -181,7 +189,7 @@ Fired whenever the active bank changes.
 
 ### `pivot_knob_turn`
 
-Fired whenever the knob is turned in Control Mode.
+Fired whenever the knob is turned in Control Mode – except on passive banks (scenes, scripts, switches, input_booleans and open/close-only covers), where the knob does nothing, and on a timer bank, which fires `pivot_timer_duration_set` instead.
 
 | Field | Description |
 | --- | --- |
@@ -200,8 +208,18 @@ Fired on every button press regardless of mode.
 | `suffix` | Device suffix |
 | `bank` | Active bank (1–4) |
 | `bank_entity` | Entity assigned to the active bank |
-| `press_type` | `single_press`, `double_press`, `triple_press`, or `long_press` |
+| `press_type` | `single_press`, `double_press`, `triple_press`, or `long_press` (plus `easter_egg_press`, from the stock VPE easter egg) |
 | `control_mode` | `true` if in Control Mode |
+
+### `pivot_timer_duration_set`
+
+Fired when the knob sets the timer duration on a timer bank while the timer is idle.
+
+| Field | Description |
+| --- | --- |
+| `suffix` | Device suffix |
+| `bank` | The timer bank (1–4) |
+| `duration` | New duration in minutes |
 
 > See [Custom Automations](/pivot/automations/) for examples using these events.
 

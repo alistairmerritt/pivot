@@ -122,7 +122,7 @@ Timer entities are created as part of the integration and are disabled by defaul
 - `number` – timer duration
 - `select` – timer state
 - `text` – timer end time
-- `text` – restore value for Display Persistent Value (diagnostic)
+- `text` – restore value for Show Control Value (diagnostic)
 
 All entity IDs follow a stable pattern:
 
@@ -132,7 +132,7 @@ They are pinned explicitly so they stay stable across Home Assistant restarts an
 
 ### Why so many entities?
 
-Around thirty entities per device is a fair thing to question, so here is the reason: the entities **are** the interface between the integration and the firmware.
+Around forty entities per device (plus four timer entities, disabled by default) is a fair thing to question, so here is the reason: the entities **are** the interface between the integration and the firmware.
 
 ESPHome firmware has no private side channel into Home Assistant. For the device to read a value that lives in Home Assistant — which bank is active, what colour a bank should be, whether control mode is on — that value must exist as a real entity the firmware can subscribe to. So every bank value, assignment, colour, and setting is a normal Home Assistant entity, effectively a shared variable between the two halves of the system.
 
@@ -154,7 +154,9 @@ Examples include:
 - volume from a media player
 - percentage from a fan
 - target temperature from a climate entity
-- position from a cover
+- position from a cover, or whether it is open or closed if it cannot report a position
+- whether a cover accepts a position (its supported features), which decides whether its bank is passive
+- on/off state from a switch or input_boolean, shown on the ring
 - value from a number or input number
 
 ### Its own entities
@@ -210,9 +212,11 @@ Pivot also writes to its own entities when needed, for example:
 
 ### Settings push to the device
 
-Once Home Assistant has fully started, Pivot calls a dedicated action on the ESPHome device – `pivot_sync_settings`, exposed to Home Assistant as `esphome.{device_name}_pivot_sync_settings` – to push Control Mode, Show Control Value, Dim LEDs When Idle, and the per-bank Mirror Light and passive flags directly into the firmware. This is a standard Home Assistant service call, the same as any other action Pivot performs – it does not bypass Home Assistant.
+Once Home Assistant has fully started, Pivot calls a dedicated action on the ESPHome device – `pivot_sync_settings_v2`, exposed to Home Assistant as `esphome.{device_name}_pivot_sync_settings_v2` – to push Control Mode, Show Control Value, Dim LEDs When Idle, the per-bank Mirror Light and passive flags, the active bank, each bank's value, and both sets of bank colours directly into the firmware. This is a standard Home Assistant service call, the same as any other action Pivot performs – it does not bypass Home Assistant.
 
-This exists because Home Assistant's ESPHome integration only forwards genuine state *changes* to a subscribed device – a device that connects and subscribes before Pivot's entities are restored (typical during a Home Assistant restart) would otherwise never receive their values. The push guarantees the firmware has correct settings after a restart regardless of connection or restore ordering. It requires firmware v0.0.24 or later; on older firmware the action does not exist and the push is skipped silently.
+This exists because Home Assistant's ESPHome integration only forwards genuine state *changes* to a subscribed device – a device that connects and subscribes before Pivot's entities are restored (typical during a Home Assistant restart) would otherwise never receive their values. The push guarantees the firmware has correct settings after a restart regardless of connection or restore ordering. It also runs when the device connects later, and retries on a backoff schedule until an attempt is confirmed – a warning is logged if it never succeeds.
+
+The full push needs firmware v0.0.25 or later. On firmware v0.0.24 Pivot falls back to the original `pivot_sync_settings` action, which pushes only the switches and flags; on older firmware neither action exists and the push is skipped.
 
 ### Blueprint notification
 

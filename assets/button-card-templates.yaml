@@ -147,7 +147,7 @@ button_card_templates:
           'control_mode': 'Control Mode',
           'announcements': 'System Announcements',
           'mute_announcements': 'Mute Announcements',
-          'show_control_value': 'Display Persistent Value',
+          'show_control_value': 'Show Control Value',
           'dim_when_idle': 'Dim Gauge LEDs While Idle',
         };
         return labels[variables.toggle_entity] ?? variables.toggle_entity;
@@ -583,6 +583,10 @@ button_card_templates:
                     if (unassigned) return '';
 
                     if (passive === 'on') {
+                      if (entityId.startsWith('cover.')) {
+                        const coverLabels = { open: 'Open', closed: 'Closed', opening: 'Opening', closing: 'Closing' };
+                        return coverLabels[entityState] ?? '';
+                      }
                       if (entityState === 'on') return 'On';
                       return value === 0 ? 'Off' : 'On';
                     }
@@ -1380,8 +1384,10 @@ button_card_templates:
                   [[[
                     const entityId = states[variables.name_entity]?.state;
                     const domain = entityId?.split('.')?.[0];
-                    const supported = ['light', 'media_player', 'fan', 'climate', 'cover', 'number'];
-                    return supported.includes(domain) ? 'block' : 'none';
+                    const supported = ['light', 'media_player', 'fan', 'climate', 'cover', 'number', 'input_number'];
+                    // Passive banks (e.g. garage doors) never announce a value.
+                    const passive = states[variables.passive_entity]?.state === 'on';
+                    return supported.includes(domain) && !passive ? 'block' : 'none';
                   ]]]
             custom_fields:
               btn:
