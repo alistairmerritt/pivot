@@ -97,11 +97,12 @@ Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmwar
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "your-key-here"
 
-  # OTA update password – REQUIRED, and unique per device.
+  # OTA update password – REQUIRED. One password can be shared by all
+  # your Pivot devices.
   # Generate one with:  openssl rand -hex 16
   # Then add it to your ESPHome secrets.yaml, e.g.:
-  #   pivot_ota_lounge: "a1b2c3d4e5f6a7b8c9d0e1f2"
-  ota_password: !secret pivot_ota_lounge
+  #   pivot_ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2"
+  ota_password: !secret pivot_ota_password
 
   # LED orientation:
   #   '6'  flat on a surface, cable facing away (default)
@@ -125,7 +126,7 @@ packages:
 <blockquote><strong>WiFi credentials:</strong> The config uses <code>!secret</code> to keep credentials out of the YAML. Add <code>wifi_ssid</code> and <code>wifi_password</code> to your ESPHome <strong>Secrets</strong> file (the key icon in ESPHome Device Builder). If you prefer, you can paste the values directly as plain text instead.</blockquote>
 
 <blockquote><strong>OTA password is required for security purposes.</strong> Once your device runs Pivot firmware, all future updates can happen wirelessly (though USB is still acceptable too). Without a password, anyone who can reach the device on your network could install their own firmware onto it. <br><br>
-You can create/apply a password yourself, and if you have more than one Pivot device, they can share the same password. Ensure passwords are at least 12 characters, using only letters, digits, hyphens or underscores (avoid quotes or other special characters). If you'd rather generate a random one, open a terminal and run <code>openssl rand -hex 16</code>, which prints a random value you can copy. Add your chosen password to your ESPHome <strong>Secrets</strong> file as <code>pivot_ota_password</code> (any name you like), and reference it as shown above.<br><br>
+You can create/apply a password yourself, and if you have more than one Pivot device, they can share the same password. Ensure passwords are at least 12 characters, using only letters, digits, hyphens or underscores (avoid quotes or other special characters). If you'd rather generate a random one, open a terminal and run <code>openssl rand -hex 16</code>, which prints a random value you can copy. Add your chosen password to your ESPHome <strong>Secrets</strong> file as <code>pivot_ota_password</code>, and reference it as shown above. (Any name works, as long as the Secrets entry and the <code>!secret</code> line match.)<br><br>
 <strong>If you do not save a password, the build will stop with an error.</strong> Pivot refuses to build firmware without a password rather than quietly producing an unprotected device.</blockquote>
 
 <blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code>, <code>api_encryption_key</code> and <code>ota_password</code> somewhere safe. You will need the suffix when adding the Pivot integration, the key if Home Assistant ever asks for it, and the OTA password for every future wireless update. If you lose the OTA password, the only way back in is a USB reflash.</blockquote></li>

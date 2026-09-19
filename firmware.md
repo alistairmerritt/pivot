@@ -36,8 +36,8 @@ substitutions:
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "your_generated_key_here"
 
-  # OTA update password – REQUIRED, unique per device, min 12 characters.
-  # Generate with:  openssl rand -hex 16
+  # OTA update password – REQUIRED, min 12 characters. One password can be
+  # shared by all your Pivot devices. Generate with:  openssl rand -hex 16
   ota_password: "your_generated_ota_password"
 
   # LED orientation – set based on how your device is mounted:
@@ -95,10 +95,11 @@ substitutions:
   # https://esphome.io/components/api.html#configuration-variables
   api_encryption_key: "generate-a-unique-key-here"
 
-  # OTA update password – REQUIRED, unique per device, min 12 characters.
-  # Generate with `openssl rand -hex 16` and add it to secrets.yaml:
-  #   pivot_ota_lounge: "a1b2c3d4e5f6a7b8c9d0e1f2"
-  ota_password: !secret pivot_ota_lounge
+  # OTA update password – REQUIRED, min 12 characters. One password can be
+  # shared by all your Pivot devices. Generate with `openssl rand -hex 16`
+  # and add it to secrets.yaml:
+  #   pivot_ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2"
+  ota_password: !secret pivot_ota_password
 
   # LED orientation – set based on how your device is mounted:
   #   '6'  flat on a surface, cable facing away (LEDs start at bottom)
@@ -230,7 +231,7 @@ Before flashing, make a note of these three values somewhere safe. You will need
 
 ### `ota_password`
 
-Required, unique per device, minimum 12 characters. Make one up yourself, or generate one by running `openssl rand -hex 16` in a terminal.
+Required, minimum 12 characters. One password can be shared by all your Pivot devices. Make one up yourself, or generate one by running `openssl rand -hex 16` in a terminal.
 
 Once a device is running Pivot firmware, updates can arrive over the air (a USB cable still works too). Without a password that endpoint accepts firmware from anyone who can reach the device on your network. The API encryption key covers the Home Assistant connection only; it does not protect OTA.
 

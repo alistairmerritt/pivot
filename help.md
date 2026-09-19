@@ -277,13 +277,13 @@ openssl rand -hex 16
 
 ```yaml
 substitutions:
-  ota_password: !secret pivot_ota_lounge   # ✓ from your ESPHome secrets file
+  ota_password: !secret pivot_ota_password # ✓ from your ESPHome secrets file
   ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2" # ✓ or inline
   ota_password: ""                         # ✗ empty is rejected
   ota_password: "hunter2"                  # ✗ under 12 characters
 ```
 
-If using `!secret`, add the matching entry to your ESPHome **Secrets** file (the key icon in ESPHome Device Builder), using a different name for each device.
+If using `!secret`, add the matching entry to your ESPHome **Secrets** file (the key icon in ESPHome Device Builder) – e.g. `pivot_ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2"`. One password can be shared by all your Pivot devices.
 
 Only the length is checked (12+ characters) — the build does not inspect content, so a value with quotes or a backslash will not necessarily be caught here. It is embedded in a C++ string literal during the build though, so such a character could break the build or silently produce a different password than you typed. Stick to the hexadecimal output above, or letters/digits/hyphens/underscores, to avoid that risk.
 
