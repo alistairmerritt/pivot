@@ -189,6 +189,8 @@ Pivot is now set up and ready to use. Turn the knob to control the active bank's
 
 Pivot includes optional timer blueprints. These are not required for normal Pivot control. Blueprints are hosted on GitHub and imported via URL into Home Assistant – when you first add a Pivot device, a notification appears with the import links.
 
+> **The Voice PE's own timers keep working either way.** Installing Pivot does not change them: asking *"set a timer for 10 minutes"* still works exactly as it did, with the countdown on the LED ring and the alarm on the device, whether or not you install these blueprints. The blueprints add the extra features described on the [Timer page](/pivot/timer/) – knob control of the duration, dashboard controls, and voice commands for pausing, resuming and querying a running timer.
+
 Timers are not enabled by default. Before setting up these blueprints, go to your Pivot device in Home Assistant and enable the required timer entities. See the [Timer page](/pivot/timer/) for full setup instructions.
 
 | Blueprint | Type | Required? | What it does |
