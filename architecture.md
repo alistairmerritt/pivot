@@ -37,7 +37,7 @@ It is designed to be local-only and intentionally narrow in scope: everything it
 
 Both the integration and the firmware source are public and can be inspected before installing. For the integration, the modules listed below show exactly what each file does. For the firmware, the full YAML is at [alistairmerritt/pivot-firmware](https://github.com/alistairmerritt/pivot-firmware) — specifically `home-assistant-voice.yaml`.
 
-To verify the telemetry claim yourself: there is no `mqtt:` block, and the only outbound network activity beyond the standard ESPHome API connection to Home Assistant is `audio_http`, which streams TTS and media audio — the same mechanism used by the stock VPE firmware.
+The firmware half is covered on the [Firmware](/pivot/firmware/) page, under *What the firmware does and does not do*: what leaves the device, how the microphone behaves, and how to diff Pivot's configuration against the official one.
 
 * * *
 

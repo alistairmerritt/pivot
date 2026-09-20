@@ -173,11 +173,33 @@ You can change bank colours from within Home Assistant using the light entities 
 
 ---
 
+## What the firmware does and does not do
+
+Pivot firmware is the official Home Assistant Voice PE configuration with Pivot's control layer added on top. Measured against the upstream file it is built from: **1,327 lines added, 145 changed, and no upstream block removed**. The additions are the bank logic, the LED ring behaviour, and the dial and button handling.
+
+**Your microphone behaves exactly as it does on stock firmware.** Wake word detection runs on the device itself (`micro_wake_word`), and audio is streamed to Home Assistant only after a wake word or a button press, over the same ESPHome connection the official firmware uses. Pivot changes the LEDs, the dial and the button – it does not touch the audio path.
+
+**Nothing new leaves your network.** Pivot declares the same network components as upstream: the ESPHome API, OTA updates and WiFi. There is no `mqtt:`, no `http_request:` and no `web_server:` block, and the only outbound audio is the same `audio_http` media player the stock firmware uses to play TTS and media from Home Assistant. No cloud service, no telemetry, no analytics.
+
+**Both connections are authenticated.** The Home Assistant connection uses your `api_encryption_key`, and wireless updates require your `ota_password` – see [SECURITY.md](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md).
+
+**One external component, pinned.** Pivot pulls the `voice_kit` component and the device sounds from the official [esphome/home-assistant-voice-pe](https://github.com/esphome/home-assistant-voice-pe) repository, pinned to commit `0579e7b` (7 July 2026), so the same device configuration builds the same firmware every time.
+
+**Check all of this yourself.** The firmware is one readable YAML file, and you can diff it against the official one:
+
+```bash
+curl -O https://raw.githubusercontent.com/alistairmerritt/pivot-firmware/main/home-assistant-voice.yaml
+curl -o upstream.yaml https://raw.githubusercontent.com/esphome/home-assistant-voice-pe/0579e7b9d8504264719c593474c85447253c9dc1/home-assistant-voice.yaml
+diff upstream.yaml home-assistant-voice.yaml
+```
+
+For the Home Assistant side – what the integration creates, reads and writes – see the [Architecture](/pivot/architecture/) page.
+
+---
+
 ## Safety and rollback
 
 Pivot firmware is based on the official Home Assistant Voice PE ESPHome configuration and is designed to be reversible. As with any custom firmware, there are a few trade-offs to be aware of: the first flash may require USB, updates are manual through ESPHome, and upstream VPE features or fixes may not appear in Pivot immediately. In uncommon cases, a flash or update may need to be retried, or the device may need to be reflashed or returned to stock firmware. If anything goes wrong, or if you simply change your mind, you can restore the original stock firmware from your browser at any time via the official [Home Assistant Voice PE recovery page](https://esphome.github.io/home-assistant-voice-pe/), completely removing Pivot firmware from your VPE.
-
-Pivot firmware communicates with Home Assistant over the standard ESPHome API on your local network. It does not add any new telemetry, cloud services, or outbound network behaviour beyond what is already present in the stock Home Assistant Voice PE ESPHome configuration.
 
 ### Updates and pinning
 
