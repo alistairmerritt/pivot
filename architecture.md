@@ -6,14 +6,6 @@ permalink: /architecture/
 
 This page is for people who want to understand exactly what the Pivot integration does before installing it. It has been developed with transparency in mind, shaped by Home Assistant’s local, open-source and community-led ethos.
 
-This page explains:
-
-- what the integration creates
-- what it reads
-- what it writes
-- what it does **not** do
-- why it exists as a custom integration rather than just a set of blueprints
-
 The full source is available at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
 
 > **Firmware:** Pivot also includes custom firmware for the Home Assistant Voice Preview Edition, which is a separate component with its own installation, update and rollback considerations. Review the [Firmware](https://alistairmerritt.github.io/pivot/firmware/) page as well before proceeding.
@@ -41,19 +33,7 @@ Pivot does **not** run a web server, make outbound HTTP requests, connect to a c
 
 Pivot is an independent project and is not affiliated with Nabu Casa or the ESPHome team. It is built and maintained by [u/Pivotonian](https://www.reddit.com/user/Pivotonian/), a long-time Home Assistant community contributor.
 
-It is designed to be local-only and intentionally narrow in scope.
-
-In practical terms:
-
-- no cloud dependency
-- no telemetry
-- no external API calls
-- no external HTTP requests
-- no credential handling
-- no custom database layer
-- no direct writes to your main YAML config files
-
-Everything it does happens inside Home Assistant using standard entity platforms, standard service calls, and normal event listeners.
+It is designed to be local-only and intentionally narrow in scope: everything it does happens inside Home Assistant using standard entity platforms, standard service calls and normal event listeners. [What it does not do](#what-it-does-not-do) lists the specifics.
 
 Both the integration and the firmware source are public and can be inspected before installing. For the integration, the modules listed below show exactly what each file does. For the firmware, the full YAML is at [alistairmerritt/pivot-firmware](https://github.com/alistairmerritt/pivot-firmware) — specifically `home-assistant-voice.yaml`.
 
@@ -73,7 +53,7 @@ The integration is split into a small set of modules with defined roles.
 | `entity_mappings.py` | Maps a 0–100 Pivot value to the correct HA service call for each supported domain |
 | `announcements.py` | Formats and triggers spoken announcements |
 | `mirror.py` | Watches assigned lights and mirrors their colour into the bank colour entity |
-| `device_sync.py` | Pushes Control Mode, display, and per-bank settings to the device via the `pivot_sync_settings` action once Home Assistant has started |
+| `device_sync.py` | Pushes settings to the device once Home Assistant has started, so they are correct after a restart |
 | `blueprints.py` | Sends a one-time notification on first setup with links to import the optional timer blueprints from GitHub |
 | `config_flow.py` | Setup flow and options flow |
 | `const.py` | Entity definitions, constants, and shared configuration |
@@ -222,8 +202,6 @@ Once Home Assistant has fully started, Pivot calls a dedicated action on the ESP
 
 This exists because Home Assistant's ESPHome integration only forwards genuine state *changes* to a subscribed device – a device that connects and subscribes before Pivot's entities are restored (typical during a Home Assistant restart) would otherwise never receive their values. The push guarantees the firmware has correct settings after a restart regardless of connection or restore ordering. It also runs when the device connects later, and retries on a backoff schedule until an attempt is confirmed – a warning is logged if it never succeeds.
 
-The full push needs firmware v0.0.25 or later. On firmware v0.0.24 Pivot falls back to the original `pivot_sync_settings` action, which pushes only the switches and flags; on older firmware neither action exists and the push is skipped.
-
 ### Blueprint notification
 
 On first setup, Pivot sends a one-time Home Assistant notification with links to import the optional timer blueprints from GitHub. Blueprints are not copied automatically — importing them is optional and user-initiated.
@@ -265,44 +243,11 @@ That scope is intentional. Pivot only acts on the entities you explicitly assign
 
 A fair question is: why not just do this with blueprints?
 
-### 1. Entity provisioning
-
-Blueprints cannot create entities.
-
-Pivot needs real Home Assistant entities for things like:
-
-- bank values
-- active bank
-- bank assignments
-- colour settings
-- control switches
-- timer state
-
-These entities need stable IDs, device registration, and normal HA behaviour.
-
-### 2. State restoration
-
-Pivot uses Home Assistant restore-capable entity classes so values survive restart in the normal HA way.
-
-Blueprints do not provide an equivalent entity model for this.
-
-### 3. Loop prevention
-
-Some Pivot behaviour requires writing a synced value back into Home Assistant without that write being mistaken for a new physical control input.
-
-That kind of state feedback control is much easier and more reliable inside a custom integration than in blueprints or automations.
-
-### 4. Efficiency
-
-Knob changes can happen rapidly.
-
-Pivot uses native Home Assistant Python callbacks to respond quickly and keep gauge sync responsive, rather than relying on a heavier chain of automations, templates, and triggers.
-
-### 5. Device model
-
-Pivot behaves like a real Home Assistant device with grouped entities and a consistent contract between firmware and integration.
-
-A custom integration is the right layer for that.
+- **Entity provisioning** – blueprints cannot create entities, and Pivot needs real ones with stable IDs and device registration for bank values, assignments, colours, switches and timer state.
+- **State restoration** – Pivot uses Home Assistant's restore-capable entity classes so values survive a restart in the normal way.
+- **Loop prevention** – syncing a value back into Home Assistant without mistaking it for a new knob turn is far more reliable in Python than in automations.
+- **Efficiency** – knob turns come fast, and native callbacks keep the gauge responsive where a chain of automations and templates would not.
+- **Device model** – Pivot behaves like a real Home Assistant device, with grouped entities and a consistent contract between firmware and integration.
 
 * * *
 
@@ -316,7 +261,7 @@ A few things to keep in mind:
 - some domains are simple on/off or trigger-style interactions rather than continuous control
 - some behaviour is entity-dependent, because different Home Assistant integrations expose different attributes and capabilities
 - the timer blueprints are optional and imported separately — they are not required for Pivot to work
-- firmware and integration versions should be kept in sync where recommended
+- firmware and integration versions should be kept in sync – see the compatibility table on the [Changelog](/pivot/changelog/) page
 
 The goal is not to abstract every possible Home Assistant entity perfectly. The goal is to provide a stable, predictable control layer for the supported use cases.
 
@@ -324,8 +269,6 @@ The goal is not to abstract every possible Home Assistant entity perfectly. The 
 
 ## Source
 
-The integration source is public and Apache 2.0 licensed at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration).
-
-If you want to inspect the code before installing it, this page is intended to help you understand what to look for and where.
+The integration source is public and Apache 2.0 licensed at [alistairmerritt/pivot-integration](https://github.com/alistairmerritt/pivot-integration). This page is meant to tell you what to look for and where.
 
 * * *
