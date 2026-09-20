@@ -296,7 +296,9 @@ Remove the `.yaml` suffix, save, and retry the build.
 
 Or `Set a unique ota_password in your device YAML`. Both mean the same thing: your device YAML has no usable `ota_password`.
 
-This is intentional, not a bug. Once a device runs Pivot firmware, updates can arrive wirelessly, and an OTA endpoint without a password accepts firmware from anyone who can reach the device on your network. A missing password cannot be detected after the device is running, so Pivot checks while building instead.
+This is intentional, not a bug. Once a device runs Pivot firmware, updates can arrive wirelessly, and without a password that endpoint accepts plaintext uploads from anyone who can reach the device on your network. A missing password cannot be detected after the device is running, so Pivot checks while building instead.
+
+(The password is not the only credential: a device built with an `api_encryption_key` also accepts encrypted uploads authenticated by that key, which skip the password check. Keep the key as safe as the password.)
 
 Run this in a terminal to generate one, or make up your own following the same length and character rules below:
 

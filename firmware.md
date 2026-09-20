@@ -277,13 +277,15 @@ Before flashing, make a note of these three values somewhere safe. You will need
 | --- | --- |
 | `device_suffix` | Required when adding your device in the Pivot integration |
 | `api_encryption_key` | Required if you ever need to re-add the device to Home Assistant |
-| `ota_password` | Required for **every** future wireless update. Lose it and the only way back in is a USB reflash |
+| `ota_password` | Used for wireless updates. Lose it and you can still update using the `api_encryption_key`; lose both and it's a USB reflash |
 
 ### `ota_password`
 
 Required, minimum 12 characters. One password can be shared by all your Pivot devices. Make one up yourself, or generate one by running `openssl rand -hex 16` in a terminal.
 
-Once a device is running Pivot firmware, updates can arrive over the air (a USB cable still works too). Without a password that endpoint accepts firmware from anyone who can reach the device on your network. The API encryption key covers the Home Assistant connection only; it does not protect OTA.
+Once a device is running Pivot firmware, updates can arrive over the air (a USB cable still works too). Without a password, that endpoint accepts *plaintext* uploads from anyone who can reach the device on your network.
+
+It is not the only credential, though. On current ESPHome a device built with an `api_encryption_key` also accepts encrypted OTA uploads authenticated by that key, and those skip the password check – so protect the key as carefully as the password. ESPHome removes the plaintext path in 2027.3.0, and Pivot will move to key-authenticated updates before then, at which point the separate OTA password goes away.
 
 Because a missing OTA password cannot be detected once the device is running, Pivot checks at **build time**. Omitting it, leaving it empty, or using fewer than 12 characters stops the build:
 
@@ -294,6 +296,8 @@ error: static assertion failed: ota_password must be at least 12 characters - se
 You're free to make up your own password rather than generate one – just keep it at least 12 characters and stick to letters, digits, hyphens and underscores. Only the length is actually checked at build time; the value is embedded in a C++ string literal during the build, so a quote or backslash could break the build or silently produce a different password than you typed, with no warning either way.
 
 **Upgrading a device that has no OTA password yet:** the first upload still works without authentication, because the firmware currently on the device has no password to check against. Enforcement starts from the following update.
+
+**If you lose the password:** you can still update the device wirelessly using its `api_encryption_key`, because encrypted uploads do not check the password. Only losing both means a USB reflash.
 
 **Changing an existing password** is a two-stage process — the configured password both authenticates the upload and sets the new firmware's password, so you cannot simply swap the value. See [`SECURITY.md`](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md) in the firmware repository.
 
