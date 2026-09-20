@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.27 | v0.0.91 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.28 | v0.0.91 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -782,6 +782,13 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.28</summary>
+
+- **Fix:** The LED ring now uses explicit timings for the WS2812B-2020 parts it actually has, instead of ESPHome's generic `WS2812` preset. That preset leaves no latch gap between frames, where these parts need roughly 280 microseconds, so a frame could be misread as a continuation of the one before it – showing as flicker or briefly wrong colours. Pivot redraws the ring far more often than the stock firmware does, so it had more chances to hit this. The values match [upstream home-assistant-voice-pe #640](https://github.com/esphome/home-assistant-voice-pe/pull/640), verified on the same hardware. Configuration only – no behaviour changes.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.27</summary>

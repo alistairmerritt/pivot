@@ -175,7 +175,7 @@ You can change bank colours from within Home Assistant using the light entities 
 
 ## What the firmware does and does not do
 
-Pivot firmware is the official Home Assistant Voice PE configuration with Pivot's control layer added on top. Measured against the upstream file it is built from: **1,327 lines added, 145 changed, and no upstream block removed**. The additions are the bank logic, the LED ring behaviour, and the dial and button handling.
+Pivot firmware is the official Home Assistant Voice PE configuration with Pivot's control layer added on top. Measured against the upstream file it is built from: **1,338 lines added, 146 changed, and no upstream block removed**. The additions are the bank logic, the LED ring behaviour, and the dial and button handling.
 
 **Your microphone behaves exactly as it does on stock firmware.** Wake word detection runs on the device itself (`micro_wake_word`), and audio is streamed to Home Assistant only after a wake word or a button press, over the same ESPHome connection the official firmware uses. Pivot changes the LEDs, the dial and the button – it does not touch the audio path.
 
@@ -183,7 +183,9 @@ Pivot firmware is the official Home Assistant Voice PE configuration with Pivot'
 
 **Both connections are authenticated.** The Home Assistant connection uses your `api_encryption_key`, and wireless updates require your `ota_password` – see [SECURITY.md](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md).
 
-**One external component, pinned.** Pivot pulls the `voice_kit` component and the device sounds from the official [esphome/home-assistant-voice-pe](https://github.com/esphome/home-assistant-voice-pe) repository, pinned to commit `0579e7b` (7 July 2026), so the same device configuration builds the same firmware every time.
+**One external component, pinned.** Pivot pulls the `voice_kit` component and the device sounds from the official [esphome/home-assistant-voice-pe](https://github.com/esphome/home-assistant-voice-pe) repository, pinned to commit `0579e7b` (7 July 2026), so the same device configuration builds the same firmware every time. Neither the component nor the sounds have changed upstream since that commit.
+
+Upstream fixes to the configuration itself are reviewed and ported individually rather than tracked automatically – most recently the LED ring timings in firmware v0.0.28.
 
 **Check all of this yourself.** The firmware is one readable YAML file, and you can diff it against the official one:
 
