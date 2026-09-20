@@ -199,6 +199,8 @@ The only network audio functionality is the same `audio_http` media player used 
 
 The connection to Home Assistant is protected using your `api_encryption_key`, and wireless firmware updates require your `ota_password`.
 
+Your `api_encryption_key` authenticates wireless updates as well: ESPHome offers an encrypted upload path that uses it, and those uploads skip the password check. Keep the key as safe as the password.
+
 More detail is available in [SECURITY.md](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md).
 
 ### One external component, pinned to a specific version
