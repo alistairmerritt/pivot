@@ -283,25 +283,53 @@ Before flashing, make a note of these three values somewhere safe. You will need
 
 ### `ota_password`
 
-Required, minimum 12 characters. One password can be shared by all your Pivot devices. Make one up yourself, or generate one by running `openssl rand -hex 16` in a terminal.
+OTA Password is required, with 12 characters minimum. You can use the same password across all of your Pivot devices.
 
-Once a device is running Pivot firmware, updates can arrive over the air (a USB cable still works too). Without a password, that endpoint accepts *plaintext* uploads from anyone who can reach the device on your network.
+Make one up yourself, or generate one in a terminal with:
 
-It is not the only credential, though. On current ESPHome a device built with an `api_encryption_key` also accepts encrypted OTA uploads authenticated by that key, and those skip the password check – so protect the key as carefully as the password. ESPHome removes the plaintext path in 2027.3.0, and Pivot will move to key-authenticated updates before then, at which point the separate OTA password goes away.
-
-Because a missing OTA password cannot be detected once the device is running, Pivot checks at **build time**. Omitting it, leaving it empty, or using fewer than 12 characters stops the build:
-
+```bash
+openssl rand -hex 16
 ```
+
+Once a device is running Pivot firmware, future firmware updates can be installed over the air. USB flashing still works too.
+
+At present, ESPHome's plaintext OTA endpoint is protected by this password. Without one, anyone who can reach the device on your local network could upload firmware to it.
+
+The OTA password is not the device's only credential. On current ESPHome versions, a device configured with an `api_encryption_key` can also accept encrypted OTA uploads authenticated with that key. Those uploads do not use the OTA password, so the encryption key should be protected just as carefully.
+
+ESPHome is removing the plaintext OTA path in 2027.3.0. Pivot will move to key-authenticated OTA updates before then, at which point the separate OTA password will no longer be required.
+
+### Build-time check
+
+A missing OTA password cannot be detected reliably once the device is already running, so Pivot checks it during the build instead.
+
+If `ota_password` is missing, empty, or fewer than 12 characters, the build stops with:
+
+```text
 error: static assertion failed: ota_password must be at least 12 characters - see SECURITY.md
 ```
 
-You're free to make up your own password rather than generate one – just keep it at least 12 characters and stick to letters, digits, hyphens and underscores. Only the length is actually checked at build time; the value is embedded in a C++ string literal during the build, so a quote or backslash could break the build or silently produce a different password than you typed, with no warning either way.
+You do not need to generate the password — making up your own is fine. Keep it at least 12 characters long and, for simplicity, use letters, numbers, hyphens and underscores.
 
-**Upgrading a device that has no OTA password yet:** the first upload still works without authentication, because the firmware currently on the device has no password to check against. Enforcement starts from the following update.
+Only the length is checked at build time. The value is inserted into a C++ string literal during compilation, so characters such as quotes or backslashes may break the build or result in a password different from the one you intended.
 
-**If you lose the password:** you can still update the device wirelessly using its `api_encryption_key`, because encrypted uploads do not check the password. Only losing both means a USB reflash.
+### If your device does not have an OTA password yet
 
-**Changing an existing password** is a two-stage process — the configured password both authenticates the upload and sets the new firmware's password, so you cannot simply swap the value. See [`SECURITY.md`](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md) in the firmware repository.
+The first update can still be installed without authentication because the firmware currently running on the device has no password to check.
+
+The new password takes effect after that firmware has been installed, so subsequent plaintext OTA updates will require it.
+
+### If you lose the password
+
+You can still update the device wirelessly using its `api_encryption_key`, because encrypted OTA uploads are authenticated with that key rather than the OTA password.
+
+If you lose both credentials, the device will need to be reflashed over USB.
+
+### Changing an existing password
+
+Changing the OTA password is a two-stage process. The configured password is used both to authenticate the current upload and to set the password used by the newly installed firmware, so you cannot simply replace the value and upload once.
+
+See [`SECURITY.md`](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md) in the firmware repository for the change procedure.
 
 ---
 
