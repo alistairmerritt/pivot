@@ -187,11 +187,11 @@ Pivot is now set up and ready to use. Turn the knob to control the active bank's
 
 ## Step 7. Optional: Set up a timer
 
-Pivot includes optional timer blueprints. These are not required for normal Pivot control. Blueprints are hosted on GitHub and imported via URL into Home Assistant – when you first add a Pivot device, a notification appears with the import links.
+Pivot includes optional timer blueprints. These are not required for normal Pivot control. Blueprints are hosted on GitHub and imported via URL into Home Assistant – when you first add a Pivot device, a notification appears with the import links. You can ignore this if you wish.
 
-> **Installing Pivot does not take the Voice PE's timers away.** With no blueprints installed, asking *"set a timer for 10 minutes"* works exactly as it did before, with the countdown on the LED ring and the alarm on the device.
+> **Installing Pivot does not replace the Voice PE's built-in timers.** If you do not install the timer blueprints, commands such as *"set a timer for 10 minutes"* continue to work exactly as they do on the standard Voice PE, including the LED ring countdown and alarm on the device.
 >
-> The **Pivot - Timer - Voice** blueprint changes that deliberately: it claims those phrases, so the same command then runs Pivot's timer instead, which is what adds knob control of the duration, dashboard controls, and voice commands for pausing, resuming and asking how long is left. See the [Timer page](/pivot/timer/).
+> Installing the **Pivot - Timer - Voice** blueprint deliberately 'takes over' those timer phrases and routes them through Pivot's timer instead. This is what enables the extra Pivot features, including knob control of the timer duration, dashboard controls, and voice commands to pause, resume, cancel, or check the remaining time. See the [Timer page](/pivot/timer/) for setup details.
 
 Timers are not enabled by default. Before setting up these blueprints, go to your Pivot device in Home Assistant and enable the required timer entities. See the [Timer page](/pivot/timer/) for full setup instructions.
 
