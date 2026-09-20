@@ -195,7 +195,7 @@ Pivot includes optional timer blueprints. These are not required for normal Pivo
 
 Timers are not enabled by default. Before setting up these blueprints, go to your Pivot device in Home Assistant and enable the required timer entities. See the [Timer page](/pivot/timer/) for full setup instructions.
 
-| Blueprint | Type | Required? | What it does |
+| Blueprint | Type | Required for timer functionality? | What it does |
 | --- | --- | --- | --- |
 | **Pivot - Timer Control** | Automation | Yes | Required for the timer alarm to fire. Also handles start, pause, resume, LED countdown gauge, and physical button control when a bank is assigned. Set Bank Number to `0` for voice-only use with no bank assigned. |
 | **Pivot - Timer - Voice** | Automation | Optional | Voice control for the timer via Home Assistant Assist – set, pause, resume, cancel, and query remaining time by voice. Requires Timer Control. Bank assignment not required. |
