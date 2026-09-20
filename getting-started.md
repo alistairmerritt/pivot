@@ -63,7 +63,7 @@ If you don't already have ESPHome Device Builder installed, install it via <stro
 
 <p>When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices – click <strong>Show</strong> in the top right corner if you don't see it.</p>
 
-<blockquote><strong>Not sure which device is yours?</strong> If you have multiple VPEs, ESPHome names them by the last 6 characters of their MAC address (e.g. <code>Home-Assistant-Voice-052B5D</code>). To find the MAC address of a specific device, go to <strong>Settings → Devices &amp; Services → ESPHome</strong>, select the device, and look in the left column.</blockquote>
+<blockquote><strong>Not sure which device is yours?</strong> If you have multiple VPEs, ESPHome names them by the last 6 characters of their MAC address (e.g. <code>Home-Assistant-Voice-052B5D</code>). To find the MAC address of a specific device, go to <strong>Settings → Devices &amp; Services → ESPHome</strong>, select the device, and look in the left column. It is also printed on the sticker on the underside of the VPE itself, which is the easier option if the device is in front of you.</blockquote>
 
 <p>Click <strong>Take Control</strong> and give it a name. ESPHome will offer to install its own firmware – you can skip this as it will be replaced by Pivot firmware in the next step.</p>
 
