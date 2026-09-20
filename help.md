@@ -92,6 +92,25 @@ No. The Getting Started guide walks through the process step-by-step.
 
 ---
 
+**How do I point a Pivot device at a different VPE?**
+Use **Reconfigure** (integration v0.0.91 and later). You need this when the VPE has been added to Home Assistant again – re-adopted in ESPHome, reset, or first added by IP address and later by name. That makes it a new device, and your Pivot entry stays linked to the old one, so the knob keeps working but the button stops.
+
+1. Go to **Settings → Devices & Services → Pivot**.
+2. Find your device's entry and open its menu (⋮).
+3. Choose **Reconfigure**.
+4. Pick the ESPHome device to use. Copies whose button can't be heard are marked **(unavailable)**, and other ESPHome devices are marked **(no button)** – choose the one with neither.
+5. Submit. Pivot re-links the entry and reloads it.
+
+**What is kept:** your device suffix, bank assignments, bank colours, every switch, and the Pivot device itself – including its area, any name you gave it, and automations that target the device.
+
+**What to update afterwards:** anything pointing at the *old* device's button entity directly – the **Button event entity** input of your Pivot Timer automation, and any automation of your own that triggers on that entity. Automations using the `pivot_button_press` event need no change.
+
+The firmware on the device you choose must use the same `device_suffix`, because Reconfigure does not change it – see [The device suffix mismatch](#the-device-suffix-mismatch--entities-have-wrong-ids).
+
+On integration versions before v0.0.91 there is no Reconfigure: delete the device's entry from the Pivot integration and add it again.
+
+---
+
 ### Behaviour & Controls
 
 **How do I use the dial?**
@@ -207,7 +226,7 @@ Mostly, yes – it depends on what you rename:
 
 - **The device's name in Home Assistant** (the name shown on its device page) – always safe.
 - **The device's name in ESPHome** (`device_name` in your YAML) – safe from integration v0.0.91. Older versions kept using the old name when pushing settings to the device after a Home Assistant restart, so the push silently stopped reaching it. If you renamed a device on an older version, update the integration.
-- **Removing the VPE and adding it to Home Assistant again** – this makes it a new device, and the Pivot entry stays linked to the old one: the knob keeps working but the button doesn't. Use **Reconfigure** on the Pivot entry to re-link it (see [The button press does nothing](#the-button-press-does-nothing)).
+- **Removing the VPE and adding it to Home Assistant again** – this makes it a new device, and the Pivot entry stays linked to the old one: the knob keeps working but the button doesn't. Use **Reconfigure** on the Pivot entry to re-link it – see [How do I point a Pivot device at a different VPE?](#setup--installation) in the FAQ.
 - **Pivot's entity IDs** – never rename these. The firmware finds them by your `device_suffix`, so a renamed entity ID breaks the connection. Change an entity's **Name** instead if you want a clearer label.
 
 ---
@@ -389,7 +408,7 @@ Work through these in order:
 
    **To check:** go to **Settings → Devices & Services → ESPHome**. If your VPE appears twice, the copy whose entities are all unavailable is the old one. You can also open **Developer Tools → States**, find your VPE's `event.…_button_press` entity and press the button: if its time updates but nothing toggles, this is the cause.
 
-   **To fix (integration v0.0.91 and later):** go to **Settings → Devices & Services → Pivot**, open the menu (⋮) on your device's entry, choose **Reconfigure**, and pick the copy of the VPE whose button is available – unavailable copies are marked. Only the link changes: your suffix, bank assignments and settings are kept. Afterwards, update the **Button event entity** input of your Pivot Timer automation, and any automation of your own that triggers on the old button entity, to the new device.
+   **To fix (integration v0.0.91 and later):** re-link the entry with **Reconfigure** – see [How do I point a Pivot device at a different VPE?](#setup--installation) in the FAQ for the steps and for what to update afterwards.
 
    **To fix (older versions):** make a note of your bank assignments, then delete your device's entry from the Pivot integration and add it again, choosing the copy of the VPE whose entities are available. At the suffix step, enter the same `device_suffix` as your firmware YAML – the field is pre-filled from the ESPHome name, which may be different.
 
