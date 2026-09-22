@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.28 | v0.0.91 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.28 | v0.0.92 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,14 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.92</summary>
+
+- **Fix:** Re-pointing a bank at a different entity left the previous entity's value on the dial. The gauge was only re-synced when the *new* entity was a passive one (a scene, script, switch or garage door), so a bank moved from, say, a light at 100% to a number helper reading 57 kept showing 100 until something else happened to re-sync it — the entity changing state, or switching banks. Re-pointing now mirrors the new entity in every case, matching what switching banks already did. Most noticeable when an automation re-points a bank at an entity that then sits still.
+- **Change:** Automated tests expanded from 96 to 99.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.91</summary>
