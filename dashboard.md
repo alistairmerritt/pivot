@@ -4,15 +4,15 @@ title: Dashboard
 permalink: /dashboard/
 ---
 
-Pivot includes a set of dashboard cards that let you view and control your Pivot devices directly from Home Assistant. You can see which bank is active, adjust values, change what each bank controls, and manage the device settings without having to find individual entities.
+The Pivot integration includes a set of dashboard cards that let you view and control your Pivot devices directly from Home Assistant. You can see which bank is active, adjust values, change what each bank controls, and manage the device settings without having to find individual entities.
 
-The cards are included with the Pivot integration, so there's nothing else to install. You don't need any additional custom cards, YAML templates or dashboard resources.
-
-![The Pivot dashboard showing the active bank, four banks and device settings](https://alistairmerritt.github.io/pivot/assets/images/pivot-cards.png)
+The cards are included with the Pivot integration – there's no additional components to install. 
 
 > **The dashboard cards are entirely optional.** Pivot works without them, and the same settings are available through your device's entities in Home Assistant. The cards simply bring everything together in one place.
 
 ![pivot-dashboard-mockup](https://github.com/user-attachments/assets/3a08ebc1-b6bb-479e-92b0-dfcfa2c8f511)
+
+![The Pivot dashboard showing the active bank, four banks and device settings](https://alistairmerritt.github.io/pivot/assets/images/pivot-cards.png)
 
 ---
 
@@ -250,99 +250,6 @@ The `rows` option accepts the same settings as `settings_rows` on the main Pivot
 
 ---
 
-## Example layouts
-
-You don't need to use the cards in any particular way. Depending on where your Pivot device is located, you might want a full dashboard for it, or just a couple of controls alongside the rest of the room.
-
-Here are a few examples.
-
-### A dedicated Pivot dashboard
-
-The main Pivot card, with its default settings, shows everything for a single device: its name, active bank, all four banks and the device settings.
-
-```yaml
-type: custom:pivot-device-card
-device: ha_voice_kitchen
-```
-
-![study_pivot_half_frames](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
-
-### Part of an existing room dashboard
-
-If your room dashboard already has a heading, you probably don't need to repeat the device name. You can also hide any unassigned banks and move the settings elsewhere.
-
-```yaml
-type: custom:pivot-device-card
-device: ha_voice_bedroom
-show_title: false
-hide_unassigned: true
-show_settings: false
-```
-
-### Only show particular banks
-
-If you're only interested in the first two banks, you can leave the others out.
-
-```yaml
-type: custom:pivot-device-card
-device: ha_voice_kitchen
-banks: [1, 2]
-```
-
-### Show whichever bank is active
-
-This displays a single bank that automatically changes as you switch between banks on the dial.
-
-```yaml
-type: custom:pivot-bank-card
-device: ha_voice_living_room
-bank: active
-```
-
-### A kitchen timer
-
-You can use the main Pivot card to display just the timer, without any of the other banks or settings.
-
-In this example, the preset buttons are set to 5, 10, 15 and 30 minutes.
-
-```yaml
-type: custom:pivot-device-card
-device: ha_voice_kitchen
-show_title: false
-show_active_bank: false
-banks: timer
-show_edit: false
-show_settings: false
-timer_presets: [5, 10, 15, 30]
-```
-
-### A wall-mounted dashboard
-
-For a tablet or a dashboard used by other people in your household, you might want to remove the editing controls and show two banks per row.
-
-```yaml
-type: custom:pivot-device-card
-device: ha_voice_living_room
-show_edit: false
-show_bank_options: false
-show_settings: false
-bank_columns: 2
-```
-
-### Settings somewhere else
-
-You can keep the banks on one dashboard and put the settings on another, or inside a popup.
-
-First, turn off **Show Settings** on the main Pivot card. Then add a separate settings card:
-
-```yaml
-type: custom:pivot-settings-card
-device: ha_voice_living_room
-background: true
-```
-
----
-
 ## Theming
 
 The cards follow your existing Home Assistant theme, including its background, text colour and fonts. They'll also automatically adjust between light and dark themes.
@@ -368,8 +275,6 @@ If you want more control over their appearance, Pivot includes a number of CSS v
 | `--pivot-volume-track-color` | `rgba(255,255,255,0.3)` |
 | `--pivot-volume-fill-color` | `#ffffff` |
 
-You don't need to change any of these for the cards to work. They're only there if you want to adjust how the cards look alongside the rest of your dashboard.
-
 ---
 
 ## Troubleshooting
@@ -394,8 +299,3 @@ The timer entities need to be enabled and the Pivot – Timer Control blueprint 
 
 Follow the [Timer](https://alistairmerritt.github.io/pivot/timer/) guide to complete the setup.
 
-### The timer cancels, but there's no spoken confirmation
-
-If the ✕ button cancels the timer but the device doesn't announce "Timer cancelled", re-import the **Pivot – Timer Control** blueprint from the [Timer](https://alistairmerritt.github.io/pivot/timer/) page.
-
-The timer can still be cancelled directly by Pivot, but the blueprint needs the dashboard cancellation handling for the spoken confirmation to work.
