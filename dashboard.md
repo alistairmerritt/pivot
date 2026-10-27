@@ -12,8 +12,6 @@ The cards are included with the Pivot integration – there's no additional comp
 
 ![pivot-dashboard-mockup](https://github.com/user-attachments/assets/3a08ebc1-b6bb-479e-92b0-dfcfa2c8f511)
 
-![The Pivot dashboard showing the active bank, four banks and device settings](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
-
 ---
 
 ## Adding the cards
@@ -109,6 +107,8 @@ rows:
 ```
 
 For example, you might keep the banks on a room dashboard but move the settings to another view or a popup. Just disable **Show Settings** on the main Pivot card, then add a Pivot settings card wherever you want them.
+
+![The Pivot dashboard showing the active bank, four banks and device settings](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
 
 ---
 
