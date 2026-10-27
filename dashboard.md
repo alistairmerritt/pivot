@@ -114,8 +114,6 @@ For example, you might keep the banks on a room dashboard but move the settings 
 
 The cards work directly with your Pivot device, so changes you make on the dashboard are reflected on the dial.
 
-![The Pivot dashboard showing the active bank, four banks and device settings](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
-
 ### Banks
 
 Each bank shows the entity it's controlling, its current value or state, and any controls that apply to that entity.
@@ -172,6 +170,9 @@ There are a couple of behaviours worth mentioning:
 - **Pivot Device Volume** controls the volume of the speaker assigned to that Pivot device.
 
 Any settings you change from the dashboard are applied to the device, just as they would be if you changed them from Home Assistant directly.
+
+
+![The Pivot dashboard showing the active bank, four banks and device settings](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
 
 ---
 
