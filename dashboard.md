@@ -141,19 +141,19 @@ The cards press the timer with the `pivot.timer_toggle` and `pivot.timer_cancel`
 
 ## Theming
 
-The cards follow your Home Assistant theme: the card background, text colour and font come from it. On light themes they switch to a light palette automatically. To fine-tune them, set any of these variables in your theme:
+The cards follow your Home Assistant theme: the card background, text colour and font come from it. On light themes they switch to a light palette automatically. The greys are see-through white and black rather than solid colours, so the cards sit right on translucent cards and background images. To fine-tune them, set any of these variables in your theme:
 
 | Variable | Default (dark) |
 | --- | --- |
 | `--pivot-card-radius` | `20px` |
 | `--pivot-value-font-family` | `'SF Pro Rounded', ui-rounded, system-ui, sans-serif` |
-| `--pivot-muted-color` | `#545454` (values, EDIT ENTITY, row icons) |
+| `--pivot-muted-color` | `rgba(255,255,255,0.25)` (values, EDIT ENTITY, row icons) |
 | `--pivot-description-color` | `rgba(255,255,255,0.5)` |
-| `--pivot-active-border-color` | `rgba(180,180,180,0.4)` |
-| `--pivot-toggle-track-color` | `#171717` |
-| `--pivot-toggle-on-color` / `--pivot-toggle-off-color` | `#ffffff` / `#545454` |
-| `--pivot-timer-strip-color` | `#171717` |
-| `--pivot-button-color` / `--pivot-button-idle-color` | `#545454` / `#2a2a2a` |
+| `--pivot-active-border-color` | `rgba(255,255,255,0.27)` |
+| `--pivot-toggle-track-color` / `--pivot-toggle-edge-color` | `rgba(0,0,0,0.3)` / `rgba(255,255,255,0.08)` |
+| `--pivot-toggle-on-color` / `--pivot-toggle-off-color` | `#ffffff` / `rgba(255,255,255,0.26)` |
+| `--pivot-timer-strip-color` | `rgba(0,0,0,0.18)` |
+| `--pivot-button-color` / `--pivot-button-idle-color` | `rgba(255,255,255,0.26)` / `rgba(255,255,255,0.08)` |
 | `--pivot-volume-track-color` / `--pivot-volume-fill-color` | `rgba(255,255,255,0.3)` / `#ffffff` |
 
 ---

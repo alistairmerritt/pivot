@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.28 | v0.0.93 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.28 | v0.0.94 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,17 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.94</summary>
+
+- **Fix (dashboard cards):** **The cards looked wrong over a background image or on see-through cards.** Their greys were solid colours chosen for a plain dark card, so on a translucent card the values, *EDIT ENTITY* and the row icons all but vanished, while the toggles and the timer strip sat on top as solid black shapes. They are now see-through white and black, so they take on whatever is behind them. On a solid dark card they look exactly as before.
+- **Fix (dashboard cards):** The toggle knob sat 2px from the edge when off but 5px when on, and 3.5px from the top and bottom. It now has an even 3px gap all round. Toggles also get a faint edge, so they stay visible on a black background.
+- **Fix:** **Google Assistant logged an error for every Pivot bank colour light** (*Unexpected error serializing query*), because the lights reported no brightness. They now report full brightness. Nothing else reads it.
+- **Fix:** Home Assistant 2026.10 logs *"Detected that custom integration 'pivot' accesses `DeviceEntry.config_entries`"*. That property stops working in Home Assistant 2027.10. Pivot now reads the device's config entry the new way, and still works on older versions.
+- **Change:** Automated tests expanded from 108 to 113.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.93</summary>
