@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.28 | v0.0.92 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.28 | v0.0.93 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,24 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.93</summary>
+
+- **New:** **Dashboard cards, built in.** Pivot now ships its own Lovelace cards: **Pivot** (the whole dashboard for one device), **Pivot bank**, **Pivot status** and **Pivot settings**. Add them from the card picker and choose your device from a list. There is nothing to install beyond the integration, no YAML to paste and no suffix to type. They replace the `custom:button-card` templates, which drop out along with *button-card*, *my-slider-v2* and *layout-card*. The cards draw the same layout as the templates, follow your theme, and include a visual editor. See the [Dashboard page](/pivot/dashboard/).
+- **New:** **`pivot.timer_toggle` and `pivot.timer_cancel` actions.** They press the timer bank like the physical button: toggle starts, pauses, resumes or dismisses; cancel cancels. Both switch the device to its timer bank first. They replace the *Pivot - Timer Toggle Script*, which could only send a single press, so a dashboard could never properly cancel a timer.
+- **Fix (Timer Control blueprint):** A cancel sent from a dashboard was ignored. The long-press condition read `trigger.to_state`, which an event trigger doesn't have, so the template errored and the cancel branch never ran. The old dashboard cancel button worked around this by setting the timer state to `idle` directly, which skipped the cleanup: `timer_end` was left behind and *Display Persistent Value* wasn't restored. **Requires re-importing the Pivot - Timer Control blueprint.** Until you do, `pivot.timer_cancel` performs the same reset itself, without the spoken confirmation.
+- **Fix (Timer - Voice blueprint):** *"Set a 5-minute timer"* started a timer at the default duration instead. Speech-to-text writes the duration as *"5-minute"*, so the spoken number reached the blueprint as `5-` and read as zero. The same happened with *"30-second"* and *"2-hour"*. **Requires re-importing the Pivot - Timer - Voice blueprint.**
+- **Fix (dashboard):** Several behaviours the templates got wrong:
+  - Dragging the bar of a bank that wasn't active moved the bar but never changed the entity. It now makes the bank active first.
+  - Timer presets and the timer bar only worked while the timer bank was active.
+  - The idle timer showed minutes estimated from the gauge instead of the real duration, so it could read *60 mins* for a 1-minute timer.
+  - The 15m preset never showed as selected.
+  - Garage doors read *On*/*Off* instead of *Open*/*Closed* and offered *Announce Value*.
+  - The downloadable `button-card-templates.yaml` still used the old 0-based bank numbers, so every bank card it drew was empty. It is fixed for anyone still using it.
+- **Change:** Automated tests expanded from 99 to 108, plus 52 for the cards.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.92</summary>

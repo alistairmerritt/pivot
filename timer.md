@@ -26,7 +26,7 @@ The timer is built around three blueprints. One is required; the others are opti
 | --- | --- | --- | --- |
 | **Pivot - Timer Control** | Yes | Manages the countdown and fires the alarm. Also handles physical button control and the LED gauge when a bank is assigned. | [Import Blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer.yaml) |
 | **Pivot - Timer - Voice** | Optional | Voice control via Home Assistant Assist. Set, start, pause, resume, cancel, dismiss, and query the timer by speaking to the device. | [Import Blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fautomation%2Fpivot_timer_voice.yaml) |
-| **Pivot - Timer Toggle Script** | Optional | Dashboard helper. Lets a button card start, pause, resume, or dismiss the timer the same way the physical button does. | [Import Blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) |
+| **Pivot - Timer Toggle Script** | Not needed from v0.0.93 | Dashboard helper for Pivot v0.0.92 and earlier. From v0.0.93 the [Pivot dashboard cards](/pivot/dashboard/) and the `pivot.timer_toggle` action do the same without a script. | [Import Blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) |
 
 **Pivot - Timer Control is always required**, even if you only plan to use voice control. It manages the countdown and is what sets the alarm state when time runs out. Without it, a running timer simply expires silently.
 
@@ -36,7 +36,7 @@ Bank assignment is optional. Without a bank, the alarm still fires and TTS annou
 - **Alarm** – plays the built-in alarm sound and pulses the LED ring when the timer finishes; single press, "stop" wake word, or the dashboard button dismisses it
 - **TTS announcements** – spoken feedback on start, pause, resume, and finish
 - **Voice control** – via the optional **Pivot - Timer - Voice** blueprint
-- **Dashboard control** – via the optional **Pivot - Timer Toggle Script** blueprint
+- **Dashboard control** – via the [Pivot dashboard cards](/pivot/dashboard/), or the `pivot.timer_toggle` and `pivot.timer_cancel` actions on any card
 
 **Available when a bank is assigned:**
 - **Knob** – turn to set the duration while idle; announces the chosen time when the knob settles. Knob durations are in whole minutes (minimum 1 minute) – for sub-minute timers, use voice control
@@ -155,17 +155,9 @@ Number values (`{n}`, `{h}`, `{m}`) accept both digits (*"5"*) and words (*"five
 
 ### Step 5. Optional: add dashboard control
 
-The [**Pivot - Timer Toggle Script**](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) blueprint lets a dashboard button card start, pause, resume, and dismiss the timer the same way the physical button does.
+The easiest way is the [Pivot dashboard cards](/pivot/dashboard/) (Pivot v0.0.93 and later): a bank set to `timer` shows the countdown, play/pause, cancel, the 15/30/45/60-minute presets and the Silent Timer switch, with nothing else to set up.
 
-A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must already be running.
-
-#### Step 1. Install the script
-
-Import **Pivot - Timer Toggle Script** using the link above if you haven't already. Then go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**.
-
-> **Important:** Do not change the script name. When saving, the script ID must remain `pivot_timer_toggle` – dashboard cards call `script.pivot_timer_toggle` directly. The script only needs to be created once and works across all your Pivot devices.
-
-#### Step 2. Add a tile card
+To build your own controls, call Pivot's timer actions from any card. They press the timer bank the same way the physical button does: **`pivot.timer_toggle`** starts, pauses, resumes or dismisses, and **`pivot.timer_cancel`** cancels. Both switch the device to its timer bank first. `device` is your device suffix; `bank` is optional and defaults to the bank set to `timer`. **Pivot - Timer Control** (Step 2) must already be running.
 
 This example uses the `sensor.pivot_timer_remaining` template sensor to display the current timer state – see [Template sensors](#template-sensors) below for how to create it.
 
@@ -173,6 +165,26 @@ This example uses the `sensor.pivot_timer_remaining` template sensor to display 
 type: tile
 name: Timer
 entity: sensor.pivot_timer_remaining
+tap_action:
+  action: perform-action
+  perform_action: pivot.timer_toggle
+  data:
+    device: ha_voice_lounge
+hold_action:
+  action: perform-action
+  perform_action: pivot.timer_cancel
+  data:
+    device: ha_voice_lounge
+```
+
+> **Re-import Pivot - Timer Control after updating to v0.0.93.** Earlier versions of the blueprint ignored a cancel sent from a dashboard. `pivot.timer_cancel` still resets the timer with an older blueprint, but without the spoken "Timer cancelled".
+
+<details markdown="1">
+<summary>Pivot v0.0.92 and earlier: the Timer Toggle Script</summary>
+
+Import the [**Pivot - Timer Toggle Script**](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fmain%2Fblueprints%2Fscript%2Fpivot_timer_toggle.yaml) blueprint, then go to **Settings → Automations & Scenes → Scripts**, click **Add Script**, and select **Pivot - Timer Toggle Script**. Keep the script ID `pivot_timer_toggle`: cards call `script.pivot_timer_toggle` directly.
+
+```yaml
 tap_action:
   action: perform-action
   perform_action: script.turn_on
@@ -184,31 +196,7 @@ tap_action:
       bank: 2
 ```
 
-#### Cancel button
-
-To add a dedicated cancel button, set `timer_state` to `idle` directly:
-
-```yaml
-type: tile
-name: Cancel Timer
-icon: mdi:timer-off-outline
-entity: select.ha_voice_lounge_timer_state
-tap_action:
-  action: perform-action
-  perform_action: select.select_option
-  target:
-    entity_id: select.ha_voice_lounge_timer_state
-  data:
-    option: idle
-```
-
-> This resets the timer immediately without a TTS announcement. It only takes effect when the timer is running or paused.
-
-#### Complete dashboard examples
-
-The cards above are intentionally minimal. If you want a fully worked example – timer state display, start/pause/cancel controls, and a progress indicator in a polished device card – the [Dashboard](/pivot/dashboard/) page has complete working examples that include timer support.
-
-<img width="521" height="282" alt="timer" src="https://github.com/user-attachments/assets/b33a96e9-77da-4c18-9cc9-b8be1a103cb3" /> <img width="521" height="282" alt="timer-finished" src="https://github.com/user-attachments/assets/951947ff-4e47-4e7d-9332-8f130b766cfa" />
+</details>
 
 ---
 
@@ -326,7 +314,7 @@ This is useful for focus sessions, late-night use, or situations where visual fe
 
 **Changing duration mid-session** – Turning the knob while the timer is running or paused does nothing. To change the duration, long press to cancel, then turn the knob to select a new time.
 
-**Multiple devices** – Create one **Pivot - Timer Control** automation and one **Pivot - Timer - Voice** automation per Pivot device, each with its own suffix and timer ringing switch. The **Pivot - Timer Toggle Script** is the exception – it is set up once and works across all devices.
+**Multiple devices** – Create one **Pivot - Timer Control** automation and one **Pivot - Timer - Voice** automation per Pivot device, each with its own suffix and timer ringing switch. The dashboard cards and the `pivot.timer_toggle` / `pivot.timer_cancel` actions need no per-device setup.
 
 **Pausing and resuming** – Remaining time is stored in `text.{device_suffix}_timer_end` and survives HA restarts. If HA restarts while the timer is running and the stored end time has already passed, the countdown sync will detect this within 30 seconds and trigger the finish sequence normally.
 

@@ -4,255 +4,195 @@ title: Dashboard
 permalink: /dashboard/
 ---
 
-This page documents a set of `custom:button-card` templates for building a Pivot control dashboard in Home Assistant.
+Pivot comes with its own dashboard cards. They are part of the integration (v0.0.93 and later), so there is nothing extra to install: no HACS frontend cards, no YAML templates, no resources to add. Pick a card, choose your Pivot device from a list, and you're done.
 
-Although all of these settings can already be adjusted through the device menu, it is not always the quickest or most convenient place to manage them – especially if you are regularly changing banks, colours, values or behaviour settings. As such, this dashboard is not essential to using the Pivot ecosystem, but it does provide a more central, glanceable way to view and adjust those controls from one place.
+![The Pivot card: active bank, the four banks, and the device and behaviour settings]({{ "/assets/images/pivot-cards.png" | relative_url }})
 
-Each component is independent, so you can use all of them, some of them, or just the bank cards on their own. The layout shown in the examples is simply a starting point.
-
-![pivot-dashboard-mockup](https://github.com/user-attachments/assets/3a08ebc1-b6bb-479e-92b0-dfcfa2c8f511)
-
-> **Optional and experimental** – This is a community-built example dashboard, not an 'official' part of Pivot. It has not been extensively tested across all configurations and requires editing raw dashboard YAML.
-
-> ⚠️ **Proceed with care** – Editing raw dashboard YAML carries risk. A mistake can corrupt, overwrite or completely wipe your existing dashboard. If you are not comfortable working directly in YAML, this is not recommended. **Before making any changes, copy your entire existing dashboard YAML and save it somewhere safe – even pasting it into a local text file is enough.** Please proceed at your own risk.
+The dashboard is optional. Everything it shows can also be changed from the device page, but the cards put your banks, colours, values and settings in one glanceable place.
 
 ---
 
 ## On this page
 
-- [Components](#components)
-- [Prerequisites](#prerequisites)
-- [Getting started](#getting-started)
-- [Template reference](#template-reference)
-- [Full example](#full-example)
+- [Adding the cards](#adding-the-cards)
+- [The cards](#the-cards)
+- [What the cards do](#what-the-cards-do)
+- [Theming](#theming)
+- [Moving from the button-card templates](#moving-from-the-button-card-templates)
+- [Troubleshooting](#troubleshooting)
+- [Legacy YAML templates](#legacy-yaml-templates)
 
 ---
 
-## Components
+## Adding the cards
 
-There are four template components. The bank cards are the most useful – the rest are optional additions.
+1. Update Pivot to **v0.0.93 or later** in HACS and restart Home Assistant.
+2. Reload the dashboard in your browser once (in the companion app, close and reopen it).
+3. Open a dashboard, choose **Edit dashboard → Add card**, and search for **Pivot**.
+4. Pick a card and choose your device from the **Pivot device** list.
 
-### Bank cards
-
-The primary card for Pivot control.
-
-<img width="521" height="216" alt="bank-1" src="https://github.com/user-attachments/assets/112332f6-cb71-469a-99a5-f39839ca5016" />
-
-<img width="521" height="262" alt="bank-2" src="https://github.com/user-attachments/assets/b2e77614-18a4-476a-bb38-e96f0d02406b" />
-
-<img width="521" height="216" alt="bank-3" src="https://github.com/user-attachments/assets/a657d202-53ee-4c50-8aa0-4a3485c52078" />
-
-<img width="521" height="282" alt="timer" src="https://github.com/user-attachments/assets/843e9cc5-427c-4ca5-8855-9c001d1b2500" />
-
-
-
-Each bank card shows:
-
-- The bank number and colour dot
-- The entity currently assigned to that bank
-- The entity's current value (percentage, timer countdown, or on/off)
-- A coloured value slider (hidden for passive/binary entities)
-- A `Mirror Light Colour` toggle (visible only when a light entity is assigned)
-- `Timer controls` – play/pause, reset, and preset duration buttons (15m / 30m / 45m / 60m), shown automatically when the bank entity is set to `timer`
-- A `Silent Timer` toggle (shown on timer banks)
-- An `Announce Value` toggle (shown for supported entity types: light, media player, fan, climate, cover, number, input_number – but not for open/close-only covers such as garage doors, where the knob does nothing) – enables spoken value announcements after the knob settles
-
-Tapping the card switches the physical device to that bank.
-
-Below is an example of the bank card config that you would use on your dashboard. For one Pivot device, you would usually add four bank cards to your dashboard. 
-
-```yaml
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen   # your device config template
-    - pivot_banks
-  variables:
-    bank_number: 1           # 1, 2, 3, or 4
-```
+The **Pivot** card lays out everything for one device, exactly like the screenshot above. In a sections dashboard it takes the full width and drops to one column on a phone. The smaller cards let you build your own layout.
 
 ---
 
-### Active bank indicator
+## The cards
 
-Shows which bank is currently active on the physical device – its bank number, entity name, and colour dot. Useful as a live status line at the top of a device section.
+### Pivot
 
-<img width="236" height="68" alt="active-bank" src="https://github.com/user-attachments/assets/054a02cd-606f-4927-8b61-11c0dc24c062" />
-
-```yaml
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen
-    - pivot_active_bank
-```
-
----
-
-### Settings – device and behaviour toggles
-
-Individual toggle rows for the Pivot switches. Each row shows the switch name, a short description, and a styled toggle. Pass the switch name suffix as `toggle_entity`.
-
-<img width="530" height="403" alt="settings" src="https://github.com/user-attachments/assets/e01ad4cd-ed05-4db5-95a3-5708d244ff22" />
-
-Available values:
-
-| `toggle_entity` | Switch |
-| --- | --- |
-| `control_mode` | Enable or disable Pivot control |
-| `announcements` | Announce bank changes by voice (System Announcements) |
-| `mute_announcements` | Silence all spoken announcements temporarily |
-| `show_control_value` | Keep value visible on LED ring when idle |
-| `dim_when_idle` | Dim gauge LEDs while not interacting |
+The whole dashboard for one Pivot: the device name, the active bank, the four banks, and the device and behaviour settings.
 
 ```yaml
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen
-    - pivot_toggle_row
-  variables:
-    toggle_entity: control_mode
+type: custom:pivot-device-card
+device: ha_voice_kitchen
 ```
 
-The `dim_when_idle` row automatically dims and disables itself if `show_control_value` is off, since dimming only applies when the value is shown.
-
-You can also add a device volume label and slider using `pivot_volume` – useful as a central place to adjust the VPE speaker volume without going into device settings, but not absolutely necessary to include:
-
-```yaml
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen
-    - pivot_volume
-```
-
-If you selected a media player during setup, the integration writes it to `text.{device_suffix}_media_player_entity`, and the media player entity is then derived automatically from that value.
-
----
-
-### Heading card
-
-A minimal section label with an optional subheading. This is just a styled `custom:button-card` – you can replace it with any heading approach (eg. the stock Home Assistant heading card) that suits your dashboard theme.
-
-```yaml
-- type: custom:button-card
-  template: pivot_section_heading
-  variables:
-    heading: Kitchen Pivot
-    subheading: Home Assistant Voice PE
-```
-
----
-
-## Prerequisites
-
-- [HACS](https://hacs.xyz) installed in Home Assistant
-- The following HACS frontend cards:
-  - **custom:button-card** – required for all Pivot templates
-  - **custom:my-slider-v2** – required if you want value sliders and the volume slider
-
-`custom:layout-card` is used in the example dashboard YAML for column layout, but it is not required. The bank cards work inside any standard layout – a grid card, a vertical stack, or whatever suits your dashboard.
-
-### Installing via HACS
-
-1. Go to **HACS → Frontend**
-2. Search for and download each card you need (see table below)
-3. Once all cards are downloaded, restart Home Assistant once
-4. Do a full browser refresh (Ctrl+Shift+R / Cmd+Shift+R)
-
-| Card | Search term | Author | Required? |
-| --- | --- | --- | --- |
-| custom:button-card | Button Card | RomRider | Yes |
-| custom:my-slider-v2 | My Slider v2 | AnthonMS | For value and volume sliders |
-| custom:layout-card | Layout Card | thomasloven | For the column layout in the full example |
-
----
-
-## Getting started
-
-### 1–Add the shared templates
-
-Download the full `button_card_templates` YAML from GitHub:
-
-**[button-card-templates.yaml](https://github.com/alistairmerritt/pivot/blob/main/assets/button-card-templates.yaml)**
-
-Open your Home Assistant dashboard in **Edit** mode, click the three-dot menu, and select **Edit dashboard YAML** (or **Raw configuration editor**). **Before touching anything, select all and copy the existing YAML to a safe place.** Then paste the `button_card_templates` block at the very top of your dashboard YAML.
-
-### 2–Add a per-device config
-
-The templates block includes a placeholder `pivot_config_example`. Replace it with a real entry for each Pivot device you have – or add multiple entries if you have more than one.
-
-```yaml
-button_card_templates:
-  pivot_config_kitchen:
-    variables:
-      device_name: Kitchen Pivot          # display name
-      device_suffix: ha_voice_yellow      # must match your firmware device_suffix
-      timer_silent_toggle: switch.kitchen_voice_pe_timer_silent_mode
-```
-
-To find the `timer_silent_toggle` entity ID, go to **Settings → Devices & Services → ESPHome → your device**.
-
-### 3–Add cards to your dashboard
-
-Reference your config template and a component template together. For example, to show all four banks for the Kitchen device:
-
-```yaml
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen
-    - pivot_banks
-  variables:
-    bank_number: 1
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen
-    - pivot_banks
-  variables:
-    bank_number: 2
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen
-    - pivot_banks
-  variables:
-    bank_number: 3
-- type: custom:button-card
-  template:
-    - pivot_config_kitchen
-    - pivot_banks
-  variables:
-    bank_number: 4
-```
-
-Mix in whichever other components you want alongside them.
-
----
-
-## Template reference
-
-| Template | Purpose | Key variable |
+| Option | Default | |
 | --- | --- | --- |
-| `pivot_config_*` | Per-device config. Sets `device_suffix` and `timer_silent_toggle`. Pair with any other template. | `device_suffix`, `timer_silent_toggle` |
-| `pivot_banks` | Full bank card – value display, slider, timer controls, mirror toggle. | `bank_number` (1–4) |
-| `pivot_active_bank` | Active bank name, entity, and colour dot. | – |
-| `pivot_volume` | Device volume label and slider. Derives media player from `text.{device_suffix}_media_player_entity` automatically. | – |
-| `pivot_section_heading` | Section label with optional subheading. | `heading`, `subheading` |
-| `pivot_toggle_row` | Toggle row for a Pivot switch. | `toggle_entity` |
+| `device` | – | **Required.** The device's suffix, picked from a list in the editor. |
+| `name` | the device name | Title shown at the top. |
+| `show_status` | `true` | Show the title and the active bank line. |
+| `show_settings` | `true` | Show the Device and Behaviour settings. |
+| `timer_silent_entity` | found automatically | The VPE's *Timer Silent Mode* switch, if Pivot can't find it. |
+
+### Pivot bank
+
+One bank: its entity, value, colour, toggles and (for a timer bank) the timer controls. Use four of them for one device.
+
+```yaml
+type: custom:pivot-bank-card
+device: ha_voice_kitchen
+bank: 1
+```
+
+| Option | Default | |
+| --- | --- | --- |
+| `device` | – | **Required.** |
+| `bank` | `1` | `1`, `2`, `3` or `4`. |
+| `timer_silent_entity` | found automatically | As above. |
+
+### Pivot status
+
+The device name and which bank is active, for example *● Bank 2 – Desk Lamp*. It reads *Control mode off* when Pivot control is switched off.
+
+```yaml
+type: custom:pivot-status-card
+device: ha_voice_kitchen
+```
+
+| Option | Default | |
+| --- | --- | --- |
+| `device` | – | **Required.** |
+| `name` | the device name | Title text. |
+| `show_name` | `true` | Set to `false` to show only the active bank line. |
+
+### Pivot settings
+
+Control Mode, the device volume and the announcement and LED settings.
+
+```yaml
+type: custom:pivot-settings-card
+device: ha_voice_kitchen
+rows:
+  - control_mode
+  - volume
+  - mute_announcements
+```
+
+| Option | Default | |
+| --- | --- | --- |
+| `device` | – | **Required.** |
+| `rows` | all of them | Any of `control_mode`, `volume`, `announcements`, `mute_announcements`, `show_control_value`, `dim_when_idle`. |
+| `headings` | `true` | Show the *Device* and *Behaviour* headings. |
 
 ---
 
-## Notes
+## What the cards do
 
-**Timer bank – the bank must be active for duration changes to take effect**
+**Banks**
 
-The duration slider and preset buttons on a timer bank only take effect when that bank is the active bank on the device. If you adjust the duration while on a different bank, the change won't be picked up when the timer starts.
+- **Tap a bank** to make it the active bank on the dial.
+- **Drag the bar** to set the value. Dragging a bank that isn't active makes it active first, then sets the value, because the dial only applies values to its active bank.
+- **Tap the name** to open the entity itself.
+- **Tap the colour dot** to change the bank colour.
+- **Tap EDIT ENTITY** to point the bank at a different entity.
+- Banks without a value (switches, scenes, scripts and open/close-only covers such as garage doors) show their state (*On*, *Off*, *Open*, *Closed*) and no bar.
+- **Mirror Light Colour** appears for lights.
+- **Announce Value** appears for entities with a value to announce. It is greyed out while *Mute Announcements* is on.
+- Press and hold any toggle row to open its entity.
+- With **Control Mode** off, the banks dim and the bars are locked, matching the dial.
+
+**Timer bank**
+
+- The value shows the timer duration, the countdown while running, or *Paused – 4:12*.
+- **15m / 30m / 45m / 60m** and the bar set the duration. Unlike the old templates, this works whether or not the timer bank is the active bank.
+- **▶ / ❚❚** starts, pauses and resumes; **✕** cancels.
+- When the alarm goes off, **Stop** silences it and **Repeat** silences it and starts the same timer again.
+- **Silent Timer** is found automatically on the Voice PE.
+- If the timer entities haven't been enabled yet, the card says so instead of showing controls that do nothing. See the [Timer page](/pivot/timer/).
+
+The cards press the timer with the `pivot.timer_toggle` and `pivot.timer_cancel` actions, so the *Pivot – Timer Toggle Script* is not needed. **Pivot – Timer Control** must still be set up, and re-importing it is recommended (see the [changelog](/pivot/changelog/)).
+
+**Settings**
+
+- *Dim Gauge LEDs While Idle* is greyed out while *Display Persistent Value* is off, because dimming only applies when the value is shown.
+- **Pivot Device Volume** sets the volume of the speaker chosen for this Pivot.
 
 ---
 
-## Full example
+## Theming
 
-**[dashboard-example.yaml](https://github.com/alistairmerritt/pivot/blob/main/assets/dashboard-example.yaml)**
+The cards follow your Home Assistant theme: the card background, text colour and font come from it. On light themes they switch to a light palette automatically. To fine-tune them, set any of these variables in your theme:
 
-A complete, ready-to-paste dashboard YAML that includes all the template definitions and a full five-device layout. The config variables for each device are at the top of the file – update those, paste the whole thing into your raw dashboard YAML editor, and it should produce something like this:
+| Variable | Default (dark) |
+| --- | --- |
+| `--pivot-card-radius` | `20px` |
+| `--pivot-value-font-family` | `'SF Pro Rounded', ui-rounded, system-ui, sans-serif` |
+| `--pivot-muted-color` | `#545454` (values, EDIT ENTITY, row icons) |
+| `--pivot-description-color` | `rgba(255,255,255,0.5)` |
+| `--pivot-active-border-color` | `rgba(180,180,180,0.4)` |
+| `--pivot-toggle-track-color` | `#171717` |
+| `--pivot-toggle-on-color` / `--pivot-toggle-off-color` | `#ffffff` / `#545454` |
+| `--pivot-timer-strip-color` | `#171717` |
+| `--pivot-button-color` / `--pivot-button-idle-color` | `#545454` / `#2a2a2a` |
+| `--pivot-volume-track-color` / `--pivot-volume-fill-color` | `rgba(255,255,255,0.3)` / `#ffffff` |
 
-![study_pivot_half_frames](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
+---
 
+## Moving from the button-card templates
 
-The example uses `custom:layout-card` to achieve the layout shown, but you can rearrange the bank cards however you like using any standard Home Assistant layout card.
+The cards replace the YAML templates one for one:
+
+| Template | Card |
+| --- | --- |
+| `pivot_banks` with `bank_number: N` | `custom:pivot-bank-card` with `bank: N` |
+| `pivot_active_bank` | `custom:pivot-status-card` |
+| `pivot_toggle_row`, `pivot_volume`, `pivot_section_heading` | `custom:pivot-settings-card` |
+| the whole page | `custom:pivot-device-card` |
+| `device_suffix:` in `pivot_config_*` | `device:` |
+| `timer_silent_toggle:` | found automatically (or `timer_silent_entity:`) |
+
+Once you've switched, you can delete the `pivot_*` entries from `button_card_templates`. If nothing else on your dashboards uses them, you can also uninstall *button-card*, *my-slider-v2* and *layout-card*, and delete `script.pivot_timer_toggle`.
+
+---
+
+## Troubleshooting
+
+**"Custom element doesn't exist: pivot-device-card"**
+Home Assistant hasn't been restarted since Pivot was updated, or the page is still the one loaded before the restart. Restart Home Assistant, then reload the page (in the companion app, close and reopen it).
+
+**"No Pivot device … Choose one in the card editor"**
+The card's `device` doesn't match a Pivot device. Open the card editor and pick one from the list.
+
+**The ✕ button cancels the timer but you don't hear "Timer cancelled"**
+Your **Pivot – Timer Control** blueprint predates a fix for dashboard cancels, so Pivot reset the timer itself. Re-import the blueprint from the [Timer page](/pivot/timer/) to get the spoken confirmation back.
+
+---
+
+## Legacy YAML templates
+
+The `custom:button-card` templates used before v0.0.93 are still available, but they will be removed in a later release. Please move to the cards above.
+
+- [button-card-templates.yaml](https://github.com/alistairmerritt/pivot/blob/main/assets/button-card-templates.yaml): the `button_card_templates` block. Paste it at the top of your raw dashboard YAML and add a `pivot_config_*` entry per device with its `device_suffix` and `timer_silent_toggle`.
+- [dashboard-example.yaml](https://github.com/alistairmerritt/pivot/blob/main/assets/dashboard-example.yaml): a complete example dashboard built from them.
+
+They need *button-card*, *my-slider-v2* and *layout-card* from HACS. **Before editing raw dashboard YAML, copy your existing YAML somewhere safe:** a mistake can wipe the dashboard.

@@ -199,11 +199,11 @@ Timers are not enabled by default. Before setting up these blueprints, go to you
 | --- | --- | --- | --- |
 | **Pivot - Timer Control** | Automation | Yes | Required for the timer alarm to fire. Also handles start, pause, resume, LED countdown gauge, and physical button control when a bank is assigned. Set Bank Number to `0` for voice-only use with no bank assigned. |
 | **Pivot - Timer - Voice** | Automation | Optional | Voice control for the timer via Home Assistant Assist – set, pause, resume, cancel, and query remaining time by voice. Requires Timer Control. Bank assignment not required. |
-| **Pivot - Timer Toggle Script** | Script | Optional | Dashboard helper that lets a card start, pause, resume, or dismiss a timer the same way the physical button does |
+| **Pivot - Timer Toggle Script** | Script | Not needed from v0.0.93 | Dashboard helper for Pivot v0.0.92 and earlier. The [Pivot dashboard cards](/pivot/dashboard/) and the `pivot.timer_toggle` action replace it |
 
 **Pivot - Timer Control** is required for the timer alarm to fire. Set Bank Number to `0` if you have no bank assigned – the alarm and TTS still work, but the LED gauge and physical button control are not available.  
 **Pivot - Timer - Voice** is optional – install it if you want to control the timer by voice. Requires Timer Control to be running (for the alarm to fire), but does not require a bank to be assigned.  
-**Pivot - Timer Toggle Script** is optional – install it if you want to control the timer from a dashboard card.
+**Pivot - Timer Toggle Script** is only needed on Pivot v0.0.92 and earlier. From v0.0.93 the [Pivot dashboard cards](/pivot/dashboard/) have timer controls built in.
 
 ---
 
