@@ -144,7 +144,7 @@ A bank does not need to be assigned. **Pivot - Timer Control** (Step 2) must alr
 | Pause | *"pause timer"*, *"pause the timer"* |
 | Resume | *"resume timer"*, *"resume the timer"*, *"continue timer"*, *"continue the timer"*, *"unpause timer"*, *"unpause the timer"* |
 | Cancel | *"cancel timer"*, *"cancel the timer"*, *"stop timer"*, *"stop the timer"*, *"reset timer"*, *"reset the timer"* |
-| Dismiss alarm | *"dismiss timer"*, *"dismiss the timer"*, *"dismiss alarm"*, *"stop the alarm"* |
+| Dismiss alarm | *"dismiss timer"*, *"dismiss the timer"*, *"dismiss alarm"*, *"dismiss the alarm"*, *"stop the alarm"* |
 | Status | *"how long is left on the timer"*, *"how much time is left"*, *"how much time is left on the timer"*, *"how much time remains"*, *"how much longer is left"*, *"what's the timer at"*, *"what's left on the timer"*, *"timer status"* |
 
 Number values (`{n}`, `{h}`, `{m}`) accept both digits (*"5"*) and words (*"five"*).
