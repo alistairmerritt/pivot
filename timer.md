@@ -151,6 +151,8 @@ Number values (`{n}`, `{h}`, `{m}`) accept both digits (*"5"*) and words (*"five
 
 > **Seconds timers:** Second-based durations are supported by voice only. The knob and dashboard controls are constrained to whole minutes (minimum 1 minute).
 
+> **Timers over an hour:** Also voice only. The knob and dashboard go up to 60 minutes. A longer voice timer runs its full time, but the dial can only show an hour: its gauge stays full until the last 60 minutes, then counts down as usual.
+
 ---
 
 ### Step 5. Optional: add dashboard control
