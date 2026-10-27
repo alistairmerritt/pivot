@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.28 | v0.0.95 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.28 | v0.0.96 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,22 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.96</summary>
+
+- **Fix:** **A long press on the button still reset the timer to 1 minute.** v0.0.95 fixed this for the dashboard, voice and the automatic resets, but not for the button. Since Home Assistant 2026.7, writes made while a press is being handled reach Pivot only once that handling finishes, so the cancel's empty dial arrived after the timer had already gone idle and still read as a turn of the knob. Pivot now ignores a value written before the timer went idle, or by the same automation run that set it idle. This fix is in the integration, so it covers blueprints imported before v0.0.95 too.
+- **Fix (Timer Control blueprint):** **A running timer could be cancelled when the Voice PE reconnected**, for example after a Wi-Fi drop. A reconnecting button comes back carrying its last press, and if that was a long press, Timer Control treated it as a new one. That's likely when the timer was started by voice or from a dashboard after a long-press cancel. Reconnects are now ignored, as Pivot itself already ignored them. **Requires re-importing the Pivot - Timer Control blueprint.**
+- **Fix (Timer Control blueprint):** **"Switch to timer bank when timer starts" never worked.** Its trigger read the device suffix from the blueprint's variables, which a trigger can't see, so it watched a timer that doesn't exist. Home Assistant logged *"'suffix' is undefined"* when the automation loaded. **Requires re-importing the Pivot - Timer Control blueprint.**
+- **Fix (Timer - Voice blueprint):** **Voice timers over an hour never started.** *"Set a timer for an hour and a half"*, *"set a 2 hour timer"* and *"two and a half hours"* all failed. The blueprint wrote the minutes to *Timer Duration*, which goes up to 60, and Home Assistant's rejection stopped the timer before it began. The timer now runs its full time, and *Timer Duration* is set to 60: the dial stays full until the last hour. **Requires re-importing the Pivot - Timer - Voice blueprint.**
+- **Fix (Timer - Voice blueprint):** *"Dismiss the alarm"*, the example in the blueprint's own description, wasn't one of its phrases, so it did nothing. It now dismisses the alarm. **Requires re-importing the Pivot - Timer - Voice blueprint.**
+- **Fix:** **Pivot could ignore a button press.** After Home Assistant restarted while a Voice PE was offline, the button came back with no last press, and Pivot skipped the first real press after that as if it were a reconnect.
+- **Fix:** **Configure couldn't clear anything.** Clearing a bank's entity, the TTS entity or the media player in the form had no effect: Home Assistant sends nothing for an emptied field, and Pivot filled the old value back in. Cleared fields now stay cleared.
+- **Fix:** A bank whose light was unavailable showed a full dial, because an unavailable light reports no brightness and Pivot read that as fully on. The dial now keeps its last value until the light comes back.
+- **Fix:** On Home Assistant 2026.10, adding a dial and *Reconfigure* used two device-registry lookups that Home Assistant has deprecated. Each logged a *"Detected that custom integration 'pivot'…"* warning, and they stop working in Home Assistant 2027.8 and 2027.9. Pivot now uses their replacements, and still works on older versions.
+- **Change:** Automated tests expanded from 122 to 153 for the integration. They now run both timer blueprints in Home Assistant's own automation engine, driven the way the hardware drives them: every button press, knob turn, alarm, dashboard action and voice command. They run on Home Assistant 2026.10 as well as an older release.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.95</summary>
@@ -32,15 +48,7 @@ permalink: /changelog/
   See [Common setups](/pivot/dashboard/#common-setups) for examples.
 - **New:** The **Pivot bank** card can show the bank the dial is on (`bank: active`) or whichever bank is the timer (`bank: timer`), and takes the same bank options. The **Pivot status** and **Pivot settings** cards gain *Show active bank* and *card background*.
 - **Fix (dashboard cards):** **The Pivot cards could fail to load**, showing an error card ("Custom element doesn't exist") instead. Home Assistant loads the cards at the same time as its own app, in no fixed order, and when the cards won the race they registered themselves where Home Assistant couldn't see them. It depended on timing, so it came and went between page loads and devices. The cards now wait for Home Assistant's app.
-- **Fix:** **Cancelling a timer reset its duration to 1 minute.** With announcements on, it also said *"1 minute timer. Press to start."* after *"Timer cancelled."* The cancel empties the dial, and Pivot read that 0 on an idle timer bank as a turn of the knob. The same happened when a paused timer was cleared after 15 minutes and when a stuck alarm was cleared. Pivot now ignores a value written by the same automation run that set the timer to idle, and any value written before the timer went idle. That second rule covers a long press on the button: since Home Assistant 2026.7, writes made while a press is being handled reach Pivot only once that handling finishes, after the timer has already gone idle. This fix is in the integration, so blueprints you imported earlier are covered too. The Timer Control and Timer - Voice blueprints also empty the dial before going idle now.
-- **Fix (Timer Control blueprint):** **A running timer could be cancelled when the Voice PE reconnected**, for example after a Wi-Fi drop. A reconnecting button comes back carrying its last press, and if that was a long press, Timer Control treated it as a new one. That's likely when the timer was started by voice or from a dashboard after a long-press cancel. Reconnects are now ignored, as Pivot itself already ignored them. **Requires re-importing the Pivot - Timer Control blueprint.**
-- **Fix (Timer Control blueprint):** **"Switch to timer bank when timer starts" never worked.** Its trigger read the device suffix from the blueprint's variables, which a trigger can't see, so it watched a timer that doesn't exist. Home Assistant logged *"'suffix' is undefined"* when the automation loaded. **Requires re-importing the Pivot - Timer Control blueprint.**
-- **Fix (Timer - Voice blueprint):** *"Dismiss the alarm"*, the example in the blueprint's own description, wasn't one of its phrases, so it did nothing. It now dismisses the alarm. **Requires re-importing the Pivot - Timer - Voice blueprint.**
-- **Fix:** On Home Assistant 2026.10, adding a dial and *Reconfigure* used two device-registry lookups that Home Assistant has deprecated. Each logged a *"Detected that custom integration 'pivot'…"* warning, and they stop working in Home Assistant 2027.8 and 2027.9. Pivot now uses their replacements, and still works on older versions.
-- **Fix:** **Pivot could ignore a button press.** After Home Assistant restarted while a Voice PE was offline, the button came back with no last press, and Pivot skipped the first real press after that as if it were a reconnect.
-- **Fix (Timer - Voice blueprint):** **Voice timers over an hour never started.** *"Set a timer for an hour and a half"*, *"set a 2 hour timer"* and *"two and a half hours"* all failed. The blueprint wrote the minutes to *Timer Duration*, which goes up to 60, and Home Assistant's rejection stopped the timer before it began. The timer now runs its full time, and *Timer Duration* is set to 60: the dial stays full until the last hour. **Requires re-importing the Pivot - Timer - Voice blueprint.**
-- **Fix:** **Configure couldn't clear anything.** Clearing a bank's entity, the TTS entity or the media player in the form had no effect: Home Assistant sends nothing for an emptied field, and Pivot filled the old value back in. Cleared fields now stay cleared.
-- **Fix:** A bank whose light was unavailable showed a full dial, because an unavailable light reports no brightness and Pivot read that as fully on. The dial now keeps its last value until the light comes back.
+- **Fix (Timer Control and Timer - Voice blueprints):** **Cancelling a timer reset its duration to 1 minute.** With announcements on, it also said *"1 minute timer. Press to start."* after *"Timer cancelled."* The cancel set the timer to idle and then emptied the dial, and Pivot read that 0 on an idle timer bank as a turn of the knob. The same happened when a paused timer was cleared after 15 minutes and when a stuck alarm was cleared. The dial is now emptied first. **Requires re-importing both blueprints.** Cancelling from a dashboard card was fixed in the integration itself.
 - **Fix:** **A false "Pivot can't hear the button" repair** could appear while a timer ran on a Voice PE that was switched off. Timer Control updates the dial every 30 seconds from a time-based trigger, and Pivot mistook those updates for the device being online. Automations and scripts no longer count.
 - **Fix:** A single press on a bank assigned to a number, input number or sensor logged a Home Assistant warning on every press, because these can't be turned on or off. Pivot now leaves them alone. Automations still receive the press.
 - **Fix:** **Configure couldn't be saved** when a bank held an entity from a domain the bank picker doesn't offer, such as a group set through *EDIT ENTITY*. The picker rejected its own pre-filled value.
@@ -48,7 +56,7 @@ permalink: /changelog/
 - **Fix (card editor):** A space typed at the end of a title vanished, so two-word titles couldn't be typed. A hand-written settings row order now survives the editor. A seventh timer preset is refused instead of replacing the longest one. A card following the dial stays on its bank until a drag ends.
 - **Change:** `rows: []` on the Pivot settings card now shows no rows. It used to show all of them.
 - **Change:** Cards set up with v0.0.93 or v0.0.94 look and work exactly as before. `show_status: false` and the status card's `show_name: false` still work, and the editor rewrites them as the new options.
-- **Change:** Automated tests expanded from 113 to 153 for the integration and from 52 to 112 for the cards. They now run both timer blueprints in Home Assistant's own automation engine, driven the way the hardware drives them: every button press, knob turn, alarm, dashboard action and voice command. The tests now run on Home Assistant 2026.10 as well as an older release.
+- **Change:** Automated tests expanded from 113 to 122 for the integration and from 52 to 112 for the cards. They now include runs of the Timer Control blueprint itself in Home Assistant's automation engine.
 
 </details>
 
