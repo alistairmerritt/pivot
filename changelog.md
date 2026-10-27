@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.28 | v0.0.94 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.28 | v0.0.95 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -19,6 +19,22 @@ permalink: /changelog/
 ## Integration
 
 > **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+
+<details markdown="1">
+<summary>v0.0.95</summary>
+
+- **New:** **The Pivot card can be set up for any kind of dashboard.** Its editor now groups the options under **Banks**, **Timer** and **Settings**:
+  - **Banks to show:** all four, the ones you choose, only the active bank (it changes as the dial does), or only the timer bank. Banks with nothing assigned can be left out.
+  - **Two banks per row** on wide dashboards. Narrower, they stack.
+  - **Show or hide** the title, the active bank line, *EDIT ENTITY*, the *Mirror Light Colour* and *Announce Value* rows, and *Silent Timer*. Hiding *EDIT ENTITY* suits wall tablets and family dashboards.
+  - **Your own timer presets:** up to six buttons, each from 1 to 60 minutes.
+  - **Settings:** choose which ones show, put them on a card background so they read over a photo, place them below the banks instead of beside them, or turn them off and use the **Pivot settings** card elsewhere.
+  See [Common setups](/pivot/dashboard/#common-setups) for examples.
+- **New:** The **Pivot bank** card can show the bank the dial is on (`bank: active`) or whichever bank is the timer (`bank: timer`), and takes the same bank options. The **Pivot status** and **Pivot settings** cards gain *Show active bank* and *card background*.
+- **Change:** Cards set up with v0.0.93 or v0.0.94 look and work exactly as before. `show_status: false` and the status card's `show_name: false` still work, and the editor rewrites them as the new options.
+- **Change:** Automated tests for the cards expanded from 52 to 104.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.94</summary>
