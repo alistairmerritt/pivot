@@ -108,13 +108,13 @@ rows:
 
 For example, you might keep the banks on a room dashboard but move the settings to another view or a popup. Just disable **Show Settings** on the main Pivot card, then add a Pivot settings card wherever you want them.
 
-![The Pivot dashboard showing the active bank, four banks and device settings](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
-
 ---
 
 ## Using the cards
 
 The cards work directly with your Pivot device, so changes you make on the dashboard are reflected on the dial.
+
+![The Pivot dashboard showing the active bank, four banks and device settings](https://github.com/user-attachments/assets/7a556f57-18cb-4c95-9a22-230e97e22560)
 
 ### Banks
 
