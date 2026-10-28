@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.31 | v0.0.97 | 2026.10.0+ | 2025.8.0+* |
+| v0.0.32 | v0.0.97 | 2026.10.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -607,9 +607,15 @@ permalink: /changelog/
 </details>
 
 <details markdown="1">
-<summary>v0.0.31</summary>
+<summary>v0.0.32</summary>
 
 - **New:** **Disable physical controls**, a child lock. A switch on the Voice PE's device page makes the knob and button do nothing, except that a press still stops a ringing alarm. See [Locking the controls](/pivot/firmware/#locking-the-controls).
+
+</details>
+
+<details markdown="1">
+<summary>v0.0.31</summary>
+
 - **Change:** **Up to date with the official Voice PE firmware.** Pivot now includes the official changes up to September 2026:
   - Assist listens on both microphones, one without automatic gain, as the official firmware has since May.
   - Sendspin prefers FLAC, and applies its saved delay adjustment only while headphones are plugged in.

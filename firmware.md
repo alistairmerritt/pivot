@@ -167,7 +167,7 @@ You can change bank colours from within Home Assistant using the light entities 
 
 ## Locking the controls
 
-From firmware v0.0.31, a **Disable physical controls** switch works as a child lock. You'll find it on the Voice PE's device page in Home Assistant, under **Configuration** (`switch.…_disable_physical_controls`). While it's on:
+From firmware v0.0.32, a **Disable physical controls** switch works as a child lock. You'll find it on the Voice PE's device page in Home Assistant, under **Configuration** (`switch.…_disable_physical_controls`). While it's on:
 
 - The knob and button do nothing: no changes to your entities, no bank switching, no Control Mode toggle, no volume changes, and no button events for your automations. Pressing still wakes the LED ring, but nothing else happens.
 - A press still stops a ringing timer alarm.
@@ -308,7 +308,6 @@ Pivot firmware is based on the official Home Assistant Voice PE ESPHome configur
 - Hold+turn in Normal mode retains stock behaviour – changes the LED ring colour (hue cycling)
 - Secondary scroll behaviour removed
 - [Disable physical controls](#locking-the-controls) covers Pivot's controls, is visible by default, and still lets a press stop a ringing alarm
-- Sendspin keeps its task stacks in PSRAM, as Pivot always has; the official firmware moved them to internal RAM in March
 - Passive banks (scene, script, switch, input_boolean, open/close-only cover) ignore the knob. Scene and script banks turn the LEDs off. Banks with an on/off state show it instead: a full ring in the bank colour when on or open, nothing when off or closed. Bank Indicator still fires normally during bank switching.
 
 All standard VPE functionality (voice assistant, wake word, mute button, LED colour change, etc.) remains intact.
@@ -319,4 +318,4 @@ Home Assistant’s Voice Preview Edition firmware continues to evolve, and new u
 
 Because Pivot is a custom firmware branch, upstream Voice Preview Edition changes will not always appear in Pivot immediately, and some updates may require additional work or testing before they are adopted.
 
-Firmware v0.0.31 includes every official change up to September 2026, apart from the differences listed above.
+From v0.0.31, Pivot firmware includes every official change up to September 2026, apart from the differences listed above.
