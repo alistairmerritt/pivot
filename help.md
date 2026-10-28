@@ -294,17 +294,13 @@ Remove the `.yaml` suffix, save, and retry the build.
 
 ### Wireless install stops with "the device did not offer encryption"
 
-The full message starts *"An OTA encryption key is configured but the device did not offer encryption; refusing to send the image in plaintext"*. From firmware v0.0.30, every wireless update must be encrypted with the device's `api_encryption_key`, and the firmware already on this device is too old to accept one: it was built with ESPHome older than 2026.9.0.
+The full message starts *"An OTA encryption key is configured but the device did not offer encryption; refusing to send the image in plaintext"*. Every wireless update to Pivot firmware must be encrypted with the device's `api_encryption_key`, and the firmware already on this device is too old to accept one: it was built with ESPHome older than 2026.9.0.
 
-Install it once with `ref: v0.0.29` in place of `ref: stable` (keep `ota_password` in the config for this), then change it back to `ref: stable` and install again. See [Updating from firmware v0.0.29 or earlier](/pivot/firmware/#updating-from-firmware-v0029-or-earlier).
+Install over USB this once instead – see [Flashing](/pivot/firmware/#flashing). Wireless installs work from then on.
 
 ### ESPHome build fails with "Invalid key format"
 
 The `api_encryption_key` is missing, still the placeholder from the template, or not a valid key. It protects both the connection to Home Assistant and wireless updates, so Pivot will not build without one. Use the key ESPHome showed when you took control of the device, or generate one at [esphome.io](https://esphome.io/components/api.html#configuration-variables).
-
-### ESPHome build fails with "ota_password must be at least 12 characters"
-
-Or `Set a unique ota_password in your device YAML`. These come from firmware v0.0.29 and earlier, which needed an OTA password. Update to the latest firmware (`ref: stable`), which no longer uses one. If you're installing v0.0.29 on purpose, add `ota_password` to the device's substitutions: at least 12 letters or digits, e.g. from `openssl rand -hex 16`.
 
 ---
 

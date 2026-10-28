@@ -280,15 +280,6 @@ Wireless updates are encrypted with your `api_encryption_key`, and the device re
 - **If you lose it,** the device needs to be reflashed over USB.
 - **Changing it** also means a USB reflash, because the device only accepts an update encrypted with the key it already has. Home Assistant then asks for the new key.
 
-### Updating from firmware v0.0.29 or earlier
-
-Earlier Pivot firmware used an `ota_password`. Firmware v0.0.30 replaces it with encryption, which ESPHome requires from 2027.3.0. Most devices need nothing extra:
-
-1. Update ESPHome Device Builder to 2026.10.0 or later.
-2. Click **Install → Wirelessly**. If the device's current firmware was built with ESPHome 2026.9.0 or later, that's all.
-3. If ESPHome stops with *"the device did not offer encryption; refusing to send the image in plaintext"*, the firmware on the device is older than that. Change `ref: stable` to `ref: v0.0.29` and install, then change it back to `ref: stable` and install again.
-4. Once the device is on v0.0.30, delete the `ota_password` line from its config, and `pivot_ota_password` from your Secrets file when no device uses it. Keep them until then: v0.0.29 still needs the password to build.
-
 ---
 
 ## Differences from stock firmware

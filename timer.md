@@ -63,8 +63,6 @@ The timer helper entities are provisioned with every Pivot device. Three of them
 
 Two more, `timer_restore_show_value` and `timer_restore_dim`, are enabled already. They save Show Control Value and Dim LEDs When Idle while a timer runs, so both can be put back afterwards.
 
-> **Set Pivot up before v0.0.97?** `timer_restore_show_value` was disabled by default then, so check it's enabled. It's a diagnostic entity, so it appears in a separate "Diagnostic" section on the device page, not with the other timer entities. If it's not showing up there, go to **Settings → Devices & Services → Entities**, enable **Show disabled entities**, and search for `timer_restore_show_value` directly – that list isn't split by category.
-
 ---
 
 ### Step 2. Set up Timer Control  –  [Import Blueprint (Open in a new tab)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Falistairmerritt%2Fpivot-integration%2Fstable%2Fblueprints%2Fautomation%2Fpivot_timer.yaml)
