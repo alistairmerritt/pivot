@@ -609,8 +609,11 @@ permalink: /changelog/
 <details markdown="1">
 <summary>v0.0.31</summary>
 
-- **Fix (Timer blueprint):** Finish alert dismiss is now more reliable. The dismiss branch no longer requires the button press to match the configured bank number – any press on the device dismisses the alarm.
-
+- **New:** **Disable physical controls**, a child lock. A switch on the Voice PE's device page makes the knob and button do nothing, except that a press still stops a ringing alarm. See [Locking the controls](/pivot/firmware/#locking-the-controls).
+- **Change:** **Up to date with the official Voice PE firmware.** Pivot now includes the official changes up to September 2026:
+  - Assist listens on both microphones, one without automatic gain, as the official firmware has since May.
+  - Sendspin prefers FLAC, and applies its saved delay adjustment only while headphones are plugged in.
+  - Smaller internal changes that match the official firmware.
 
 </details>
 

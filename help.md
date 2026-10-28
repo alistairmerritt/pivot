@@ -377,18 +377,20 @@ Start here before anything else:
 
 Work through these in order:
 
-1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, number, input_number, or a cover that accepts a position. Scenes, scripts, switches and open/close-only covers such as most garage doors are passive (knob does nothing, button only).
-3. **Check Control Mode is on** – go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
-4. **If the button works but the knob doesn't** – the `device_suffix` in your firmware YAML probably doesn't match the integration. See [The device suffix mismatch](#the-device-suffix-mismatch--entities-have-wrong-ids).
+1. **Check the controls aren't locked** – on the Voice PE's device page, **Disable physical controls** must be off. See [Locking the controls](/pivot/firmware/#locking-the-controls).
+2. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
+3. **Check the entity domain** – the entity must be a supported type: light, fan, media player, climate, number, input_number, or a cover that accepts a position. Scenes, scripts, switches and open/close-only covers such as most garage doors are passive (knob does nothing, button only).
+4. **Check Control Mode is on** – go to **Settings → Devices & Services → Pivot → your device** and check that the **Control Mode** switch is on. You can also toggle it with a double press on the button.
+5. **If the button works but the knob doesn't** – the `device_suffix` in your firmware YAML probably doesn't match the integration. See [The device suffix mismatch](#the-device-suffix-mismatch--entities-have-wrong-ids).
 
 ---
 
 ### The button press does nothing
 
-1. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
-2. **Check Control Mode is on** – the button only toggles entities in Control Mode. Double press to toggle it on.
-3. **If the knob works but the button doesn't** – the Pivot entry is probably linked to an old copy of your VPE. This happens when the VPE is added to Home Assistant again: re-adopting it in ESPHome, re-adding it after a reset, or first adding it by IP address and later by name. The knob keeps working because it finds Pivot's entities by suffix, but button presses are matched to the specific device the Pivot entry was set up with – and that device no longer exists. Triple-press announcements go quiet for the same reason. From integration v0.0.91, Home Assistant tells you: a notice appears in **Settings → Repairs** saying Pivot can't hear the button.
+1. **Check the controls aren't locked** – on the Voice PE's device page, **Disable physical controls** must be off. See [Locking the controls](/pivot/firmware/#locking-the-controls).
+2. **Check bank assignment** – go to **Settings → Devices & Services → Pivot → your device → Configure** and confirm the active bank has an entity assigned.
+3. **Check Control Mode is on** – the button only toggles entities in Control Mode. Double press to toggle it on.
+4. **If the knob works but the button doesn't** – the Pivot entry is probably linked to an old copy of your VPE. This happens when the VPE is added to Home Assistant again: re-adopting it in ESPHome, re-adding it after a reset, or first adding it by IP address and later by name. The knob keeps working because it finds Pivot's entities by suffix, but button presses are matched to the specific device the Pivot entry was set up with – and that device no longer exists. Triple-press announcements go quiet for the same reason. From integration v0.0.91, Home Assistant tells you: a notice appears in **Settings → Repairs** saying Pivot can't hear the button.
 
    **To check:** go to **Settings → Devices & Services → ESPHome**. If your VPE appears twice, the copy whose entities are all unavailable is the old one. You can also open **Developer Tools → States**, find your VPE's `event.…_button_press` entity and press the button: if its time updates but nothing toggles, this is the cause.
 
@@ -397,8 +399,8 @@ Work through these in order:
    **To fix (older versions):** make a note of your bank assignments, then delete your device's entry from the Pivot integration and add it again, choosing the copy of the VPE whose entities are available. At the suffix step, enter the same `device_suffix` as your firmware YAML – the field is pre-filled from the ESPHome name, which may be different.
 
    Either way, if you're sure the unavailable copy is old, delete it from ESPHome first so it can't be picked by mistake.
-4. **Check the integration is up to date** – button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
-5. **Check firmware is up to date** – open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
+5. **Check the integration is up to date** – button toggle is handled natively by the integration. Update via HACS and restart Home Assistant if you are not on the latest version.
+6. **Check firmware is up to date** – open your device in ESPHome Device Builder and click **Install → Wirelessly** to get the latest firmware.
 
 ---
 
