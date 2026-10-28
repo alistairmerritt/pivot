@@ -14,7 +14,7 @@ This guide walks you through everything needed to get Pivot running on a Home As
 
 - A Home Assistant Voice Preview Edition (VPE)
 - Home Assistant with the ESPHome integration installed
-- The ESPHome Device Builder app (formerly the ESPHome add-on) **with version 2026.5.0 or later** installed
+- The ESPHome Device Builder app (formerly the ESPHome add-on) **with version 2026.10.0 or later** installed
 - HACS installed in Home Assistant
 - Your WiFi credentials
 
@@ -95,14 +95,8 @@ Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmwar
 
   # API encryption key – use the one from Take Control, or generate one at:
   # https://esphome.io/components/api.html#configuration-variables
+  # It also protects wireless updates: every update is encrypted with it.
   api_encryption_key: "your-key-here"
-
-  # OTA update password – REQUIRED. One password can be shared by all
-  # your Pivot devices.
-  # Generate one with:  openssl rand -hex 16
-  # Then add it to your ESPHome secrets.yaml, e.g.:
-  #   pivot_ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2"
-  ota_password: !secret pivot_ota_password
 
   # LED orientation:
   #   '6'  flat on a surface, cable facing away (default)
@@ -125,12 +119,9 @@ packages:
 
 <blockquote><strong>WiFi credentials:</strong> The config uses <code>!secret</code> to keep credentials out of the YAML. Add <code>wifi_ssid</code> and <code>wifi_password</code> to your ESPHome <strong>Secrets</strong> file (the key icon in ESPHome Device Builder). If you prefer, you can paste the values directly as plain text instead.</blockquote>
 
-<blockquote><strong>OTA password is required for security purposes.</strong> Once your device runs Pivot firmware, all future updates can happen wirelessly (though USB is still acceptable too). Without a password, anyone who can reach the device on your network could install their own firmware onto it.<br><br>
-Wireless updates can also be authenticated with your <code>api_encryption_key</code> instead of the password, so keep that key just as safe. The <a href="/pivot/firmware/#ota_password">Firmware</a> page covers both in full.<br><br>
-You can create/apply a password yourself, and if you have more than one Pivot device, they can share the same password. Ensure passwords are at least 12 characters, using only letters, digits, hyphens or underscores (avoid quotes or other special characters). If you'd rather generate a random one, open a terminal and run <code>openssl rand -hex 16</code>, which prints a random value you can copy. Add your chosen password to your ESPHome <strong>Secrets</strong> file as <code>pivot_ota_password</code>, and reference it as shown above. (Any name works, as long as the Secrets entry and the <code>!secret</code> line match.)<br><br>
-<strong>If you do not save a password, the build will stop with an error.</strong> Pivot refuses to build firmware without a password rather than quietly producing an unprotected device.</blockquote>
+<blockquote><strong>Your API encryption key protects wireless updates too.</strong> Once your device runs Pivot firmware, all future updates can happen wirelessly (though USB is still acceptable too). Every wireless update must be encrypted with the device's <code>api_encryption_key</code>, and the device refuses anything else, so keep the key safe: anyone holding it can control the device and replace its firmware. Use a different key for each device. If the key is missing or isn't a valid key, the build stops with an error rather than producing an unprotected device. The <a href="/pivot/firmware/#ota_password">Firmware</a> page has more detail.</blockquote>
 
-<blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code>, <code>api_encryption_key</code> and <code>ota_password</code> somewhere safe. You will need the suffix when adding the Pivot integration, the key if Home Assistant ever asks for it, and the OTA password for future wireless updates. If you lose the password you can still update using the key; lose both and it's a USB reflash.</blockquote></li>
+<blockquote><strong>Tip:</strong> Note down your <code>device_suffix</code> and <code>api_encryption_key</code> somewhere safe. You will need the suffix when adding the Pivot integration, and the key for wireless updates and if Home Assistant ever asks for it. If you lose the key, the device needs a USB reflash.</blockquote></li>
 
 <li><p><strong>Connect your VPE via USB</strong> for the initial flash – use a good quality cable. OTA (wireless) can be used for all future updates once the device is running Pivot firmware.</p>
 

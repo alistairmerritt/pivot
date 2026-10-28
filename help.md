@@ -292,33 +292,19 @@ Remove the `.yaml` suffix, save, and retry the build.
 
 ---
 
+### Wireless install stops with "the device did not offer encryption"
+
+The full message starts *"An OTA encryption key is configured but the device did not offer encryption; refusing to send the image in plaintext"*. From firmware v0.0.30, every wireless update must be encrypted with the device's `api_encryption_key`, and the firmware already on this device is too old to accept one: it was built with ESPHome older than 2026.9.0.
+
+Install it once with `ref: v0.0.29` in place of `ref: stable` (keep `ota_password` in the config for this), then change it back to `ref: stable` and install again. See [Updating from firmware v0.0.29 or earlier](/pivot/firmware/#updating-from-firmware-v0029-or-earlier).
+
+### ESPHome build fails with "Invalid key format"
+
+The `api_encryption_key` is missing, still the placeholder from the template, or not a valid key. It protects both the connection to Home Assistant and wireless updates, so Pivot will not build without one. Use the key ESPHome showed when you took control of the device, or generate one at [esphome.io](https://esphome.io/components/api.html#configuration-variables).
+
 ### ESPHome build fails with "ota_password must be at least 12 characters"
 
-Or `Set a unique ota_password in your device YAML`. Both mean the same thing: your device YAML has no usable `ota_password`.
-
-This is intentional, not a bug. Once a device runs Pivot firmware, updates can arrive wirelessly, and without a password that endpoint accepts plaintext uploads from anyone who can reach the device on your network. A missing password cannot be detected after the device is running, so Pivot checks while building instead.
-
-(The password is not the only credential: a device built with an `api_encryption_key` also accepts encrypted uploads authenticated by that key, which skip the password check. Keep the key as safe as the password.)
-
-Run this in a terminal to generate one, or make up your own following the same length and character rules below:
-
-```bash
-openssl rand -hex 16
-```
-
-```yaml
-substitutions:
-  ota_password: !secret pivot_ota_password # ✓ from your ESPHome secrets file
-  ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2" # ✓ or inline
-  ota_password: ""                         # ✗ empty is rejected
-  ota_password: "hunter2"                  # ✗ under 12 characters
-```
-
-If using `!secret`, add the matching entry to your ESPHome **Secrets** file (the key icon in ESPHome Device Builder) – e.g. `pivot_ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2"`. One password can be shared by all your Pivot devices.
-
-Only the length is checked (12+ characters) — the build does not inspect content, so a value with quotes or a backslash will not necessarily be caught here. It is embedded in a C++ string literal during the build though, so such a character could break the build or silently produce a different password than you typed. Stick to the hexadecimal output above, or letters/digits/hyphens/underscores, to avoid that risk.
-
-**Updating a device that never had one:** this first upload still works without authentication, because the firmware currently on the device has no password to check. Enforcement begins with the next update. Save the password somewhere safe — if you lose it, the only way back in is a USB reflash.
+Or `Set a unique ota_password in your device YAML`. These come from firmware v0.0.29 and earlier, which needed an OTA password. Update to the latest firmware (`ref: stable`), which no longer uses one. If you're installing v0.0.29 on purpose, add `ota_password` to the device's substitutions: at least 12 letters or digits, e.g. from `openssl rand -hex 16`.
 
 ---
 
