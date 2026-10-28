@@ -607,19 +607,10 @@ permalink: /changelog/
 </details>
 
 <details markdown="1">
-<summary>v0.0.32</summary>
-
-- **New:** **Disable physical controls**, a child lock. A switch on the Voice PE's device page makes the knob and button do nothing, except that a press still stops a ringing alarm. See [Locking the controls](/pivot/firmware/#locking-the-controls).
-
-</details>
-
-<details markdown="1">
 <summary>v0.0.31</summary>
 
-- **Change:** **Up to date with the official Voice PE firmware.** Pivot now includes the official changes up to September 2026:
-  - Assist listens on both microphones, one without automatic gain, as the official firmware has since May.
-  - Sendspin prefers FLAC, and applies its saved delay adjustment only while headphones are plugged in.
-  - Smaller internal changes that match the official firmware.
+- **Fix (Timer blueprint):** Finish alert dismiss is now more reliable. The dismiss branch no longer requires the button press to match the configured bank number – any press on the device dismisses the alarm.
+
 
 </details>
 
@@ -882,9 +873,16 @@ permalink: /changelog/
 ## Firmware
 
 <details markdown="1">
+<summary>v0.0.32</summary>
+
+- **New:** **Disable physical controls**, a child lock. A switch on the Voice PE's device page makes the knob and button do nothing, except that a press still stops a ringing alarm. See [Locking the controls](/pivot/firmware/#locking-the-controls).
+
+</details>
+
+<details markdown="1">
 <summary>v0.0.31</summary>
 
-- **Change:** **Up to date with the official Voice PE firmware.** Pivot now includes every official change up to September 2026, except the *Disable physical controls* switch, because Pivot handles the button and knob itself:
+- **Change:** **Up to date with the official Voice PE firmware.** Pivot now includes every official change up to September 2026, except the *Disable physical controls* switch, which v0.0.32 builds into Pivot's own controls:
   - Assist listens on both microphones, one without automatic gain, as the official firmware has since May.
   - Sendspin prefers FLAC, and applies its saved delay adjustment only while headphones are plugged in.
   - Smaller internal changes that match the official firmware.
