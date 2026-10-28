@@ -78,7 +78,7 @@ Install via HACS from [alistairmerritt/pivot-integration](https://github.com/ali
 
 ### Timer entities
 
-These entities are provisioned per device but **disabled by default**. Enable them individually in the HA entity registry if you want to use the [Pivot Timer](/pivot/timer/) feature.
+These entities are provisioned per device. The duration, state and end entities are **disabled by default**: enable them in the HA entity registry if you want to use the [Pivot Timer](/pivot/timer/) feature. The two restore entities are enabled already.
 
 | Entity | Purpose |
 | --- | --- |
@@ -86,6 +86,7 @@ These entities are provisioned per device but **disabled by default**. Enable th
 | `select.{device_suffix}_timer_state` | Timer state – `idle`, `running`, `paused`, or `alerting` (alarm firing) |
 | `text.{device_suffix}_timer_end` | Internal – stores the countdown end time while the timer is running |
 | `text.{device_suffix}_timer_restore_show_value` | Internal – snapshots Show Control Value so it can be restored after the timer ends (used only if a bank is assigned). Categorised as diagnostic, so it appears in a separate section from the other timer entities on the device page |
+| `text.{device_suffix}_timer_restore_dim` | Internal – snapshots Dim LEDs When Idle so it can be restored after the timer ends. Also diagnostic |
 
 > **Do not rename Pivot entity IDs.** The firmware and integration use your `device_suffix` to build entity IDs at runtime. Renaming any of these entities in Home Assistant will break the connection between the firmware and the integration. If you need to label entities more clearly, change the entity's **Name** – not its **Entity ID**.
 
