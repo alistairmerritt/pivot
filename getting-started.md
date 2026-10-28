@@ -70,7 +70,7 @@ If you don't already have ESPHome Device Builder installed, install it via <stro
 <blockquote><strong>Save your encryption key.</strong> When you take control, ESPHome shows the device's API encryption key. Copy this and keep it somewhere safe – you'll need it in the next step. Alternatively, generate a fresh one at <a href="https://esphome.io/components/api.html#configuration-variables">esphome.io</a>.</blockquote></li>
 
 <li><p><strong>Create your per-device config.</strong><br>
-Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml"><code>devices/example.yaml</code></a> in the firmware repo (or the code block below) and paste it into ESPHome, replacing the stock YAML. Fill in your device-specific values:</p>
+Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmware/blob/stable/devices/example.yaml"><code>devices/example.yaml</code></a> in the firmware repo (or the code block below) and paste it into ESPHome, replacing the stock YAML. Fill in your device-specific values:</p>
 
 <pre><code>substitutions:
   # =======================================================================
@@ -114,9 +114,9 @@ Copy the template from <a href="https://github.com/alistairmerritt/pivot-firmwar
 packages:
   pivot:
     url: https://github.com/alistairmerritt/pivot-firmware
-    ref: main
+    ref: stable
     file: home-assistant-voice.yaml
-    refresh: 1d
+    refresh: 0s
 </code></pre>
 
 <p>The <code>packages:</code> block at the bottom tells ESPHome to fetch the full firmware from GitHub automatically – do not paste the contents of <code>home-assistant-voice.yaml</code> directly.</p>

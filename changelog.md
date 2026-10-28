@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.28 | v0.0.96 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.29 | v0.0.97 | 2026.5.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -18,7 +18,15 @@ permalink: /changelog/
 
 ## Integration
 
-> **Blueprints are updated independently of the integration.** Import them directly from GitHub – see the [Timer page](/timer) and [Custom Automations page](/automations) for links. Re-importing picks up any fixes without needing an integration update.
+> **Re-import a blueprint when a release says so.** The timer blueprint links on the [Timer page](/timer) follow the latest integration release, so after you update, **Re-import blueprint** in Home Assistant picks up any blueprint fixes listed below. The [Custom Automations page](/automations) blueprints are examples and can be re-imported at any time.
+
+<details markdown="1">
+<summary>v0.0.97</summary>
+
+- **Change:** **The timer blueprint links now follow the latest release** instead of the newest code on GitHub, so importing or re-importing a blueprint never picks up unreleased changes. This applies to the links on the [Timer page](/pivot/timer/) and in the setup notification. A blueprint you imported before keeps its old link: import it again from the Timer page to switch.
+- **Fix:** The links in the setup notification opened the raw blueprint file instead of Home Assistant's import dialog.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.96</summary>
@@ -859,6 +867,13 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.29</summary>
+
+- **Change:** The per-device config now builds from the `stable` branch, which only moves when a firmware version is released, instead of `main`. **Install** in ESPHome still gives you the latest release, but never unreleased work. If your device YAML says `ref: main`, change it to `ref: stable`. No firmware changes.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.28</summary>

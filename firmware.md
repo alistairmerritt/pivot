@@ -111,12 +111,12 @@ substitutions:
 packages:
   pivot:
     url: https://github.com/alistairmerritt/pivot-firmware
-    ref: main
+    ref: stable
     file: home-assistant-voice.yaml
-    refresh: 1d
+    refresh: 0s
 ```
 
-A fully annotated template is available at [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml) in the firmware repo.
+A fully annotated template is available at [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/stable/devices/example.yaml) in the firmware repo.
 
 When a new version of Pivot firmware is released, open each device in ESPHome and click **Install → Wirelessly** – ESPHome pulls the latest from GitHub and flashes it OTA. No manual YAML changes required.
 
@@ -218,7 +218,7 @@ Changes to the upstream Voice PE configuration are reviewed and brought into Piv
 The firmware is a single readable YAML file, so you can compare it directly with the official Home Assistant Voice PE configuration:
 
 ```bash
-curl -O https://raw.githubusercontent.com/alistairmerritt/pivot-firmware/main/home-assistant-voice.yaml
+curl -O https://raw.githubusercontent.com/alistairmerritt/pivot-firmware/stable/home-assistant-voice.yaml
 curl -o upstream.yaml https://raw.githubusercontent.com/esphome/home-assistant-voice-pe/0579e7b9d8504264719c593474c85447253c9dc1/home-assistant-voice.yaml
 diff upstream.yaml home-assistant-voice.yaml
 ```
@@ -233,9 +233,9 @@ Pivot firmware is based on the official Home Assistant Voice PE ESPHome configur
 
 ### Updates and pinning
 
-The per-device config uses `ref: main`, which means clicking **Install** always gives you the latest firmware from the repository. `refresh: 1d` controls ESPHome's local cache of the downloaded source – it does **not** auto-flash. Your device only ever updates when you click **Install** in ESPHome Device Builder. Nothing happens silently or automatically.
+The per-device config uses `ref: stable`. The `stable` branch always holds the latest firmware release and only moves when a new version is published, so clicking **Install** gives you the newest release and never unreleased work. `refresh: 0s` makes ESPHome check for a new release each time you install – it does **not** auto-flash. Your device only ever updates when you click **Install** in ESPHome Device Builder. Nothing happens silently or automatically.
 
-If you want to pin to a specific version, you can replace `ref: main` with a version tag (e.g. `ref: v0.0.23`). Available tags are listed on the [pivot-firmware](https://github.com/alistairmerritt/pivot-firmware) repository on GitHub.
+If you want to stay on a specific version, replace `ref: stable` with its version tag (e.g. `ref: v0.0.28`). Available tags are listed on the [pivot-firmware](https://github.com/alistairmerritt/pivot-firmware/tags) repository on GitHub.
 
 ---
 
@@ -251,7 +251,7 @@ Taking control simply imports the device into ESPHome Device Builder so you can 
 
 When you open ESPHome Device Builder, your VPE may appear hidden under Discovered Devices – click **Show** in the top right corner if you don't see it. Click **Take Control**, give it a name, then click **Install**. This may take 3–5 minutes over Wi-Fi.
 
-Once you have taken control, replace the stock YAML with your per-device config (from [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/main/devices/example.yaml)), then click **Install**. Do not paste the full `home-assistant-voice.yaml` – the per-device config fetches it from GitHub automatically.
+Once you have taken control, replace the stock YAML with your per-device config (from [`devices/example.yaml`](https://github.com/alistairmerritt/pivot-firmware/blob/stable/devices/example.yaml)), then click **Install**. Do not paste the full `home-assistant-voice.yaml` – the per-device config fetches it from GitHub automatically.
 
 **Flashing via USB**
 
