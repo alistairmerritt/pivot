@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.30 | v0.0.97 | 2026.10.0+ | 2025.8.0+* |
+| v0.0.31 | v0.0.97 | 2026.10.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -871,6 +871,16 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.31</summary>
+
+- **Change:** **Up to date with the official Voice PE firmware.** Pivot now includes every official change up to September 2026, except the *Disable physical controls* switch, because Pivot handles the button and knob itself:
+  - Assist listens on both microphones, one without automatic gain, as the official firmware has since May.
+  - Sendspin prefers FLAC, and applies its saved delay adjustment only while headphones are plugged in.
+  - Smaller internal changes that match the official firmware.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.30</summary>
