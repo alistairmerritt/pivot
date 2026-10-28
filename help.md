@@ -412,6 +412,14 @@ Work through these in order:
 
 ---
 
+### The Voice PE restarts after I turn the knob a lot
+
+If the bank has **Announce Value** on, this is a known Voice PE bug, not a Pivot one. Every time the knob settles, Pivot announces the value, and many announcements in a row can crash the Voice PE's audio playback in ESPHome 2026.6 and later. The device drops offline for a few seconds and comes back. Its ESPHome logs show a crash just before, such as `LoadProhibited` or `IllegalInstruction`.
+
+Turn **Announce Value** off for banks you turn a lot. The LED ring still shows the value, and the other announcements are unaffected. The bug is tracked upstream in [home-assistant-voice-pe#613](https://github.com/esphome/home-assistant-voice-pe/issues/613); once ESPHome fixes it, updating the firmware is all you need.
+
+---
+
 ### The timer blueprint triggers when I turn the knob on a bank with a real entity
 
 This happens when the timer blueprint is set up on a bank that also has a real entity assigned. The blueprint requires the bank to be set as a timer bank before it will respond – this prevents it from interfering with normally-assigned banks.

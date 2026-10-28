@@ -143,6 +143,8 @@ Supported domains and what is spoken for value announcements:
 
 Value announcements only fire when the knob is physically turned – changes made by external automations, dashboards, or voice commands are not announced.
 
+> **Known issue: rapid value announcements can restart the Voice PE.** Turning the knob a lot on a bank with **Announce Value** on sends announcements back to back, and that can crash the Voice PE, which then restarts. Occasional announcements are fine, and banks without Announce Value aren't affected. This is a bug in the Voice PE's audio playback in ESPHome 2026.6 and later, not in Pivot: stock Voice PEs crash the same way with other spoken audio. It's tracked upstream in [home-assistant-voice-pe#613](https://github.com/esphome/home-assistant-voice-pe/issues/613). Until it's fixed, turn **Announce Value** off for banks you turn a lot – the LED ring still shows the value.
+
 ### Muting announcements
 
 **Mute Announcements** (`switch.{device_suffix}_mute_announcements`) silences all TTS from announcements and the timer blueprint without changing any other setting. Useful for quiet hours or when the device is in a shared space.
