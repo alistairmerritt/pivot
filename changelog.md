@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.29 | v0.0.97 | 2026.5.0+ | 2025.8.0+* |
+| v0.0.30 | v0.0.97 | 2026.10.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -867,6 +867,17 @@ permalink: /changelog/
 ---
 
 ## Firmware
+
+<details markdown="1">
+<summary>v0.0.30</summary>
+
+- **Change:** **Wireless updates are encrypted with the device's `api_encryption_key`, and the OTA password is gone.** The device refuses an update that isn't encrypted, and ESPHome checks the key when it builds the firmware. ESPHome stops supporting the OTA password in 2027.3.0. Most devices update with a plain **Install**: see [Updating from firmware v0.0.29 or earlier](/pivot/firmware/#updating-from-firmware-v0029-or-earlier).
+- **Change:** **Requires ESPHome Device Builder 2026.10.0 or later.** The LED ring also moves from `rgb_order` to `channel_colors`, which ESPHome removes in 2027.3.0 too.
+- **Fix:** On an upright dial (`led_offset: '0'`), the dot that marks an empty gauge, and the red dot for zero volume, showed at the bottom of the ring, opposite where the gauge starts.
+- **Fix:** Dismissing an alarm puts *Dim LEDs When Idle* back as it was before the timer, instead of always turning it on. Needs the v0.0.97 timer blueprints; with older ones it still turns on.
+- **New:** Home Assistant shows the Pivot firmware version on the device page, with *Made with Merritt* as the manufacturer and *Pivot* as the model.
+
+</details>
 
 <details markdown="1">
 <summary>v0.0.29</summary>

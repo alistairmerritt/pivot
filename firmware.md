@@ -34,11 +34,8 @@ substitutions:
 
   # API encryption key – generate one at:
   # https://esphome.io/components/api.html#configuration-variables
+  # It also protects wireless updates: every update is encrypted with it.
   api_encryption_key: "your_generated_key_here"
-
-  # OTA update password – REQUIRED, min 12 characters. One password can be
-  # shared by all your Pivot devices. Generate with:  openssl rand -hex 16
-  ota_password: "your_generated_ota_password"
 
   # LED orientation – set based on how your device is mounted:
   #   6  = flat on a surface, cable facing away (LEDs start at bottom)
@@ -93,13 +90,8 @@ substitutions:
 
   # API encryption key – generate a unique one per device at:
   # https://esphome.io/components/api.html#configuration-variables
+  # It also protects wireless updates: every update is encrypted with it.
   api_encryption_key: "generate-a-unique-key-here"
-
-  # OTA update password – REQUIRED, min 12 characters. One password can be
-  # shared by all your Pivot devices. Generate with `openssl rand -hex 16`
-  # and add it to secrets.yaml:
-  #   pivot_ota_password: "a1b2c3d4e5f6a7b8c9d0e1f2"
-  ota_password: !secret pivot_ota_password
 
   # LED orientation – set based on how your device is mounted:
   #   '6'  flat on a surface, cable facing away (LEDs start at bottom)
@@ -197,9 +189,7 @@ The only network audio functionality is the same `audio_http` media player used 
 
 ### Connections are authenticated
 
-The connection to Home Assistant is protected using your `api_encryption_key`, and wireless firmware updates require your `ota_password`.
-
-Your `api_encryption_key` authenticates wireless updates as well: ESPHome offers an encrypted upload path that uses it, and those uploads skip the password check. Keep the key as safe as the password.
+The connection to Home Assistant and wireless firmware updates are both protected with your `api_encryption_key`. Every wireless update must be encrypted with it, and the device refuses anything else.
 
 More detail is available in [SECURITY.md](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md).
 
@@ -241,7 +231,7 @@ If you want to stay on a specific version, replace `ref: stable` with its versio
 
 ## Flashing
 
-> **Requires ESPHome Device Builder 2026.5.0 or later.** Pivot firmware depends on components that were merged into ESPHome core in this release. Older versions will fail to compile with a confusing error. Update the ESPHome Device Builder add-on before flashing.
+> **Requires ESPHome Device Builder 2026.10.0 or later.** Pivot firmware uses OTA encryption and other configuration that older versions do not have. They fail to compile with a confusing error. Update the ESPHome Device Builder add-on before flashing.
 
 The easiest way to flash is using the **ESPHome Device Builder application** (formerly called the ESPHome add-on). Install it via **Settings → Applications → Add Application** and search for ESPHome Device Builder.
 
@@ -273,63 +263,31 @@ Replace `your-device.yaml` with your per-device config file — not `home-assist
 
 ## Before you flash – note these down
 
-Before flashing, make a note of these three values somewhere safe. You will need them during setup and potentially again later:
+Before flashing, make a note of these two values somewhere safe. You will need them during setup and potentially again later:
 
 | Value | Where it's used |
 | --- | --- |
 | `device_suffix` | Required when adding your device in the Pivot integration |
-| `api_encryption_key` | Required if you ever need to re-add the device to Home Assistant |
-| `ota_password` | Used for wireless updates. Lose it and you can still update using the `api_encryption_key`; lose both and it's a USB reflash |
+| `api_encryption_key` | Required for wireless updates, and if you ever need to re-add the device to Home Assistant. Lose it and it's a USB reflash |
 
-### `ota_password`
-
-OTA Password is required, with 12 characters minimum. You can use the same password across all of your Pivot devices.
-
-Make one up yourself, or generate one in a terminal with:
-
-```bash
-openssl rand -hex 16
-```
+### Wireless updates and your key {#ota_password}
 
 Once a device is running Pivot firmware, future firmware updates can be installed over the air. USB flashing still works too.
 
-At present, ESPHome's plaintext OTA endpoint is protected by this password. Without one, anyone who can reach the device on your local network could upload firmware to it.
+Wireless updates are encrypted with your `api_encryption_key`, and the device refuses an update that isn't. There is no separate OTA password. ESPHome checks the key when it builds the firmware and stops if it's missing or invalid, so a device can't end up unprotected.
 
-The OTA password is not the device's only credential. On current ESPHome versions, a device configured with an `api_encryption_key` can also accept encrypted OTA uploads authenticated with that key. Those uploads do not use the OTA password, so the encryption key should be protected just as carefully.
+- **Keep the key safe.** Anyone holding it can control the device and replace its firmware. Use a different key for each device.
+- **If you lose it,** the device needs to be reflashed over USB.
+- **Changing it** also means a USB reflash, because the device only accepts an update encrypted with the key it already has. Home Assistant then asks for the new key.
 
-ESPHome is removing the plaintext OTA path in 2027.3.0. Pivot will move to key-authenticated OTA updates before then, at which point the separate OTA password will no longer be required.
+### Updating from firmware v0.0.29 or earlier
 
-### Build-time check
+Earlier Pivot firmware used an `ota_password`. Firmware v0.0.30 replaces it with encryption, which ESPHome requires from 2027.3.0. Most devices need nothing extra:
 
-A missing OTA password cannot be detected reliably once the device is already running, so Pivot checks it during the build instead.
-
-If `ota_password` is missing, empty, or fewer than 12 characters, the build stops with:
-
-```text
-error: static assertion failed: ota_password must be at least 12 characters - see SECURITY.md
-```
-
-You do not need to generate the password — making up your own is fine. Keep it at least 12 characters long and, for simplicity, use letters, numbers, hyphens and underscores.
-
-Only the length is checked at build time. The value is inserted into a C++ string literal during compilation, so characters such as quotes or backslashes may break the build or result in a password different from the one you intended.
-
-### If your device does not have an OTA password yet
-
-The first update can still be installed without authentication because the firmware currently running on the device has no password to check.
-
-The new password takes effect after that firmware has been installed, so subsequent plaintext OTA updates will require it.
-
-### If you lose the password
-
-You can still update the device wirelessly using its `api_encryption_key`, because encrypted OTA uploads are authenticated with that key rather than the OTA password.
-
-If you lose both credentials, the device will need to be reflashed over USB.
-
-### Changing an existing password
-
-Changing the OTA password is a two-stage process. The configured password is used both to authenticate the current upload and to set the password used by the newly installed firmware, so you cannot simply replace the value and upload once.
-
-See [`SECURITY.md`](https://github.com/alistairmerritt/pivot-firmware/blob/main/SECURITY.md) in the firmware repository for the change procedure.
+1. Update ESPHome Device Builder to 2026.10.0 or later.
+2. Click **Install → Wirelessly**. If the device's current firmware was built with ESPHome 2026.9.0 or later, that's all.
+3. If ESPHome stops with *"the device did not offer encryption; refusing to send the image in plaintext"*, the firmware on the device is older than that. Change `ref: stable` to `ref: v0.0.29` and install, then change it back to `ref: stable` and install again.
+4. Once the device is on v0.0.30, delete the `ota_password` line from its config, and `pivot_ota_password` from your Secrets file when no device uses it. Keep them until then: v0.0.29 still needs the password to build.
 
 ---
 
