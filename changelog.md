@@ -25,6 +25,10 @@ permalink: /changelog/
 
 - **Change:** **The timer blueprint links now follow the latest release** instead of the newest code on GitHub, so importing or re-importing a blueprint never picks up unreleased changes. This applies to the links on the [Timer page](/pivot/timer/) and in the setup notification. A blueprint you imported before keeps its old link: import it again from the Timer page to switch.
 - **Fix:** The links in the setup notification opened the raw blueprint file instead of Home Assistant's import dialog.
+- **Fix (Timer Control and Timer - Voice blueprints):** **Every timer left *Dim LEDs When Idle* switched on.** A timer turns it off while it runs, and every way of ending one turned it back on, so a dial set to the default (off) started dimming after its first timer. The blueprints now save it when a timer starts and put it back when the timer ends, however it ends. After an alarm the firmware does this, from firmware v0.0.30; older firmware still turns it on. **Requires re-importing both timer blueprints.**
+- **Fix (Timer - Voice blueprint):** Cancelling by voice a timer started with the button left *Show Control Value* on, and the next timer then saved that as your setting. **Requires re-importing the Pivot - Timer - Voice blueprint.**
+- **Change:** A new entity, `text.{device_suffix}_timer_restore_dim`, holds *Dim LEDs When Idle* while a timer runs. It and `timer_restore_show_value` are now enabled by default, so a new setup enables three timer entities instead of four.
+- **Change:** Automated tests expanded from 153 to 174.
 
 </details>
 
