@@ -165,6 +165,18 @@ You can change bank colours from within Home Assistant using the light entities 
 
 ---
 
+## Locking the controls
+
+From firmware v0.0.32, a **Disable physical controls** switch works as a child lock. You'll find it on the Voice PE's device page in Home Assistant, under **Configuration** (`switch.…_disable_physical_controls`). While it's on:
+
+- The knob and button do nothing: no changes to your entities, no bank switching, no Control Mode toggle, no volume changes, and no button events for your automations. Pressing still wakes the LED ring, but nothing else happens.
+- A press still stops a ringing timer alarm.
+- Voice, the hardware mute switch, the factory reset hold and anything you do from Home Assistant all work as normal.
+
+The switch is remembered across restarts, and automations can turn it on and off – for example, to lock a dial while children are up.
+
+---
+
 ## What the firmware does and does not do
 
 Pivot firmware is built on the official Home Assistant Voice PE configuration, with Pivot's controls added on top. Compared with the upstream file it is based on, **1,338 lines have been added, 146 changed, and no upstream blocks removed**.
@@ -295,6 +307,7 @@ Pivot firmware is based on the official Home Assistant Voice PE ESPHome configur
 - Control Mode added: hold+turn switches bank, turn adjusts the active bank's assigned entity value
 - Hold+turn in Normal mode retains stock behaviour – changes the LED ring colour (hue cycling)
 - Secondary scroll behaviour removed
+- [Disable physical controls](#locking-the-controls) covers Pivot's controls, is visible by default, and still lets a press stop a ringing alarm
 - Passive banks (scene, script, switch, input_boolean, open/close-only cover) ignore the knob. Scene and script banks turn the LEDs off. Banks with an on/off state show it instead: a full ring in the bank colour when on or open, nothing when off or closed. Bank Indicator still fires normally during bank switching.
 
 All standard VPE functionality (voice assistant, wake word, mute button, LED colour change, etc.) remains intact.
@@ -304,3 +317,5 @@ All standard VPE functionality (voice assistant, wake word, mute button, LED col
 Home Assistant’s Voice Preview Edition firmware continues to evolve, and new upstream features or fixes may be added over time. Where relevant, I will aim to review those changes and carry useful updates across into Pivot firmware where possible.
 
 Because Pivot is a custom firmware branch, upstream Voice Preview Edition changes will not always appear in Pivot immediately, and some updates may require additional work or testing before they are adopted.
+
+From v0.0.31, Pivot firmware includes every official change up to September 2026, apart from the differences listed above.
