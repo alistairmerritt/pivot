@@ -8,7 +8,7 @@ permalink: /changelog/
 
 | Firmware | Integration | ESPHome Device Builder | Home Assistant |
 | --- | --- | --- | --- |
-| v0.0.32 | v0.0.97 | 2026.10.0+ | 2025.8.0+* |
+| v0.0.33 | v0.0.97 | 2026.10.0+ | 2025.8.0+* |
 
 **Always run the latest firmware and integration together.** If you update the integration, check the firmware changelog for any matching firmware release.
 
@@ -873,6 +873,13 @@ permalink: /changelog/
 ## Firmware
 
 <details markdown="1">
+<summary>v0.0.33</summary>
+
+- **Fix:** After unlocking the controls, the first press-and-turn colour change in Normal mode started on the first click instead of after four.
+
+</details>
+
+<details markdown="1">
 <summary>v0.0.32</summary>
 
 - **New:** **Disable physical controls**, a child lock. A switch on the Voice PE's device page makes the knob and button do nothing, except that a press still stops a ringing alarm. See [Locking the controls](/pivot/firmware/#locking-the-controls).
@@ -883,8 +890,8 @@ permalink: /changelog/
 <summary>v0.0.31</summary>
 
 - **Change:** **Up to date with the official Voice PE firmware.** Pivot now includes every official change up to September 2026, except the *Disable physical controls* switch, which v0.0.32 builds into Pivot's own controls:
-  - Assist listens on both microphones, one without automatic gain, as the official firmware has since May.
-  - Sendspin prefers FLAC, and applies its saved delay adjustment only while headphones are plugged in.
+  - Assist gets a second stream from the microphones, without automatic gain, as the official firmware has since May. Future Home Assistant releases can use it to pick whichever stream suits the speech-to-text engine.
+  - Sendspin prefers FLAC, and applies its saved delay adjustment only while something is plugged into the 3.5 mm jack.
   - Smaller internal changes that match the official firmware.
 
 </details>

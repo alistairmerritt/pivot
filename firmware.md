@@ -169,7 +169,7 @@ You can change bank colours from within Home Assistant using the light entities 
 
 From firmware v0.0.32, a **Disable physical controls** switch works as a child lock. You'll find it on the Voice PE's device page in Home Assistant, under **Configuration** (`switch.…_disable_physical_controls`). While it's on:
 
-- The knob and button do nothing: no changes to your entities, no bank switching, no Control Mode toggle, no volume changes, and no button events for your automations. Pressing still wakes the LED ring, but nothing else happens.
+- The knob and button do nothing: no changes to your entities, no bank switching, no Control Mode toggle, no volume changes, and no button events for your automations (apart from the stock firmware's hidden easter egg). Pressing still wakes the LED ring, but nothing else happens.
 - A press still stops a ringing timer alarm.
 - Voice, the hardware mute switch, the factory reset hold and anything you do from Home Assistant all work as normal.
 
